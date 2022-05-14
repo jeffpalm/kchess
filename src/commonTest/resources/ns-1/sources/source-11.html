@@ -88,18 +88,18 @@ Current scope:     <a href="../../index.html">all classes</a>
 <div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;import kotlin.math.abs
 <i class="no-highlight">2</i>&nbsp;
 <b class="fc"><i class="no-highlight">3</i>&nbsp;data class PotentialMove (val from: SquareCoords, val to: SquareCoords) {</b>
-<b class="fc"><i class="no-highlight">4</i>&nbsp;    val deltaX: Byte = (to.x - from.x).toByte()</b>
-<b class="fc"><i class="no-highlight">5</i>&nbsp;    val deltaY: Byte = (to.y - from.y).toByte()</b>
-<b class="fc"><i class="no-highlight">6</i>&nbsp;    val distanceX: UByte = abs(deltaX.toInt()).toUByte()</b>
-<b class="fc"><i class="no-highlight">7</i>&nbsp;    val distanceY: UByte = abs(deltaY.toInt()).toUByte()</b>
+<b class="fc"><i class="no-highlight">4</i>&nbsp;    val deltaX: Int = (to.x - from.x)</b>
+<b class="fc"><i class="no-highlight">5</i>&nbsp;    val deltaY: Int = (to.y - from.y)</b>
+<b class="fc"><i class="no-highlight">6</i>&nbsp;    val distanceX: UInt = abs(deltaX.toInt()).toUInt()</b>
+<b class="fc"><i class="no-highlight">7</i>&nbsp;    val distanceY: UInt = abs(deltaY.toInt()).toUInt()</b>
 <b class="fc"><i class="no-highlight">8</i>&nbsp;    val trajectory: MoveTrajectory? = determineDirection()</b>
 <i class="no-highlight">9</i>&nbsp;
 <i class="no-highlight">10</i>&nbsp;    private fun determineDirection(): MoveTrajectory? {
 <b class="fc"><i class="no-highlight">11</i>&nbsp;        return when {</b>
 <b class="fc"><i class="no-highlight">12</i>&nbsp;            distanceX == distanceY -&gt; MoveTrajectory.DIAGONAL</b>
-<b class="pc"><i class="no-highlight">13</i>&nbsp;            deltaY == 0.toByte() &amp;&amp; deltaX != 0.toByte() -&gt; MoveTrajectory.HORIZONTAL</b>
-<b class="pc"><i class="no-highlight">14</i>&nbsp;            deltaX == 0.toByte() &amp;&amp; deltaY != 0.toByte() -&gt; MoveTrajectory.VERTICAL</b>
-<b class="pc"><i class="no-highlight">15</i>&nbsp;            distanceY == 2.toUByte() &amp;&amp; distanceX == 1.toUByte() -&gt; MoveTrajectory.KNIGHT</b>
+<b class="pc"><i class="no-highlight">13</i>&nbsp;            deltaY == 0 &amp;&amp; deltaX != 0 -&gt; MoveTrajectory.HORIZONTAL</b>
+<b class="pc"><i class="no-highlight">14</i>&nbsp;            deltaX == 0 &amp;&amp; deltaY != 0 -&gt; MoveTrajectory.VERTICAL</b>
+<b class="pc"><i class="no-highlight">15</i>&nbsp;            distanceY == 2.toUInt() &amp;&amp; distanceX == 1.toUInt() -&gt; MoveTrajectory.KNIGHT</b>
 <b class="fc"><i class="no-highlight">16</i>&nbsp;            else -&gt; null</b>
 <i class="no-highlight">17</i>&nbsp;        }
 <i class="no-highlight">18</i>&nbsp;    }

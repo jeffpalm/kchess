@@ -9,8 +9,8 @@ class FenTest {
         asserter.assertEquals("sideToMove", "w", fen.sideToMove)
         asserter.assertEquals("castlingAvailability", "KQkq", fen.castlingAvailability)
         asserter.assertEquals("enPassantTarget", "-", fen.enPassantTarget)
-        asserter.assertEquals("halfMoveClock", 0.toByte(), fen.halfMoveClock)
-        asserter.assertEquals("fullMoveNumber", 1.toByte(), fen.fullMoveClock)
+        asserter.assertEquals("halfMoveClock", 0, fen.halfMoveClock)
+        asserter.assertEquals("fullMoveNumber", 1, fen.fullMoveClock)
     }
 
     @Test

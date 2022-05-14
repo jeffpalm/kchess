@@ -1,18 +1,18 @@
 import kotlin.math.abs
 
 data class PotentialMove (val from: Coords, val to: Coords) {
-    val deltaX: Byte = (to.x - from.x).toByte()
-    val deltaY: Byte = (to.y - from.y).toByte()
-    val distanceX: UByte = abs(deltaX.toInt()).toUByte()
-    val distanceY: UByte = abs(deltaY.toInt()).toUByte()
+    val deltaX: Int = (to.x - from.x)
+    val deltaY: Int = (to.y - from.y)
+    val distanceX: UInt = abs(deltaX.toInt()).toUInt()
+    val distanceY: UInt = abs(deltaY.toInt()).toUInt()
     val trajectory: MoveTrajectory? = determineDirection()
 
     private fun determineDirection(): MoveTrajectory? {
         return when {
             distanceX == distanceY -> MoveTrajectory.DIAGONAL
-            deltaY == 0.toByte() && deltaX != 0.toByte() -> MoveTrajectory.HORIZONTAL
-            deltaX == 0.toByte() && deltaY != 0.toByte() -> MoveTrajectory.VERTICAL
-            distanceY == 2.toUByte() && distanceX == 1.toUByte() -> MoveTrajectory.KNIGHT
+            deltaY == 0 && deltaX != 0 -> MoveTrajectory.HORIZONTAL
+            deltaX == 0 && deltaY != 0 -> MoveTrajectory.VERTICAL
+            distanceY == 2.toUInt() && distanceX == 1.toUInt() -> MoveTrajectory.KNIGHT
             else -> null
         }
     }

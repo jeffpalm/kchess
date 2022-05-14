@@ -88,7 +88,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 <div class="sourceCode" id="sourceCode"><b class="fc"><i class="no-highlight">1</i>&nbsp;class Knight(override val color: PieceColor) :</b>
 <b class="fc"><i class="no-highlight">2</i>&nbsp;    Piece(PieceType.KNIGHT, color, if (color == PieceColor.WHITE) &#39;N&#39; else &#39;n&#39;) {</b>
 <i class="no-highlight">3</i>&nbsp;    override fun canMove(move: PotentialMove): Boolean {
-<b class="pc"><i class="no-highlight">4</i>&nbsp;        return move.distanceX == 2.toUByte() &amp;&amp; move.distanceY == 1.toUByte() || move.distanceX == 1.toUByte() &amp;&amp; move.distanceY == 2.toUByte()</b>
+<b class="pc"><i class="no-highlight">4</i>&nbsp;        return move.distanceX == 2.toUInt() &amp;&amp; move.distanceY == 1.toUInt() || move.distanceX == 1.toUInt() &amp;&amp; move.distanceY == 2.toUInt()</b>
 <i class="no-highlight">5</i>&nbsp;    }
 <i class="no-highlight">6</i>&nbsp;}
 </div>

@@ -5,8 +5,8 @@ class Game(fenString: String) : IGame {
     var turn: PieceColor = PieceColor.WHITE
     var castling: String = fen.castlingAvailability
     var enPassant: String = fen.enPassantTarget
-    var halfMoves: Byte = fen.halfMoveClock
-    var fullMoves: Byte = fen.fullMoveClock
+    var halfMoves: Int = fen.halfMoveClock
+    var fullMoves: Int = fen.fullMoveClock
 
     private fun oppositeSide(): PieceColor {
         return if (turn == PieceColor.WHITE) PieceColor.BLACK else PieceColor.WHITE
@@ -54,7 +54,7 @@ class Game(fenString: String) : IGame {
     }
 
     private fun incrementMoveClock() {
-        if (halfMoves == 0.toByte()) {
+        if (halfMoves == 0) {
             halfMoves = 1
         } else {
             halfMoves = 0
@@ -63,7 +63,7 @@ class Game(fenString: String) : IGame {
     }
 
     private fun decrementMoveClock() {
-        if (halfMoves == 0.toByte()) {
+        if (halfMoves == 0) {
             halfMoves = 1
             fullMoves--
         } else {

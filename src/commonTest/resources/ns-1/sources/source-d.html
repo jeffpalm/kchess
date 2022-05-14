@@ -88,18 +88,18 @@ Current scope:     <a href="../../index.html">all classes</a>
 <div class="sourceCode" id="sourceCode"><b class="fc"><i class="no-highlight">1</i>&nbsp;class Pawn(override val color: PieceColor) : Piece(PieceType.PAWN, color, if (color == PieceColor.WHITE) &#39;P&#39; else &#39;p&#39;) {</b>
 <i class="no-highlight">2</i>&nbsp;    override fun canMove(move: PotentialMove): Boolean {
 <b class="fc"><i class="no-highlight">3</i>&nbsp;        return when {</b>
-<b class="fc"><i class="no-highlight">4</i>&nbsp;            move.distanceY == 0.toUByte() -&gt; false</b>
+<b class="fc"><i class="no-highlight">4</i>&nbsp;            move.distanceY == 0.toUInt() -&gt; false</b>
 <b class="fc"><i class="no-highlight">5</i>&nbsp;            color == PieceColor.BLACK &amp;&amp; move.deltaY &lt; 0 || move.deltaY &gt; 2 -&gt; false</b>
 <b class="fc"><i class="no-highlight">6</i>&nbsp;            color == PieceColor.WHITE &amp;&amp; move.deltaY &gt; 0 || move.deltaY &lt; -2 -&gt; false</b>
 <i class="no-highlight">7</i>&nbsp;            // going in correct direction
-<b class="fc"><i class="no-highlight">8</i>&nbsp;            move.distanceY == 2.toUByte() &amp;&amp; move.distanceX &gt; 0.toUByte() -&gt; false</b>
-<b class="fc"><i class="no-highlight">9</i>&nbsp;            move.distanceY == 2.toUByte() -&gt; if (color == PieceColor.WHITE) move.from.y == 6.toByte() else move.from.y == 1.toByte()</b>
+<b class="fc"><i class="no-highlight">8</i>&nbsp;            move.distanceY == 2.toUInt() &amp;&amp; move.distanceX &gt; 0.toUInt() -&gt; false</b>
+<b class="fc"><i class="no-highlight">9</i>&nbsp;            move.distanceY == 2.toUInt() -&gt; if (color == PieceColor.WHITE) move.from.y == 6 else move.from.y == 1</b>
 <b class="fc"><i class="no-highlight">10</i>&nbsp;            else -&gt; true</b>
 <i class="no-highlight">11</i>&nbsp;        }
 <i class="no-highlight">12</i>&nbsp;    }
 <i class="no-highlight">13</i>&nbsp;
 <i class="no-highlight">14</i>&nbsp;    override fun canCapture(move: PotentialMove): Boolean {
-<b class="fc"><i class="no-highlight">15</i>&nbsp;        return canMove(move) &amp;&amp; move.distanceY == 1.toUByte() &amp;&amp; move.distanceX == 1.toUByte()</b>
+<b class="fc"><i class="no-highlight">15</i>&nbsp;        return canMove(move) &amp;&amp; move.distanceY == 1.toUInt() &amp;&amp; move.distanceX == 1.toUInt()</b>
 <i class="no-highlight">16</i>&nbsp;    }
 <i class="no-highlight">17</i>&nbsp;}
 </div>

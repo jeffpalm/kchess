@@ -1,4 +1,4 @@
-class BoardToFenAdapter(board: Map<Byte, Map<Byte, Square>>) {
+class BoardToFenAdapter(board: Map<Int, Map<Int, Square>>) {
     val fenBoardRepresentation: String
 
     init {
@@ -6,8 +6,8 @@ class BoardToFenAdapter(board: Map<Byte, Map<Byte, Square>>) {
         for (y in 0..7) {
             var emptyCount = 0
             for (x in 0..7) {
-                val row = board[y.toByte()] ?: throw IllegalArgumentException("Board is not valid")
-                val square = row[x.toByte()] ?: throw IllegalArgumentException("Board row is not valid")
+                val row = board[y] ?: throw IllegalArgumentException("Board is not valid")
+                val square = row[x] ?: throw IllegalArgumentException("Board row is not valid")
                 if (square.piece != null) {
                     fenBoard += if (emptyCount > 0) emptyCount.toString() + square.piece!!.symbol else square.piece!!.symbol
                     emptyCount = 0

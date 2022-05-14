@@ -104,13 +104,13 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <pre>
 <div class="sourceCode" id="sourceCode"><b class="fc"><i class="no-highlight">1</i>&nbsp;class Board(fen: Fen) : IBoard {</b>
-<i class="no-highlight">2</i>&nbsp;    private var board: Map&lt;Byte, Map&lt;Byte, Square&gt;&gt;
+<i class="no-highlight">2</i>&nbsp;    private var board: Map&lt;Int, Map&lt;Int, Square&gt;&gt;
 <i class="no-highlight">3</i>&nbsp;
 <b class="fc"><i class="no-highlight">4</i>&nbsp;    init {</b>
 <b class="fc"><i class="no-highlight">5</i>&nbsp;        board = fen.toBoard()</b>
 <b class="fc"><i class="no-highlight">6</i>&nbsp;    }</b>
 <i class="no-highlight">7</i>&nbsp;
-<i class="no-highlight">8</i>&nbsp;    private fun getSquare(x: Byte, y: Byte): Square {
+<i class="no-highlight">8</i>&nbsp;    private fun getSquare(x: Int, y: Int): Square {
 <b class="pc"><i class="no-highlight">9</i>&nbsp;        if (x &lt; 0 || x &gt; 7 || y &lt; 0 || y &gt; 7) {</b>
 <b class="fc"><i class="no-highlight">10</i>&nbsp;            throw IllegalArgumentException(&quot;x and y must be between 0 and 7&quot;)</b>
 <i class="no-highlight">11</i>&nbsp;        }
@@ -118,12 +118,12 @@ Current scope:     <a href="../../index.html">all classes</a>
 <i class="no-highlight">13</i>&nbsp;    }
 <i class="no-highlight">14</i>&nbsp;
 <i class="no-highlight">15</i>&nbsp;
-<i class="no-highlight">16</i>&nbsp;    override fun getPiece(x: Byte, y: Byte): Piece? {
+<i class="no-highlight">16</i>&nbsp;    override fun getPiece(x: Int, y: Int): Piece? {
 <b class="fc"><i class="no-highlight">17</i>&nbsp;        var square = getSquare(x, y)</b>
 <b class="fc"><i class="no-highlight">18</i>&nbsp;        return square.piece</b>
 <i class="no-highlight">19</i>&nbsp;    }
 <i class="no-highlight">20</i>&nbsp;
-<i class="no-highlight">21</i>&nbsp;    override fun setPiece(x: Byte, y: Byte, piece: Piece?) {
+<i class="no-highlight">21</i>&nbsp;    override fun setPiece(x: Int, y: Int, piece: Piece?) {
 <b class="fc"><i class="no-highlight">22</i>&nbsp;        getSquare(x, y).piece = piece</b>
 <i class="no-highlight">23</i>&nbsp;    }
 <i class="no-highlight">24</i>&nbsp;
@@ -136,7 +136,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 <i class="no-highlight">31</i>&nbsp;    }
 <i class="no-highlight">32</i>&nbsp;
 <i class="no-highlight">33</i>&nbsp;    override fun isPathClear(move: PotentialMove): Boolean {
-<b class="fc"><i class="no-highlight">34</i>&nbsp;        if (move.distanceX == 1.toUByte() || move.distanceY == 1.toUByte()) return true</b>
+<b class="fc"><i class="no-highlight">34</i>&nbsp;        if (move.distanceX == 1.toUInt() || move.distanceY == 1.toUInt()) return true</b>
 <b class="fc"><i class="no-highlight">35</i>&nbsp;        val (from, to) = move</b>
 <b class="fc"><i class="no-highlight">36</i>&nbsp;        val xBetween = intsBetween(from.x, to.x)</b>
 <b class="fc"><i class="no-highlight">37</i>&nbsp;        val yBetween = intsBetween(from.y, to.y)</b>
@@ -163,15 +163,15 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc"><i class="no-highlight">58</i>&nbsp;        return true</b>
 <i class="no-highlight">59</i>&nbsp;    }
 <i class="no-highlight">60</i>&nbsp;
-<i class="no-highlight">61</i>&nbsp;    private fun intsBetween(from: Byte, to: Byte): List&lt;Byte&gt; {
-<b class="fc"><i class="no-highlight">62</i>&nbsp;        val list = mutableListOf&lt;Byte&gt;()</b>
+<i class="no-highlight">61</i>&nbsp;    private fun intsBetween(from: Int, to: Int): List&lt;Int&gt; {
+<b class="fc"><i class="no-highlight">62</i>&nbsp;        val list = mutableListOf&lt;Int&gt;()</b>
 <b class="fc"><i class="no-highlight">63</i>&nbsp;        if (from &lt; to) {</b>
 <b class="fc"><i class="no-highlight">64</i>&nbsp;            for (i in from + 1 until to) {</b>
-<b class="fc"><i class="no-highlight">65</i>&nbsp;                list.add(i.toByte())</b>
+<b class="fc"><i class="no-highlight">65</i>&nbsp;                list.add(i)</b>
 <i class="no-highlight">66</i>&nbsp;            }
 <i class="no-highlight">67</i>&nbsp;        } else {
 <b class="fc"><i class="no-highlight">68</i>&nbsp;            for (i in from - 1 downTo to + 1) {</b>
-<b class="fc"><i class="no-highlight">69</i>&nbsp;                list.add(i.toByte())</b>
+<b class="fc"><i class="no-highlight">69</i>&nbsp;                list.add(i)</b>
 <i class="no-highlight">70</i>&nbsp;            }
 <i class="no-highlight">71</i>&nbsp;        }
 <b class="fc"><i class="no-highlight">72</i>&nbsp;        return list</b>

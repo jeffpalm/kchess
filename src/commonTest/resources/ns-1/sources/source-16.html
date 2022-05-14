@@ -38,8 +38,8 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <pre>
 <div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;interface IBoard {
-<i class="no-highlight">2</i>&nbsp;    fun getPiece(x: Byte, y: Byte): Piece?
-<i class="no-highlight">3</i>&nbsp;    fun setPiece(x: Byte, y: Byte, piece: Piece?)
+<i class="no-highlight">2</i>&nbsp;    fun getPiece(x: Int, y: Int): Piece?
+<i class="no-highlight">3</i>&nbsp;    fun setPiece(x: Int, y: Int, piece: Piece?)
 <i class="no-highlight">4</i>&nbsp;    fun getKing(pieceColor: PieceColor): Square?
 <i class="no-highlight">5</i>&nbsp;    fun getSquaresByPieceColor(pieceColor: PieceColor): List&lt;Square&gt;
 <i class="no-highlight">6</i>&nbsp;    fun isPathClear(move: PotentialMove): Boolean

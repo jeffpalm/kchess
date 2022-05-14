@@ -10,36 +10,36 @@ class BoardTest {
     @Test
     fun testGetsCorrectPiece() {
         assertFailsWith<IllegalArgumentException> {
-            board.getPiece(8.toByte(), 8.toByte())
+            board.getPiece(8, 8)
         }
         assertFailsWith<IllegalArgumentException> {
             board.getPiece(-1, -1)
         }
-        assertTrue(board.getPiece(4.toByte(), 0.toByte()) is King)
+        assertTrue(board.getPiece(4, 0) is King)
     }
 
     @Test
     fun testSetPiece() {
         assertFailsWith<IllegalArgumentException> {
-            board.setPiece(8.toByte(), 8.toByte(), null)
+            board.setPiece(8, 8, null)
         }
         assertFailsWith<IllegalArgumentException> {
             board.setPiece(-1, -1, null)
         }
-        board.setPiece(4.toByte(), 0.toByte(), null)
-        assertTrue(board.getPiece(4.toByte(), 0.toByte()) == null)
-        board.setPiece(4.toByte(), 0.toByte(), King(PieceColor.BLACK))
-        assertTrue(board.getPiece(4.toByte(), 0.toByte()) is King)
+        board.setPiece(4, 0, null)
+        assertTrue(board.getPiece(4, 0) == null)
+        board.setPiece(4, 0, King(PieceColor.BLACK))
+        assertTrue(board.getPiece(4, 0) is King)
     }
 
     @Test
     fun testGetKing() {
         val whiteKingSquare = board.getKing(PieceColor.WHITE)
         val blackKingSquare = board.getKing(PieceColor.BLACK)
-        assertEquals(4.toByte(), whiteKingSquare.x)
-        assertEquals(7.toByte(), whiteKingSquare.y)
-        assertEquals(4.toByte(), blackKingSquare.x)
-        assertEquals(0.toByte(), blackKingSquare.y)
+        assertEquals(4, whiteKingSquare.x)
+        assertEquals(7, whiteKingSquare.y)
+        assertEquals(4, blackKingSquare.x)
+        assertEquals(0, blackKingSquare.y)
         assertTrue(whiteKingSquare.piece is King)
         assertTrue(blackKingSquare.piece is King)
         assertEquals((whiteKingSquare.piece as King).color, PieceColor.WHITE)

@@ -90,10 +90,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc"><i class="no-highlight">3</i>&nbsp;    val sideToMove: String = fen.split(&quot; &quot;)[1]</b>
 <b class="fc"><i class="no-highlight">4</i>&nbsp;    val castlingAvailability: String = fen.split(&quot; &quot;)[2]</b>
 <b class="fc"><i class="no-highlight">5</i>&nbsp;    val enPassantTarget: String = fen.split(&quot; &quot;)[3]</b>
-<b class="fc"><i class="no-highlight">6</i>&nbsp;    val halfMoveClock: Byte = fen.split(&quot; &quot;)[4].toByte()</b>
-<b class="fc"><i class="no-highlight">7</i>&nbsp;    val fullMoveClock: Byte = fen.split(&quot; &quot;)[5].toByte()</b>
+<b class="fc"><i class="no-highlight">6</i>&nbsp;    val halfMoveClock: Int = fen.split(&quot; &quot;)[4]</b>
+<b class="fc"><i class="no-highlight">7</i>&nbsp;    val fullMoveClock: Int = fen.split(&quot; &quot;)[5]</b>
 <i class="no-highlight">8</i>&nbsp;
-<i class="no-highlight">9</i>&nbsp;    fun toBoard(): Map&lt;Byte, Map&lt;Byte, Square&gt;&gt; {
+<i class="no-highlight">9</i>&nbsp;    fun toBoard(): Map&lt;Int, Map&lt;Int, Square&gt;&gt; {
 <b class="fc"><i class="no-highlight">10</i>&nbsp;        return FenToBoardAdapter(this).board</b>
 <i class="no-highlight">11</i>&nbsp;    }
 <i class="no-highlight">12</i>&nbsp;}

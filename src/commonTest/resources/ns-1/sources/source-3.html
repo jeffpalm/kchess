@@ -85,7 +85,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<div class="sourceCode" id="sourceCode"><b class="fc"><i class="no-highlight">1</i>&nbsp;class BoardToFenAdapter(board: Map&lt;Byte, Map&lt;Byte, Square&gt;&gt;) {</b>
+<div class="sourceCode" id="sourceCode"><b class="fc"><i class="no-highlight">1</i>&nbsp;class BoardToFenAdapter(board: Map&lt;Int, Map&lt;Int, Square&gt;&gt;) {</b>
 <b class="fc"><i class="no-highlight">2</i>&nbsp;    val fenBoardRepresentation: String</b>
 <i class="no-highlight">3</i>&nbsp;
 <b class="fc"><i class="no-highlight">4</i>&nbsp;    init {</b>
@@ -93,8 +93,8 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc"><i class="no-highlight">6</i>&nbsp;        for (y in 0..7) {</b>
 <b class="fc"><i class="no-highlight">7</i>&nbsp;            var emptyCount = 0</b>
 <b class="fc"><i class="no-highlight">8</i>&nbsp;            for (x in 0..7) {</b>
-<b class="pc"><i class="no-highlight">9</i>&nbsp;                val row = board[y.toByte()] ?: throw IllegalArgumentException(&quot;Board is not valid&quot;)</b>
-<b class="pc"><i class="no-highlight">10</i>&nbsp;                val square = row[x.toByte()] ?: throw IllegalArgumentException(&quot;Board row is not valid&quot;)</b>
+<b class="pc"><i class="no-highlight">9</i>&nbsp;                val row = board[y] ?: throw IllegalArgumentException(&quot;Board is not valid&quot;)</b>
+<b class="pc"><i class="no-highlight">10</i>&nbsp;                val square = row[x] ?: throw IllegalArgumentException(&quot;Board row is not valid&quot;)</b>
 <b class="fc"><i class="no-highlight">11</i>&nbsp;                if (square.piece != null) {</b>
 <b class="fc"><i class="no-highlight">12</i>&nbsp;                    fenBoard += if (emptyCount &gt; 0) emptyCount.toString() + square.piece!!.symbol else square.piece!!.symbol</b>
 <b class="fc"><i class="no-highlight">13</i>&nbsp;                    emptyCount = 0</b>

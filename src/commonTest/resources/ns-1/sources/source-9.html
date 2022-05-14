@@ -88,10 +88,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 <div class="sourceCode" id="sourceCode"><b class="fc"><i class="no-highlight">1</i>&nbsp;class King(override val color: PieceColor) :</b>
 <b class="fc"><i class="no-highlight">2</i>&nbsp;    Piece(PieceType.KING, color, if (color == PieceColor.WHITE) &#39;K&#39; else &#39;k&#39;) {</b>
 <i class="no-highlight">3</i>&nbsp;    override fun canMove(move: PotentialMove): Boolean {
-<b class="fc"><i class="no-highlight">4</i>&nbsp;        if (move.distanceX &gt; 1.toUByte() || move.distanceY &gt; 1.toUByte()) {</b>
+<b class="fc"><i class="no-highlight">4</i>&nbsp;        if (move.distanceX &gt; 1.toUInt() || move.distanceY &gt; 1.toUInt()) {</b>
 <b class="fc"><i class="no-highlight">5</i>&nbsp;            return false</b>
 <i class="no-highlight">6</i>&nbsp;        }
-<b class="pc"><i class="no-highlight">7</i>&nbsp;        return move.deltaY == 0.toByte() || move.deltaX == 0.toByte() || move.distanceY == move.distanceX</b>
+<b class="pc"><i class="no-highlight">7</i>&nbsp;        return move.deltaY == 0 || move.deltaX == 0 || move.distanceY == move.distanceX</b>
 <i class="no-highlight">8</i>&nbsp;    }
 <i class="no-highlight">9</i>&nbsp;}
 </div>

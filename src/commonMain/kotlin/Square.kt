@@ -1,4 +1,4 @@
-data class Square(val y: Byte, val x: Byte, val name: String, var piece: Piece? = null) {
+data class Square(val y: Int, val x: Int, val name: String, var piece: Piece? = null) {
     val coords: Coords = Coords(x, y)
 
     init {

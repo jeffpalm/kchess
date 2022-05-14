@@ -3,10 +3,10 @@ class Fen(private val fen: String = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR
     val sideToMove: String = fen.split(" ")[1]
     val castlingAvailability: String = fen.split(" ")[2]
     val enPassantTarget: String = fen.split(" ")[3]
-    val halfMoveClock: Byte = fen.split(" ")[4].toByte()
-    val fullMoveClock: Byte = fen.split(" ")[5].toByte()
+    val halfMoveClock: Int = fen.split(" ")[4].toInt()
+    val fullMoveClock: Int = fen.split(" ")[5].toInt()
 
-    fun toBoard(): Map<Byte, Map<Byte, Square>> {
+    fun toBoard(): Map<Int, Map<Int, Square>> {
         return FenToBoardAdapter(this).board
     }
 }

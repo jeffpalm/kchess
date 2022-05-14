@@ -92,8 +92,8 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="nc"><i class="no-highlight">5</i>&nbsp;    var turn: PieceColor = PieceColor.WHITE</b>
 <b class="nc"><i class="no-highlight">6</i>&nbsp;    var castling: String = fen.castlingAvailability</b>
 <b class="nc"><i class="no-highlight">7</i>&nbsp;    var enPassant: String = fen.enPassantTarget</b>
-<b class="nc"><i class="no-highlight">8</i>&nbsp;    var halfMoves: Byte = fen.halfMoveClock</b>
-<b class="nc"><i class="no-highlight">9</i>&nbsp;    var fullMoves: Byte = fen.fullMoveClock</b>
+<b class="nc"><i class="no-highlight">8</i>&nbsp;    var halfMoves: Int = fen.halfMoveClock</b>
+<b class="nc"><i class="no-highlight">9</i>&nbsp;    var fullMoves: Int = fen.fullMoveClock</b>
 <i class="no-highlight">10</i>&nbsp;
 <i class="no-highlight">11</i>&nbsp;    private fun oppositeSide(): PieceColor {
 <b class="nc"><i class="no-highlight">12</i>&nbsp;        return if (turn == PieceColor.WHITE) PieceColor.BLACK else PieceColor.WHITE</b>
@@ -141,7 +141,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 <i class="no-highlight">54</i>&nbsp;    }
 <i class="no-highlight">55</i>&nbsp;
 <i class="no-highlight">56</i>&nbsp;    private fun incrementMoveClock() {
-<b class="nc"><i class="no-highlight">57</i>&nbsp;        if (halfMoves == 0.toByte()) {</b>
+<b class="nc"><i class="no-highlight">57</i>&nbsp;        if (halfMoves == 0) {</b>
 <b class="nc"><i class="no-highlight">58</i>&nbsp;            halfMoves = 1</b>
 <i class="no-highlight">59</i>&nbsp;        } else {
 <b class="nc"><i class="no-highlight">60</i>&nbsp;            halfMoves = 0</b>
@@ -150,7 +150,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 <i class="no-highlight">63</i>&nbsp;    }
 <i class="no-highlight">64</i>&nbsp;
 <i class="no-highlight">65</i>&nbsp;    private fun decrementMoveClock() {
-<b class="nc"><i class="no-highlight">66</i>&nbsp;        if (halfMoves == 0.toByte()) {</b>
+<b class="nc"><i class="no-highlight">66</i>&nbsp;        if (halfMoves == 0) {</b>
 <b class="nc"><i class="no-highlight">67</i>&nbsp;            halfMoves = 1</b>
 <b class="nc"><i class="no-highlight">68</i>&nbsp;            fullMoves--</b>
 <i class="no-highlight">69</i>&nbsp;        } else {
