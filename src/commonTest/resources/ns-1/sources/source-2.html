@@ -1,0 +1,210 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Board</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">&lt;empty package name&gt;</a>
+</div>
+
+<h1>Coverage Summary for Class: Board (&lt;empty package name&gt;)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Board</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    86.5%
+  </span>
+  <span class="absValue">
+    (45/52)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    93.9%
+  </span>
+  <span class="absValue">
+    (31/33)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Board$WhenMappings</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    86.5%
+  </span>
+  <span class="absValue">
+    (45/52)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    93.9%
+  </span>
+  <span class="absValue">
+    (31/33)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><b class="fc"><i class="no-highlight">1</i>&nbsp;class Board(fen: Fen) : IBoard {</b>
+<i class="no-highlight">2</i>&nbsp;    private var board: Map&lt;Byte, Map&lt;Byte, Square&gt;&gt;
+<i class="no-highlight">3</i>&nbsp;
+<b class="fc"><i class="no-highlight">4</i>&nbsp;    init {</b>
+<b class="fc"><i class="no-highlight">5</i>&nbsp;        board = fen.toBoard()</b>
+<b class="fc"><i class="no-highlight">6</i>&nbsp;    }</b>
+<i class="no-highlight">7</i>&nbsp;
+<i class="no-highlight">8</i>&nbsp;    private fun getSquare(x: Byte, y: Byte): Square {
+<b class="pc"><i class="no-highlight">9</i>&nbsp;        if (x &lt; 0 || x &gt; 7 || y &lt; 0 || y &gt; 7) {</b>
+<b class="fc"><i class="no-highlight">10</i>&nbsp;            throw IllegalArgumentException(&quot;x and y must be between 0 and 7&quot;)</b>
+<i class="no-highlight">11</i>&nbsp;        }
+<b class="fc"><i class="no-highlight">12</i>&nbsp;        return board[y]!![x]!!</b>
+<i class="no-highlight">13</i>&nbsp;    }
+<i class="no-highlight">14</i>&nbsp;
+<i class="no-highlight">15</i>&nbsp;
+<i class="no-highlight">16</i>&nbsp;    override fun getPiece(x: Byte, y: Byte): Piece? {
+<b class="fc"><i class="no-highlight">17</i>&nbsp;        var square = getSquare(x, y)</b>
+<b class="fc"><i class="no-highlight">18</i>&nbsp;        return square.piece</b>
+<i class="no-highlight">19</i>&nbsp;    }
+<i class="no-highlight">20</i>&nbsp;
+<i class="no-highlight">21</i>&nbsp;    override fun setPiece(x: Byte, y: Byte, piece: Piece?) {
+<b class="fc"><i class="no-highlight">22</i>&nbsp;        getSquare(x, y).piece = piece</b>
+<i class="no-highlight">23</i>&nbsp;    }
+<i class="no-highlight">24</i>&nbsp;
+<i class="no-highlight">25</i>&nbsp;    override fun getKing(pieceColor: PieceColor): Square {
+<b class="pc"><i class="no-highlight">26</i>&nbsp;        return getSquaresByPieceColor(pieceColor).first { it.piece?.type == PieceType.KING }</b>
+<i class="no-highlight">27</i>&nbsp;    }
+<i class="no-highlight">28</i>&nbsp;
+<i class="no-highlight">29</i>&nbsp;    override fun getSquaresByPieceColor(pieceColor: PieceColor): List&lt;Square&gt; {
+<b class="fc"><i class="no-highlight">30</i>&nbsp;        return board.values.flatMap { it.values }.filter { it.piece?.color == pieceColor }</b>
+<i class="no-highlight">31</i>&nbsp;    }
+<i class="no-highlight">32</i>&nbsp;
+<i class="no-highlight">33</i>&nbsp;    override fun isPathClear(move: PotentialMove): Boolean {
+<b class="fc"><i class="no-highlight">34</i>&nbsp;        if (move.distanceX == 1.toUByte() || move.distanceY == 1.toUByte()) return true</b>
+<b class="fc"><i class="no-highlight">35</i>&nbsp;        val (from, to) = move</b>
+<b class="fc"><i class="no-highlight">36</i>&nbsp;        val xBetween = intsBetween(from.x, to.x)</b>
+<b class="fc"><i class="no-highlight">37</i>&nbsp;        val yBetween = intsBetween(from.y, to.y)</b>
+<b class="pc"><i class="no-highlight">38</i>&nbsp;        when (move.trajectory) {</b>
+<b class="nc"><i class="no-highlight">39</i>&nbsp;            null -&gt; return false</b>
+<b class="nc"><i class="no-highlight">40</i>&nbsp;            MoveTrajectory.KNIGHT -&gt; return true</b>
+<i class="no-highlight">41</i>&nbsp;            MoveTrajectory.VERTICAL -&gt; {
+<b class="fc"><i class="no-highlight">42</i>&nbsp;                for (y in yBetween) {</b>
+<b class="fc"><i class="no-highlight">43</i>&nbsp;                    if (getSquare(from.x, y).piece != null) return false</b>
+<i class="no-highlight">44</i>&nbsp;                }
+<i class="no-highlight">45</i>&nbsp;            }
+<i class="no-highlight">46</i>&nbsp;            MoveTrajectory.HORIZONTAL -&gt; {
+<b class="fc"><i class="no-highlight">47</i>&nbsp;                for (x in xBetween) {</b>
+<b class="fc"><i class="no-highlight">48</i>&nbsp;                    if (getSquare(x, from.y).piece != null) return false</b>
+<i class="no-highlight">49</i>&nbsp;                }
+<i class="no-highlight">50</i>&nbsp;            }
+<i class="no-highlight">51</i>&nbsp;            MoveTrajectory.DIAGONAL -&gt; {
+<b class="fc"><i class="no-highlight">52</i>&nbsp;                for (i in xBetween.indices) {</b>
+<b class="fc"><i class="no-highlight">53</i>&nbsp;                    if (getSquare(xBetween[i], yBetween[i]).piece != null) return false</b>
+<i class="no-highlight">54</i>&nbsp;                }
+<i class="no-highlight">55</i>&nbsp;            }
+<i class="no-highlight">56</i>&nbsp;        }
+<i class="no-highlight">57</i>&nbsp;
+<b class="fc"><i class="no-highlight">58</i>&nbsp;        return true</b>
+<i class="no-highlight">59</i>&nbsp;    }
+<i class="no-highlight">60</i>&nbsp;
+<i class="no-highlight">61</i>&nbsp;    private fun intsBetween(from: Byte, to: Byte): List&lt;Byte&gt; {
+<b class="fc"><i class="no-highlight">62</i>&nbsp;        val list = mutableListOf&lt;Byte&gt;()</b>
+<b class="fc"><i class="no-highlight">63</i>&nbsp;        if (from &lt; to) {</b>
+<b class="fc"><i class="no-highlight">64</i>&nbsp;            for (i in from + 1 until to) {</b>
+<b class="fc"><i class="no-highlight">65</i>&nbsp;                list.add(i.toByte())</b>
+<i class="no-highlight">66</i>&nbsp;            }
+<i class="no-highlight">67</i>&nbsp;        } else {
+<b class="fc"><i class="no-highlight">68</i>&nbsp;            for (i in from - 1 downTo to + 1) {</b>
+<b class="fc"><i class="no-highlight">69</i>&nbsp;                list.add(i.toByte())</b>
+<i class="no-highlight">70</i>&nbsp;            }
+<i class="no-highlight">71</i>&nbsp;        }
+<b class="fc"><i class="no-highlight">72</i>&nbsp;        return list</b>
+<i class="no-highlight">73</i>&nbsp;    }
+<i class="no-highlight">74</i>&nbsp;
+<i class="no-highlight">75</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-05-14 17:46</div>
+</div>
+</body>
+</html>

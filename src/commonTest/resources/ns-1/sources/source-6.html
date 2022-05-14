@@ -1,0 +1,227 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > FenToBoardAdapter</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">&lt;empty package name&gt;</a>
+</div>
+
+<h1>Coverage Summary for Class: FenToBoardAdapter (&lt;empty package name&gt;)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FenToBoardAdapter</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (9/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (93/93)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><b class="fc"><i class="no-highlight">1</i>&nbsp;class FenToBoardAdapter(private val fen: Fen) {</b>
+<b class="fc"><i class="no-highlight">2</i>&nbsp;    val board: Map&lt;Byte, Map&lt;Byte, Square&gt;&gt; = mapOf(</b>
+<b class="fc"><i class="no-highlight">3</i>&nbsp;        0.toByte() to mapOf(</b>
+<b class="fc"><i class="no-highlight">4</i>&nbsp;            0.toByte() to Square(0, 0, &quot;a8&quot;),</b>
+<b class="fc"><i class="no-highlight">5</i>&nbsp;            1.toByte() to Square(0, 1, &quot;b8&quot;),</b>
+<b class="fc"><i class="no-highlight">6</i>&nbsp;            2.toByte() to Square(0, 2, &quot;c8&quot;),</b>
+<b class="fc"><i class="no-highlight">7</i>&nbsp;            3.toByte() to Square(0, 3, &quot;d8&quot;),</b>
+<b class="fc"><i class="no-highlight">8</i>&nbsp;            4.toByte() to Square(0, 4, &quot;e8&quot;),</b>
+<b class="fc"><i class="no-highlight">9</i>&nbsp;            5.toByte() to Square(0, 5, &quot;f8&quot;),</b>
+<b class="fc"><i class="no-highlight">10</i>&nbsp;            6.toByte() to Square(0, 6, &quot;g8&quot;),</b>
+<b class="fc"><i class="no-highlight">11</i>&nbsp;            7.toByte() to Square(0, 7, &quot;h8&quot;)</b>
+<i class="no-highlight">12</i>&nbsp;        ),
+<b class="fc"><i class="no-highlight">13</i>&nbsp;        1.toByte() to mapOf(</b>
+<b class="fc"><i class="no-highlight">14</i>&nbsp;            0.toByte() to Square(1, 0, &quot;a7&quot;),</b>
+<b class="fc"><i class="no-highlight">15</i>&nbsp;            1.toByte() to Square(1, 1, &quot;b7&quot;),</b>
+<b class="fc"><i class="no-highlight">16</i>&nbsp;            2.toByte() to Square(1, 2, &quot;c7&quot;),</b>
+<b class="fc"><i class="no-highlight">17</i>&nbsp;            3.toByte() to Square(1, 3, &quot;d7&quot;),</b>
+<b class="fc"><i class="no-highlight">18</i>&nbsp;            4.toByte() to Square(1, 4, &quot;e7&quot;),</b>
+<b class="fc"><i class="no-highlight">19</i>&nbsp;            5.toByte() to Square(1, 5, &quot;f7&quot;),</b>
+<b class="fc"><i class="no-highlight">20</i>&nbsp;            6.toByte() to Square(1, 6, &quot;g7&quot;),</b>
+<b class="fc"><i class="no-highlight">21</i>&nbsp;            7.toByte() to Square(1, 7, &quot;h7&quot;)</b>
+<i class="no-highlight">22</i>&nbsp;        ),
+<b class="fc"><i class="no-highlight">23</i>&nbsp;        2.toByte() to mapOf(</b>
+<b class="fc"><i class="no-highlight">24</i>&nbsp;            0.toByte() to Square(2, 0, &quot;a6&quot;),</b>
+<b class="fc"><i class="no-highlight">25</i>&nbsp;            1.toByte() to Square(2, 1, &quot;b6&quot;),</b>
+<b class="fc"><i class="no-highlight">26</i>&nbsp;            2.toByte() to Square(2, 2, &quot;c6&quot;),</b>
+<b class="fc"><i class="no-highlight">27</i>&nbsp;            3.toByte() to Square(2, 3, &quot;d6&quot;),</b>
+<b class="fc"><i class="no-highlight">28</i>&nbsp;            4.toByte() to Square(2, 4, &quot;e6&quot;),</b>
+<b class="fc"><i class="no-highlight">29</i>&nbsp;            5.toByte() to Square(2, 5, &quot;f6&quot;),</b>
+<b class="fc"><i class="no-highlight">30</i>&nbsp;            6.toByte() to Square(2, 6, &quot;g6&quot;),</b>
+<b class="fc"><i class="no-highlight">31</i>&nbsp;            7.toByte() to Square(2, 7, &quot;h6&quot;)</b>
+<i class="no-highlight">32</i>&nbsp;        ),
+<b class="fc"><i class="no-highlight">33</i>&nbsp;        3.toByte() to mapOf(</b>
+<b class="fc"><i class="no-highlight">34</i>&nbsp;            0.toByte() to Square(3, 0, &quot;a5&quot;),</b>
+<b class="fc"><i class="no-highlight">35</i>&nbsp;            1.toByte() to Square(3, 1, &quot;b5&quot;),</b>
+<b class="fc"><i class="no-highlight">36</i>&nbsp;            2.toByte() to Square(3, 2, &quot;c5&quot;),</b>
+<b class="fc"><i class="no-highlight">37</i>&nbsp;            3.toByte() to Square(3, 3, &quot;d5&quot;),</b>
+<b class="fc"><i class="no-highlight">38</i>&nbsp;            4.toByte() to Square(3, 4, &quot;e5&quot;),</b>
+<b class="fc"><i class="no-highlight">39</i>&nbsp;            5.toByte() to Square(3, 5, &quot;f5&quot;),</b>
+<b class="fc"><i class="no-highlight">40</i>&nbsp;            6.toByte() to Square(3, 6, &quot;g5&quot;),</b>
+<b class="fc"><i class="no-highlight">41</i>&nbsp;            7.toByte() to Square(3, 7, &quot;h5&quot;)</b>
+<i class="no-highlight">42</i>&nbsp;        ),
+<b class="fc"><i class="no-highlight">43</i>&nbsp;        4.toByte() to mapOf(</b>
+<b class="fc"><i class="no-highlight">44</i>&nbsp;            0.toByte() to Square(4, 0, &quot;a4&quot;),</b>
+<b class="fc"><i class="no-highlight">45</i>&nbsp;            1.toByte() to Square(4, 1, &quot;b4&quot;),</b>
+<b class="fc"><i class="no-highlight">46</i>&nbsp;            2.toByte() to Square(4, 2, &quot;c4&quot;),</b>
+<b class="fc"><i class="no-highlight">47</i>&nbsp;            3.toByte() to Square(4, 3, &quot;d4&quot;),</b>
+<b class="fc"><i class="no-highlight">48</i>&nbsp;            4.toByte() to Square(4, 4, &quot;e4&quot;),</b>
+<b class="fc"><i class="no-highlight">49</i>&nbsp;            5.toByte() to Square(4, 5, &quot;f4&quot;),</b>
+<b class="fc"><i class="no-highlight">50</i>&nbsp;            6.toByte() to Square(4, 6, &quot;g4&quot;),</b>
+<b class="fc"><i class="no-highlight">51</i>&nbsp;            7.toByte() to Square(4, 7, &quot;h4&quot;)</b>
+<i class="no-highlight">52</i>&nbsp;        ),
+<b class="fc"><i class="no-highlight">53</i>&nbsp;        5.toByte() to mapOf(</b>
+<b class="fc"><i class="no-highlight">54</i>&nbsp;            0.toByte() to Square(5, 0, &quot;a3&quot;),</b>
+<b class="fc"><i class="no-highlight">55</i>&nbsp;            1.toByte() to Square(5, 1, &quot;b3&quot;),</b>
+<b class="fc"><i class="no-highlight">56</i>&nbsp;            2.toByte() to Square(5, 2, &quot;c3&quot;),</b>
+<b class="fc"><i class="no-highlight">57</i>&nbsp;            3.toByte() to Square(5, 3, &quot;d3&quot;),</b>
+<b class="fc"><i class="no-highlight">58</i>&nbsp;            4.toByte() to Square(5, 4, &quot;e3&quot;),</b>
+<b class="fc"><i class="no-highlight">59</i>&nbsp;            5.toByte() to Square(5, 5, &quot;f3&quot;),</b>
+<b class="fc"><i class="no-highlight">60</i>&nbsp;            6.toByte() to Square(5, 6, &quot;g3&quot;),</b>
+<b class="fc"><i class="no-highlight">61</i>&nbsp;            7.toByte() to Square(5, 7, &quot;h3&quot;)</b>
+<i class="no-highlight">62</i>&nbsp;        ),
+<b class="fc"><i class="no-highlight">63</i>&nbsp;        6.toByte() to mapOf(</b>
+<b class="fc"><i class="no-highlight">64</i>&nbsp;            0.toByte() to Square(6, 0, &quot;a2&quot;),</b>
+<b class="fc"><i class="no-highlight">65</i>&nbsp;            1.toByte() to Square(6, 1, &quot;b2&quot;),</b>
+<b class="fc"><i class="no-highlight">66</i>&nbsp;            2.toByte() to Square(6, 2, &quot;c2&quot;),</b>
+<b class="fc"><i class="no-highlight">67</i>&nbsp;            3.toByte() to Square(6, 3, &quot;d2&quot;),</b>
+<b class="fc"><i class="no-highlight">68</i>&nbsp;            4.toByte() to Square(6, 4, &quot;e2&quot;),</b>
+<b class="fc"><i class="no-highlight">69</i>&nbsp;            5.toByte() to Square(6, 5, &quot;f2&quot;),</b>
+<b class="fc"><i class="no-highlight">70</i>&nbsp;            6.toByte() to Square(6, 6, &quot;g2&quot;),</b>
+<b class="fc"><i class="no-highlight">71</i>&nbsp;            7.toByte() to Square(6, 7, &quot;h2&quot;)</b>
+<i class="no-highlight">72</i>&nbsp;        ),
+<b class="fc"><i class="no-highlight">73</i>&nbsp;        7.toByte() to mapOf(</b>
+<b class="fc"><i class="no-highlight">74</i>&nbsp;            0.toByte() to Square(7, 0, &quot;a1&quot;),</b>
+<b class="fc"><i class="no-highlight">75</i>&nbsp;            1.toByte() to Square(7, 1, &quot;b1&quot;),</b>
+<b class="fc"><i class="no-highlight">76</i>&nbsp;            2.toByte() to Square(7, 2, &quot;c1&quot;),</b>
+<b class="fc"><i class="no-highlight">77</i>&nbsp;            3.toByte() to Square(7, 3, &quot;d1&quot;),</b>
+<b class="fc"><i class="no-highlight">78</i>&nbsp;            4.toByte() to Square(7, 4, &quot;e1&quot;),</b>
+<b class="fc"><i class="no-highlight">79</i>&nbsp;            5.toByte() to Square(7, 5, &quot;f1&quot;),</b>
+<b class="fc"><i class="no-highlight">80</i>&nbsp;            6.toByte() to Square(7, 6, &quot;g1&quot;),</b>
+<b class="fc"><i class="no-highlight">81</i>&nbsp;            7.toByte() to Square(7, 7, &quot;h1&quot;)</b>
+<i class="no-highlight">82</i>&nbsp;        )
+<i class="no-highlight">83</i>&nbsp;    )
+<i class="no-highlight">84</i>&nbsp;
+<b class="fc"><i class="no-highlight">85</i>&nbsp;    private val fenNumbers: List&lt;Char&gt; = listOf(&#39;8&#39;, &#39;7&#39;, &#39;6&#39;, &#39;5&#39;, &#39;4&#39;, &#39;3&#39;, &#39;2&#39;, &#39;1&#39;)</b>
+<i class="no-highlight">86</i>&nbsp;
+<b class="fc"><i class="no-highlight">87</i>&nbsp;    init {</b>
+<b class="fc"><i class="no-highlight">88</i>&nbsp;        val fenRows = fen.boardRepresentation.split(&quot;/&quot;).map { it.toCharArray() }</b>
+<i class="no-highlight">89</i>&nbsp;
+<b class="fc"><i class="no-highlight">90</i>&nbsp;        for (y in 0..7) {</b>
+<b class="fc"><i class="no-highlight">91</i>&nbsp;            if (fenRows[y][0] == &#39;8&#39;) {</b>
+<b class="fc"><i class="no-highlight">92</i>&nbsp;                continue</b>
+<i class="no-highlight">93</i>&nbsp;            }
+<b class="pc"><i class="no-highlight">94</i>&nbsp;            val boardRow = board[y.toByte()] ?: throw IllegalStateException(&quot;Row $y is null&quot;)</b>
+<b class="fc"><i class="no-highlight">95</i>&nbsp;            var x = 0</b>
+<b class="fc"><i class="no-highlight">96</i>&nbsp;            val fenRow = fenRows[y]</b>
+<b class="fc"><i class="no-highlight">97</i>&nbsp;            fenRow.iterator().forEach { fenChar -&gt;</b>
+<b class="pc"><i class="no-highlight">98</i>&nbsp;                if (fenChar == &#39;8&#39;) return@forEach</b>
+<i class="no-highlight">99</i>&nbsp;
+<b class="fc"><i class="no-highlight">100</i>&nbsp;                if (fenChar in fenNumbers) {</b>
+<b class="fc"><i class="no-highlight">101</i>&nbsp;                    x += fenChar.digitToInt()</b>
+<b class="fc"><i class="no-highlight">102</i>&nbsp;                    return@forEach</b>
+<i class="no-highlight">103</i>&nbsp;                }
+<b class="pc"><i class="no-highlight">104</i>&nbsp;                val square = boardRow[x.toByte()] ?: throw IllegalStateException(&quot;Square $x,$y is null&quot;)</b>
+<b class="fc"><i class="no-highlight">105</i>&nbsp;                square.piece = FenToPieceAdapter(fenChar).piece</b>
+<b class="fc"><i class="no-highlight">106</i>&nbsp;                x++</b>
+<b class="fc"><i class="no-highlight">107</i>&nbsp;            }</b>
+<i class="no-highlight">108</i>&nbsp;        }
+<b class="fc"><i class="no-highlight">109</i>&nbsp;    }</b>
+<i class="no-highlight">110</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-05-14 17:46</div>
+</div>
+</body>
+</html>
