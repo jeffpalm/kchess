@@ -30,6 +30,7 @@ class CastlingAvailability(fen: String = "KQkq") {
             if (blackQueenSide) {
                 result += "q"
             }
+            if (result.isEmpty()) return "-"
             return result
         }
 

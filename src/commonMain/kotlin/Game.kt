@@ -22,7 +22,14 @@ class Game(fenString: String? = null) : IGame {
                 val capture = board.getPiece(potential.to)
                 val move = Move(this, potential, piece, capture)
                 if (move.isValid && move.isLegal(this)) {
-                    moves.add(move)
+                    if (move.isPromotion) {
+                        for (promoPiece in PromotionPiece.values()) {
+                            val promoMove = Move(this, potential, piece, capture, Promotion(piece.color, promoPiece))
+                            moves.add(promoMove)
+                        }
+                    } else {
+                        moves.add(move)
+                    }
                 }
             }
         }
@@ -32,7 +39,10 @@ class Game(fenString: String? = null) : IGame {
     override fun makeMove(move: Move) {
         moves.add(move)
         board.setPiece(move.movement.from, null)
-        board.setPiece(move.movement.to, move.piece)
+        if (move.isPromotion && move.promotion != null) board.setPiece(
+            move.movement.to,
+            move.promotion.piece
+        ) else board.setPiece(move.movement.to, move.piece)
         incrementMoveClock()
         switchSideToMove()
         enPassant = move.enPassantTarget

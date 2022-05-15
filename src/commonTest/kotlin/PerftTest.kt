@@ -23,10 +23,29 @@ class PerftTest {
     }
 
     @Test
+    fun testDepth5() {
+        assertEquals(4865609, Perft.run(5, Game()))
+    }
+//
+//    @Test
+//    fun testDepth6() {
+//        assertEquals(119060324, Perft.run(6, Game()))
+//    }
+
+    @Test
     fun testPos4Depth1() {
         assertEquals(6, Perft.run(1, Game("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1")))
     }
 
+    @Test
+    fun testPos4Depth2() {
+        assertEquals(264, Perft.run(2, Game("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1")))
+    }
+
+    @Test
+    fun testPos4Depth3() {
+        assertEquals(9467, Perft.run(3, Game("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1")))
+    }
 
     @Test
     fun testAltPositionDepth1() {

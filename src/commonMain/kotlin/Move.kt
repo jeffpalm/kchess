@@ -2,11 +2,13 @@ class Move(
     game: Game,
     override val movement: Movement,
     override val piece: Piece,
-    override val capture: Piece? = null
+    override val capture: Piece? = null,
+    override val promotion: Promotion? = null
 ) : IMove {
     override val isValid: Boolean
     override val isCheck: Boolean = false
     override val isCheckmate: Boolean = false
+    override val isPromotion: Boolean = determineIfPromotion()
     override val enPassantTarget: String?
     val castling: Castling? = try {
         Castling(this, game)
@@ -16,7 +18,7 @@ class Move(
 
     init {
         isValid = determineIfValidMovement(game)
-        enPassantTarget = determineEnPassantTarget(game)
+        enPassantTarget = determineIfValidEnPassant(game)
     }
 
     override fun isLegal(game: Game): Boolean {
@@ -26,8 +28,8 @@ class Move(
     private fun determineIfValidMovement(game: Game): Boolean {
         return when {
             !isValidPieceMovement(game) -> false
-            piece is Pawn -> handleDeterminingValidPawnMove(game)
-            piece is King -> handleDeterminingValidKingMove()
+            piece is Pawn -> determineIfValidPawnMove(game)
+            piece is King -> determineIfValidKingMove()
             else -> true
         }
     }
@@ -43,14 +45,7 @@ class Move(
         }
     }
 
-    private fun determineIfValidWhenKingInCheck(game: Game): Boolean {
-        return when {
-            !isValidPieceMovement(game) -> false
-            else -> game.willRemoveKingFromCheck(this)
-        }
-    }
-
-    private fun handleDeterminingValidKingMove(): Boolean {
+    private fun determineIfValidKingMove(): Boolean {
         return when {
             castling?.isValidCastle == true -> true
             movement.distanceY < 2 && movement.distanceX < 2 -> true
@@ -58,7 +53,7 @@ class Move(
         }
     }
 
-    private fun handleDeterminingValidPawnMove(game: Game): Boolean {
+    private fun determineIfValidPawnMove(game: Game): Boolean {
         // Assumptions:
         // Path is clear
         // Movement.distanceX == 1 || 0
@@ -76,7 +71,7 @@ class Move(
                 && game.board.getSquareNameByCoords(movement.to) == game.enPassant
     }
 
-    private fun determineEnPassantTarget(game: Game): String? {
+    private fun determineIfValidEnPassant(game: Game): String? {
         when {
             movement.distanceY != 2 -> return null
             piece is Pawn -> {
@@ -89,6 +84,15 @@ class Move(
             }
         }
         return null
+    }
+
+    private fun determineIfPromotion(): Boolean {
+        return when {
+            piece !is Pawn -> false
+            piece.color == PieceColor.WHITE -> movement.to.y == 0
+            piece.color == PieceColor.BLACK -> movement.to.y == 7
+            else -> false
+        }
     }
 
 }

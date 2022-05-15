@@ -161,4 +161,13 @@ class FenTest {
 
         asserter.assertEquals("board to fen", "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1", fenBoard)
     }
+
+    @Test
+    fun testGameToFenAdapter() {
+        val game = Game("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1")
+
+        val fen = GameToFenAdapter(game).fen
+
+        asserter.assertEquals("game to fen", "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1", fen)
+    }
 }

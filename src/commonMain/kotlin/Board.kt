@@ -1,6 +1,10 @@
 class Board(fen: Fen) : IBoard {
     private var board: Map<Int, Map<Int, Square>>
 
+    fun getBoard(): Map<Int, Map<Int, Square>> {
+        return this.board
+    }
+
     init {
         board = fen.toBoard()
     }
