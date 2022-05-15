@@ -24,8 +24,8 @@ class GameTest {
         game.makeMove(
             Move(
                 game,
-                Movement(Sq("e2").coords, Sq("e4").coords),
-                game.board.getPiece(Sq("e2").coords)!!,
+                Movement(Sq("e2").xy, Sq("e4").xy),
+                game.board.getPiece(Sq("e2").xy)!!,
                 null
             )
         )
@@ -39,8 +39,8 @@ class GameTest {
         game.makeMove(
             Move(
                 game,
-                Movement(Sq("e7").coords, Sq("e5").coords),
-                game.board.getPiece(Sq("e7").coords)!!,
+                Movement(Sq("e7").xy, Sq("e5").xy),
+                game.board.getPiece(Sq("e7").xy)!!,
                 null
             )
         )
@@ -54,8 +54,8 @@ class GameTest {
         game.makeMove(
             Move(
                 game,
-                Movement(Sq("d2").coords, Sq("d4").coords),
-                game.board.getPiece(Sq("d2").coords)!!,
+                Movement(Sq("d2").xy, Sq("d4").xy),
+                game.board.getPiece(Sq("d2").xy)!!,
                 null
             )
         )
@@ -69,8 +69,8 @@ class GameTest {
         game.makeMove(
             Move(
                 game,
-                Movement(Sq("d7").coords, Sq("d5").coords),
-                game.board.getPiece(Sq("d7").coords)!!,
+                Movement(Sq("d7").xy, Sq("d5").xy),
+                game.board.getPiece(Sq("d7").xy)!!,
                 null
             )
         )
@@ -89,16 +89,16 @@ class GameTest {
         game.makeMove(
             Move(
                 game,
-                Movement(Sq("e1").coords, Sq("g1").coords),
-                game.board.getPiece(Sq("e1").coords)!!,
+                Movement(Sq("e1").xy, Sq("g1").xy),
+                game.board.getPiece(Sq("e1").xy)!!,
                 null
             )
         )
 
-        assertNull(game.board.getPiece(Sq("h1").coords), "Rook is removed from original square")
-        assertNull(game.board.getPiece(Sq("e1").coords), "King is removed from original square")
-        assertEquals(PieceType.ROOK, game.board.getPiece(Sq("f1").coords)!!.type, "Moved rook to correct square")
-        assertEquals(PieceType.KING, game.board.getPiece(Sq("g1").coords)!!.type, "Moved king to correct square")
+        assertNull(game.board.getPiece(Sq("h1").xy), "Rook is removed from original square")
+        assertNull(game.board.getPiece(Sq("e1").xy), "King is removed from original square")
+        assertEquals(PieceType.ROOK, game.board.getPiece(Sq("f1").xy)!!.type, "Moved rook to correct square")
+        assertEquals(PieceType.KING, game.board.getPiece(Sq("g1").xy)!!.type, "Moved king to correct square")
         assertEquals("O-O", game.moves[game.moves.size - 1].castling?.notation, "Handles correct notation")
         assertTrue(!game.castling.whiteQueenSide, "Removes white queen side castling")
         assertTrue(!game.castling.whiteKingSide, "Removes white king side castling")
@@ -107,13 +107,31 @@ class GameTest {
 
         game.undoMove()
 
-        assertNull(game.board.getPiece(Sq("f1").coords), "Rook is removed from previous square")
-        assertNull(game.board.getPiece(Sq("g1").coords), "King is removed from previous square")
-        assertEquals(PieceType.ROOK, game.board.getPiece(Sq("h1").coords)!!.type, "Moved rook to correct square")
-        assertEquals(PieceType.KING, game.board.getPiece(Sq("e1").coords)!!.type, "Moved king to correct square")
+        assertNull(game.board.getPiece(Sq("f1").xy), "Rook is removed from previous square")
+        assertNull(game.board.getPiece(Sq("g1").xy), "King is removed from previous square")
+        assertEquals(PieceType.ROOK, game.board.getPiece(Sq("h1").xy)!!.type, "Moved rook to correct square")
+        assertEquals(PieceType.KING, game.board.getPiece(Sq("e1").xy)!!.type, "Moved king to correct square")
         assertTrue(game.castling.whiteQueenSide, "Does not remove white queen side castling")
         assertTrue(game.castling.whiteKingSide, "Does not remove white king side castling")
         assertTrue(game.castling.blackKingSide, "Does not change black king side castling")
         assertTrue(game.castling.blackQueenSide, "Does not change black queen side castling")
+    }
+
+    @Test
+    fun testIsMoveCheck() {
+        val game = Game("rnbqkbnr/ppp1pppp/8/3p4/2P5/8/PP1PPPPP/RNBQKBNR w KQkq d6 0 2")
+        val piece = game.board.getPiece(Sq("d1").xy)!!
+        val move = Move(game, Movement(Sq("d1").xy, Sq("a4").xy), piece, null)
+
+        assertTrue(game.isMoveCheck(move), "Returns true for check")
+    }
+
+    @Test
+    fun testWillPutKingInCheck() {
+        val game = Game("r1bqkbnr/ppp1pppp/2n5/3p4/Q1P5/5N2/PP1PPPPP/RNB1KB1R b KQkq - 3 3")
+        val piece = game.board.getPiece(Sq("c6").xy)!!
+        val move = Move(game, Movement(Sq("c6").xy, Sq("b4").xy), piece, null)
+
+        assertTrue(game.willMovePutKingInCheck(move))
     }
 }

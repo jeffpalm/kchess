@@ -2,7 +2,7 @@ class Game(fenString: String? = null) : IGame {
     var fen: Fen = if (fenString != null) Fen(fenString) else Fen()
     var board: Board = Board(fen)
     var moves: MutableList<Move> = mutableListOf()
-    var turn: PieceColor = PieceColor.WHITE
+    var turn: PieceColor = if (fen.sideToMove == "w") PieceColor.WHITE else PieceColor.BLACK
     var castling: CastlingAvailability = CastlingAvailability(fen.castlingAvailability)
     var enPassant: String? = fen.enPassantTarget
     var halfMoves: Int = fen.halfMoveClock
@@ -13,7 +13,7 @@ class Game(fenString: String? = null) : IGame {
     }
 
     override fun generateMoves(): List<Move> {
-        var moves: MutableList<Move> = mutableListOf()
+        val moves: MutableList<Move> = mutableListOf()
         val fromSquares = board.getSquaresByPieceColor(turn)
         for (square in fromSquares) {
             val potentials = board.getPotentialMovesBySquareCoords(square.coords)
@@ -21,7 +21,7 @@ class Game(fenString: String? = null) : IGame {
                 val piece = square.piece ?: throw Exception("No piece on from square")
                 val capture = board.getPiece(potential.to)
                 val move = Move(this, potential, piece, capture)
-                if (move.isValid) {
+                if (move.isValid && move.isLegal(this)) {
                     moves.add(move)
                 }
             }
@@ -53,9 +53,38 @@ class Game(fenString: String? = null) : IGame {
 
     override fun isMoveCheck(move: Move): Boolean {
         makeMove(move)
-        val isCheck = getActiveChecks().isNotEmpty()
+        val isCheck = isKingInCheck()
         undoMove()
         return isCheck
+    }
+
+    fun willRemoveKingFromCheck(move: Move): Boolean {
+        return !willMovePutKingInCheck(move)
+    }
+
+    override fun willMovePutKingInCheck(move: Move): Boolean {
+        board.setPiece(move.movement.from, null)
+        val toPiece = board.getPiece(move.movement.to)
+        if (move.piece is King) {
+            board.setPiece(move.movement.to, move.piece)
+        }
+        val willBeInCheck = isKingInCheck()
+        board.setPiece(move.movement.from, move.piece)
+        if (move.piece is King) {
+            board.setPiece(move.movement.to, toPiece)
+        }
+        return willBeInCheck
+    }
+
+    override fun isKingInCheck(): Boolean {
+        val kingSquare = board.getKing(turn)
+        val potentials = board.getSquaresByPieceColor(oppositeSide())
+
+        for (potential in potentials) {
+            val move = Move(this, Movement(potential.coords, kingSquare.coords), potential.piece!!, kingSquare.piece)
+            if (move.isValid) return true
+        }
+        return false
     }
 
     override fun getActiveChecks(): List<Move> {

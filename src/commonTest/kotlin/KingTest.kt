@@ -14,7 +14,7 @@ class KingTest {
         assertTrue(king.canMove(Movement(Coords(4, 4), Coords(3, 4))))
         assertTrue(king.canMove(Movement(Coords(4, 4), Coords(3, 3))))
         assertTrue(king.canMove(Movement(Coords(4, 4), Coords(3, 5))))
-        assertTrue(!king.canMove(Movement(Coords(4, 4), Coords(6, 4))))
+        assertTrue(king.canMove(Movement(Coords(4, 4), Coords(6, 4))))
         assertTrue(!king.canMove(Movement(Coords(4, 4), Coords(4, 2))))
     }
 

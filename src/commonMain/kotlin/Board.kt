@@ -39,17 +39,17 @@ class Board(fen: Fen) : IBoard {
             null -> return false
             MoveTrajectory.VERTICAL -> {
                 for (y in yBetween) {
-                    if (getSquare(Coords(from.x, y)).piece != null) return false
+                    if (getPiece(Coords(from.x, y)) != null) return false
                 }
             }
             MoveTrajectory.HORIZONTAL -> {
                 for (x in xBetween) {
-                    if (getSquare(Coords(x, from.y)).piece != null) return false
+                    if (getPiece(Coords(x, from.y)) != null) return false
                 }
             }
             MoveTrajectory.DIAGONAL -> {
                 for (i in xBetween.indices) {
-                    if (getSquare(Coords(xBetween[i], yBetween[i])).piece != null) return false
+                    if (getPiece(Coords(xBetween[i], yBetween[i])) != null) return false
                 }
             }
             else -> {}
