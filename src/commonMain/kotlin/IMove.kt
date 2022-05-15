@@ -1,13 +1,9 @@
 interface IMove {
     val piece: Piece
     val capture: Piece?
-    val move: PotentialMove
+    val movement: Movement
     val isValid: Boolean
     val isCheck: Boolean
     val isCheckmate: Boolean
-    val isStalemate: Boolean
-    val isDraw: Boolean
-    val isInsufficientMaterial: Boolean
-    val isRepetition: Boolean
-    val isFiftyMoves: Boolean
+    val enPassantTarget: String?
 }

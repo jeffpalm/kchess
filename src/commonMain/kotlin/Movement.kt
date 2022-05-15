@@ -1,10 +1,10 @@
 import kotlin.math.abs
 
-data class PotentialMove (val from: Coords, val to: Coords) {
+data class Movement (val from: Coords, val to: Coords) {
     val deltaX: Int = (to.x - from.x)
     val deltaY: Int = (to.y - from.y)
-    val distanceX: UInt = abs(deltaX.toInt()).toUInt()
-    val distanceY: UInt = abs(deltaY.toInt()).toUInt()
+    val distanceX: Int = abs(deltaX)
+    val distanceY: Int = abs(deltaY)
     val trajectory: MoveTrajectory? = determineDirection()
 
     private fun determineDirection(): MoveTrajectory? {
@@ -12,7 +12,7 @@ data class PotentialMove (val from: Coords, val to: Coords) {
             distanceX == distanceY -> MoveTrajectory.DIAGONAL
             deltaY == 0 && deltaX != 0 -> MoveTrajectory.HORIZONTAL
             deltaX == 0 && deltaY != 0 -> MoveTrajectory.VERTICAL
-            distanceY == 2.toUInt() && distanceX == 1.toUInt() -> MoveTrajectory.KNIGHT
+            distanceY == 2 && distanceX == 1 -> MoveTrajectory.KNIGHT
             else -> null
         }
     }

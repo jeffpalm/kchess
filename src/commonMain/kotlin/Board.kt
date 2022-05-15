@@ -26,7 +26,11 @@ class Board(fen: Fen) : IBoard {
         return board.values.flatMap { it.values }.filter { it.piece?.color == pieceColor }
     }
 
-    override fun isPathClear(move: PotentialMove): Boolean {
+    override fun getSquareNameByCoords(coords: Coords): String {
+        return getSquare(coords).name
+    }
+
+    override fun isPathClear(move: Movement): Boolean {
         if (move.distanceX == 1.toUInt() || move.distanceY == 1.toUInt()) return true
         val (from, to) = move
         val xBetween = intsBetween(from.x, to.x)
@@ -53,31 +57,13 @@ class Board(fen: Fen) : IBoard {
         return true
     }
 
-    override fun getPotentialMovesBySquareCoords(coords: Coords): List<PotentialMove> {
-        val potentialMoves = mutableListOf<PotentialMove>()
+    override fun getPotentialMovesBySquareCoords(coords: Coords): List<Movement> {
+        val movements = mutableListOf<Movement>()
         val square = board[coords.y]!![coords.x]!!
-        val piece = square.piece ?: return potentialMoves
+        val piece = square.piece ?: return movements
 
         if (piece is Pawn) {
-            return listOf(
-                PotentialMove(
-                    Coords(square.x, square.y), Coords(
-                        square.x, (if (piece.color == PieceColor.WHITE) square.y - 1 else square.y + 1)
-                    )
-                ), PotentialMove(
-                    Coords(square.x, square.y), Coords(
-                        square.x, (if (piece.color == PieceColor.WHITE) square.y - 2 else square.y + 2)
-                    )
-                ), PotentialMove(
-                    Coords(square.x, square.y), Coords(
-                        (square.x + 1), (if (piece.color == PieceColor.WHITE) square.y - 1 else square.y + 1)
-                    )
-                ), PotentialMove(
-                    Coords(square.x, square.y), Coords(
-                        (square.x - 1), (if (piece.color == PieceColor.WHITE) square.y - 1 else square.y + 1)
-                    )
-                )
-            )
+            return getPotentialPawnMoves(piece, coords, square)
         }
 
         for (trajectory in piece.trajectories) {
@@ -85,8 +71,8 @@ class Board(fen: Fen) : IBoard {
                 MoveTrajectory.VERTICAL -> {
                     for (y in 0..7) {
                         if (y == square.y) continue
-                        potentialMoves.add(
-                            PotentialMove(
+                        movements.add(
+                            Movement(
                                 Coords(square.x, square.y),
                                 Coords(square.x, y),
                             )
@@ -96,8 +82,8 @@ class Board(fen: Fen) : IBoard {
                 MoveTrajectory.HORIZONTAL -> {
                     for (x in 0..7) {
                         if (x == square.x) continue
-                        potentialMoves.add(
-                            PotentialMove(
+                        movements.add(
+                            Movement(
                                 Coords(square.x, square.y),
                                 Coords(x, square.y),
                             )
@@ -127,10 +113,10 @@ class Board(fen: Fen) : IBoard {
                         } catch (e: Exception) {
                             null
                         }
-                        if (ne != null) potentialMoves.add(PotentialMove(square.coords, ne))
-                        if (se != null) potentialMoves.add(PotentialMove(square.coords, se))
-                        if (nw != null) potentialMoves.add(PotentialMove(square.coords, nw))
-                        if (sw != null) potentialMoves.add(PotentialMove(square.coords, sw))
+                        if (ne != null) movements.add(Movement(square.coords, ne))
+                        if (se != null) movements.add(Movement(square.coords, se))
+                        if (nw != null) movements.add(Movement(square.coords, nw))
+                        if (sw != null) movements.add(Movement(square.coords, sw))
                     }
                 }
                 MoveTrajectory.KNIGHT -> {
@@ -138,16 +124,32 @@ class Board(fen: Fen) : IBoard {
                         val target = try {
                             Coords(square.x + offset.first, square.y + offset.second)
                         } catch (e: Exception) {
-                            null
+                            continue
                         }
-                        if (target != null) {
-                            potentialMoves.add(PotentialMove(square.coords, target))
-                        }
+                        movements.add(Movement(square.coords, target))
                     }
                 }
             }
         }
-        return potentialMoves
+        return movements
+    }
+
+    private fun getPotentialPawnMoves(
+        piece: Piece,
+        coords: Coords,
+        square: Square
+    ): MutableList<Movement> {
+        val pawnMoves = mutableListOf<Movement>()
+        val moveList = if (piece.color == PieceColor.WHITE) MoveOffsets.whitePawn else MoveOffsets.blackPawn
+        for (potential in moveList) {
+            val potentialCoords = try {
+                Coords(coords.x + potential.first, coords.y + potential.second)
+            } catch (e: IllegalArgumentException) {
+                continue
+            }
+            pawnMoves.add(Movement(square.coords, potentialCoords))
+        }
+        return pawnMoves
     }
 
     private fun intsBetween(from: Int, to: Int): List<Int> {

@@ -4,5 +4,5 @@ interface IPiece {
     val symbol: Char
     val trajectories: List<MoveTrajectory>
 
-    fun canMove(move: PotentialMove): Boolean
+    fun canMove(move: Movement): Boolean
 }

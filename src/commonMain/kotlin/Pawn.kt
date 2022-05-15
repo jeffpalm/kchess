@@ -1,5 +1,5 @@
 class Pawn(override val color: PieceColor) : Piece(PieceType.PAWN, color, if (color == PieceColor.WHITE) 'P' else 'p') {
-    override fun canMove(move: PotentialMove): Boolean {
+    override fun canMove(move: Movement): Boolean {
         return when {
             move.distanceY == 0.toUInt() -> false
             color == PieceColor.BLACK && move.deltaY < 0 || move.deltaY > 2 -> false
@@ -11,7 +11,7 @@ class Pawn(override val color: PieceColor) : Piece(PieceType.PAWN, color, if (co
         }
     }
 
-    override fun canCapture(move: PotentialMove): Boolean {
+    override fun canCapture(move: Movement): Boolean {
         return canMove(move) && move.distanceY == 1.toUInt() && move.distanceX == 1.toUInt()
     }
 

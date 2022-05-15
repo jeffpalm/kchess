@@ -1,10 +1,10 @@
-class Game(fenString: String) : IGame {
-    var fen: Fen = Fen(fenString)
+class Game(fenString: String? = null) : IGame {
+    var fen: Fen = if (fenString != null) Fen(fenString) else Fen()
     var board: Board = Board(fen)
     var moves: MutableList<Move> = mutableListOf()
     var turn: PieceColor = PieceColor.WHITE
-    var castling: String = fen.castlingAvailability
-    var enPassant: String = fen.enPassantTarget
+    var castling: CastlingAvailability = CastlingAvailability(fen.castlingAvailability)
+    var enPassant: String? = fen.enPassantTarget
     var halfMoves: Int = fen.halfMoveClock
     var fullMoves: Int = fen.fullMoveClock
 
@@ -13,39 +13,49 @@ class Game(fenString: String) : IGame {
     }
 
     override fun generateMoves(): List<Move> {
+        var moves: MutableList<Move> = mutableListOf()
         val fromSquares = board.getSquaresByPieceColor(turn)
         for (square in fromSquares) {
-
+            val potentials = board.getPotentialMovesBySquareCoords(square.coords)
+            for (potential in potentials) {
+                val piece = square.piece ?: throw Exception("No piece on from square")
+                val capture = board.getPiece(potential.to)
+                val move = Move(this, potential, piece, capture)
+                if (move.isValid) {
+                    moves.add(move)
+                }
+            }
         }
-
-        TODO("Not yet implemented")
+        return moves
     }
 
     override fun makeMove(move: Move) {
         moves.add(move)
-        board.setPiece(move.move.from, null)
-        board.setPiece(move.move.to, move.piece)
+        board.setPiece(move.movement.from, null)
+        board.setPiece(move.movement.to, move.piece)
         incrementMoveClock()
         switchSideToMove()
+        enPassant = move.enPassantTarget
     }
 
     override fun undoMove() {
         val lastMove = moves.removeLast()
-        board.setPiece(lastMove.move.from, lastMove.piece)
-        board.setPiece(lastMove.move.to, lastMove.capture)
+        board.setPiece(lastMove.movement.from, lastMove.piece)
+        board.setPiece(lastMove.movement.to, lastMove.capture)
         decrementMoveClock()
         switchSideToMove()
+        enPassant = lastMove.enPassantTarget
     }
 
-    override fun isMoveCheck(move: PotentialMove): Boolean {
+    override fun isMoveCheck(move: Movement): Boolean {
         TODO("Not yet implemented")
     }
 
-    override fun getActiveChecks(): List<PotentialMove> {
+    override fun getActiveChecks(): List<Movement> {
         TODO("Not yet implemented")
     }
 
-    override fun isMoveValid(move: PotentialMove): Boolean {
+    override fun isMoveValid(move: Movement): Boolean {
         TODO("Not yet implemented")
     }
 
