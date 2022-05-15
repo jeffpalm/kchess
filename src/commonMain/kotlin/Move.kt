@@ -20,7 +20,7 @@ class Move(
     }
 
     override fun isLegal(game: Game): Boolean {
-        return isValid && !game.willMovePutKingInCheck(this)
+        return isValid && game.willRemoveKingFromCheck(this) || !game.willMovePutKingInCheck(this)
     }
 
     private fun determineIfValidMovement(game: Game): Boolean {

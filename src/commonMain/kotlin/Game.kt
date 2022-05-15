@@ -59,7 +59,12 @@ class Game(fenString: String? = null) : IGame {
     }
 
     fun willRemoveKingFromCheck(move: Move): Boolean {
-        return !willMovePutKingInCheck(move)
+        board.setPiece(move.movement.from, null)
+        board.setPiece(move.movement.to, move.piece)
+        val kingStillInCheck = isKingInCheck()
+        board.setPiece(move.movement.from, move.piece)
+        board.setPiece(move.movement.to, move.capture)
+        return !kingStillInCheck
     }
 
     override fun willMovePutKingInCheck(move: Move): Boolean {

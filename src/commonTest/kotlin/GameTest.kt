@@ -134,4 +134,18 @@ class GameTest {
 
         assertTrue(game.willMovePutKingInCheck(move))
     }
+
+    @Test
+    fun testWillRemoveKingFromCheck() {
+        val game = Game("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1")
+        val bishop = game.board.getPiece(Sq("b4").xy)!!
+        val bishopMove = Move(game, Movement(Sq("b4").xy, Sq("c5").xy), bishop, null)
+
+        assertTrue(game.willRemoveKingFromCheck(bishopMove))
+
+        val pawn = game.board.getPiece(Sq("d2").xy)!!
+        val pawnMove = Move(game, Movement(Sq("d2").xy, Sq("d4").xy), pawn, null)
+
+        assertTrue(game.willRemoveKingFromCheck(pawnMove))
+    }
 }

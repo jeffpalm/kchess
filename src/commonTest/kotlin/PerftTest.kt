@@ -17,10 +17,10 @@ class PerftTest {
         assertEquals(8902, Perft.run(3, Game()))
     }
 
-//    @Test
-//    fun testDepth4() {
-//        assertEquals(197281, Perft.run(4, Game()))
-//    }
+    @Test
+    fun testDepth4() {
+        assertEquals(197281, Perft.run(4, Game()))
+    }
 
     @Test
     fun testPos4Depth1() {
