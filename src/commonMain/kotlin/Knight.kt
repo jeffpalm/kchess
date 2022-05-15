@@ -5,4 +5,5 @@ class Knight(override val color: PieceColor) :
     }
 
     override val trajectories: List<MoveTrajectory> = listOf(MoveTrajectory.KNIGHT)
+
 }

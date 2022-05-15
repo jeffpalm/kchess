@@ -5,21 +5,17 @@ class Board(fen: Fen) : IBoard {
         board = fen.toBoard()
     }
 
-    private fun getSquare(x: Int, y: Int): Square {
-        if (x < 0 || x > 7 || y < 0 || y > 7) {
-            throw IllegalArgumentException("x and y must be between 0 and 7")
-        }
-        return board[y]!![x]!!
+    private fun getSquare(coords: Coords): Square {
+        return board[coords.y]!![coords.x]!!
     }
 
 
-    override fun getPiece(x: Int, y: Int): Piece? {
-        var square = getSquare(x, y)
-        return square.piece
+    override fun getPiece(coords: Coords): Piece? {
+        return getSquare(coords).piece
     }
 
-    override fun setPiece(x: Int, y: Int, piece: Piece?) {
-        getSquare(x, y).piece = piece
+    override fun setPiece(coords: Coords, piece: Piece?) {
+        getSquare(coords).piece = piece
     }
 
     override fun getKing(pieceColor: PieceColor): Square {
@@ -39,17 +35,17 @@ class Board(fen: Fen) : IBoard {
             null -> return false
             MoveTrajectory.VERTICAL -> {
                 for (y in yBetween) {
-                    if (getSquare(from.x, y).piece != null) return false
+                    if (getSquare(Coords(from.x, y)).piece != null) return false
                 }
             }
             MoveTrajectory.HORIZONTAL -> {
                 for (x in xBetween) {
-                    if (getSquare(x, from.y).piece != null) return false
+                    if (getSquare(Coords(x, from.y)).piece != null) return false
                 }
             }
             MoveTrajectory.DIAGONAL -> {
                 for (i in xBetween.indices) {
-                    if (getSquare(xBetween[i], yBetween[i]).piece != null) return false
+                    if (getSquare(Coords(xBetween[i], yBetween[i])).piece != null) return false
                 }
             }
         }
@@ -57,8 +53,11 @@ class Board(fen: Fen) : IBoard {
         return true
     }
 
-    override fun getPotentialMoveSquaresByPiece(square: Square, piece: Piece): List<PotentialMove> {
+    override fun getPotentialMovesBySquareCoords(coords: Coords): List<PotentialMove> {
         val potentialMoves = mutableListOf<PotentialMove>()
+        val square = board[coords.y]!![coords.x]!!
+        val piece = square.piece ?: return potentialMoves
+
         if (piece is Pawn) {
             return listOf(
                 PotentialMove(
@@ -80,6 +79,7 @@ class Board(fen: Fen) : IBoard {
                 )
             )
         }
+
         for (trajectory in piece.trajectories) {
             when (trajectory) {
                 MoveTrajectory.VERTICAL -> {
@@ -106,6 +106,7 @@ class Board(fen: Fen) : IBoard {
                 }
                 MoveTrajectory.DIAGONAL -> {
                     for (i in 1..7) {
+                        if (i > 1 && piece is King) break
                         val ne = try {
                             Coords(square.x + i, square.y - i)
                         } catch (e: Exception) {
@@ -130,6 +131,18 @@ class Board(fen: Fen) : IBoard {
                         if (se != null) potentialMoves.add(PotentialMove(square.coords, se))
                         if (nw != null) potentialMoves.add(PotentialMove(square.coords, nw))
                         if (sw != null) potentialMoves.add(PotentialMove(square.coords, sw))
+                    }
+                }
+                MoveTrajectory.KNIGHT -> {
+                    for (offset in MoveOffsets.knight) {
+                        val target = try {
+                            Coords(square.x + offset.first, square.y + offset.second)
+                        } catch (e: Exception) {
+                            null
+                        }
+                        if (target != null) {
+                            potentialMoves.add(PotentialMove(square.coords, target))
+                        }
                     }
                 }
             }

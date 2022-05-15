@@ -9,27 +9,15 @@ class BoardTest {
 
     @Test
     fun testGetsCorrectPiece() {
-        assertFailsWith<IllegalArgumentException> {
-            board.getPiece(8, 8)
-        }
-        assertFailsWith<IllegalArgumentException> {
-            board.getPiece(-1, -1)
-        }
-        assertTrue(board.getPiece(4, 0) is King)
+        assertTrue(board.getPiece(Coords(4, 0)) is King)
     }
 
     @Test
     fun testSetPiece() {
-        assertFailsWith<IllegalArgumentException> {
-            board.setPiece(8, 8, null)
-        }
-        assertFailsWith<IllegalArgumentException> {
-            board.setPiece(-1, -1, null)
-        }
-        board.setPiece(4, 0, null)
-        assertTrue(board.getPiece(4, 0) == null)
-        board.setPiece(4, 0, King(PieceColor.BLACK))
-        assertTrue(board.getPiece(4, 0) is King)
+        board.setPiece(Coords(4, 0), null)
+        assertTrue(board.getPiece(Coords(4, 0)) == null)
+        board.setPiece(Coords(4, 0), King(PieceColor.BLACK))
+        assertTrue(board.getPiece(Coords(4, 0)) is King)
     }
 
     @Test

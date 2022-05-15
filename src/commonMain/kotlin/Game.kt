@@ -23,16 +23,16 @@ class Game(fenString: String) : IGame {
 
     override fun makeMove(move: Move) {
         moves.add(move)
-        board.setPiece(move.move.from.x, move.move.from.y, null)
-        board.setPiece(move.move.to.x, move.move.to.y, move.piece)
+        board.setPiece(move.move.from, null)
+        board.setPiece(move.move.to, move.piece)
         incrementMoveClock()
         switchSideToMove()
     }
 
     override fun undoMove() {
         val lastMove = moves.removeLast()
-        board.setPiece(lastMove.move.from.x, lastMove.move.from.y, lastMove.piece)
-        board.setPiece(lastMove.move.to.x, lastMove.move.to.y, lastMove.capture)
+        board.setPiece(lastMove.move.from, lastMove.piece)
+        board.setPiece(lastMove.move.to, lastMove.capture)
         decrementMoveClock()
         switchSideToMove()
     }

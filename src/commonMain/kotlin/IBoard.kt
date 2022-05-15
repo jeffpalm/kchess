@@ -1,8 +1,8 @@
 interface IBoard {
-    fun getPiece(x: Int, y: Int): Piece?
-    fun setPiece(x: Int, y: Int, piece: Piece?)
+    fun getPiece(coords: Coords): Piece?
+    fun setPiece(coords: Coords, piece: Piece?)
     fun getKing(pieceColor: PieceColor): Square?
     fun getSquaresByPieceColor(pieceColor: PieceColor): List<Square>
     fun isPathClear(move: PotentialMove): Boolean
-    fun getPotentialMoveSquaresByPiece(square: Square, piece: Piece): List<PotentialMove>
+    fun getPotentialMovesBySquareCoords(coords: Coords): List<PotentialMove>
 }
