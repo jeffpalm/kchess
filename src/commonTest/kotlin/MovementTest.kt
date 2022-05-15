@@ -1,7 +1,7 @@
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class PotentialMoveTest {
+class MovementTest {
     @Test
     fun testDeterminesCorrectTrajectory() {
         assertEquals(Movement(Coords(0, 0), Coords(1, 0)).trajectory, MoveTrajectory.HORIZONTAL)

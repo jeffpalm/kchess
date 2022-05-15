@@ -1,6 +1,6 @@
 class King(override val color: PieceColor) : Piece(PieceType.KING, color, if (color == PieceColor.WHITE) 'K' else 'k') {
     override fun canMove(move: Movement): Boolean {
-        if (move.distanceX > 1.toUInt() || move.distanceY > 1.toUInt()) {
+        if (move.distanceX > 1 || move.distanceY > 1) {
             return false
         }
         return move.deltaY == 0 || move.deltaX == 0 || move.distanceY == move.distanceX

@@ -42,4 +42,17 @@ class Castling(move: Move, game: Game) {
         }
     }
 
+    fun handleMove(game: Game) {
+        if (rookMovement != null) {
+            game.board.setPiece(rookMovement.to, game.board.getPiece(rookMovement.from))
+            game.board.setPiece(rookMovement.from, null)
+        }
+    }
+
+    fun handleUndoMove(game: Game) {
+        if (rookMovement != null) {
+            game.board.setPiece(rookMovement.from, game.board.getPiece(rookMovement.to))
+            game.board.setPiece(rookMovement.to, null)
+        }
+    }
 }

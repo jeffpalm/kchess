@@ -36,6 +36,8 @@ class Game(fenString: String? = null) : IGame {
         incrementMoveClock()
         switchSideToMove()
         enPassant = move.enPassantTarget
+        castling.makeMove(move)
+        move.castling?.handleMove(this)
     }
 
     override fun undoMove() {
@@ -45,18 +47,42 @@ class Game(fenString: String? = null) : IGame {
         decrementMoveClock()
         switchSideToMove()
         enPassant = lastMove.enPassantTarget
+        castling.undoMove(lastMove)
+        lastMove.castling?.handleUndoMove(this)
     }
 
-    override fun isMoveCheck(move: Movement): Boolean {
-        TODO("Not yet implemented")
+    override fun isMoveCheck(move: Move): Boolean {
+        makeMove(move)
+        val isCheck = getActiveChecks().isNotEmpty()
+        undoMove()
+        return isCheck
     }
 
-    override fun getActiveChecks(): List<Movement> {
-        TODO("Not yet implemented")
+    override fun getActiveChecks(): List<Move> {
+        val activeChecks: MutableList<Move> = mutableListOf()
+        val kingSquare = board.getKing(turn)
+        val potentials = board.getSquaresByPieceColor(oppositeSide())
+
+        for (potential in potentials) {
+            val move = Move(this, Movement(potential.coords, kingSquare.coords), potential.piece!!, kingSquare.piece)
+            if (move.isValid) {
+                activeChecks.add(move)
+            }
+        }
+        return activeChecks
     }
 
     override fun isMoveValid(move: Movement): Boolean {
-        TODO("Not yet implemented")
+        val piece = board.getPiece(move.from) ?: return false
+        val potentials = board.getPotentialMovesBySquareCoords(move.from)
+        for (potential in potentials) {
+            if (potential.to == move.to) {
+                val capture = board.getPiece(potential.to)
+                val move = Move(this, potential, piece, capture)
+                return move.isValid
+            }
+        }
+        return false
     }
 
     private fun switchSideToMove() {

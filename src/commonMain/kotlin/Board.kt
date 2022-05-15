@@ -31,7 +31,7 @@ class Board(fen: Fen) : IBoard {
     }
 
     override fun isPathClear(move: Movement): Boolean {
-        if (move.distanceX == 1.toUInt() || move.distanceY == 1.toUInt()) return true
+        if (move.distanceX == 1 || move.distanceY == 1) return true
         val (from, to) = move
         val xBetween = intsBetween(from.x, to.x)
         val yBetween = intsBetween(from.y, to.y)
@@ -52,6 +52,7 @@ class Board(fen: Fen) : IBoard {
                     if (getSquare(Coords(xBetween[i], yBetween[i])).piece != null) return false
                 }
             }
+            else -> {}
         }
 
         return true
