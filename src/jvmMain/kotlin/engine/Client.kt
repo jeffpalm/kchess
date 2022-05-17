@@ -1,8 +1,8 @@
 package engine
 
 import engine.v2.*
-import engine.v2.moves.pawn.PawnContext
-import engine.v2.moves.pawn.RulePawnPush
+import engine.v2.moves.PseudoMoveGenContext
+import engine.v2.moves.pawn.PawnPseudoMoveGenerator
 
 fun main() {
     pawnRuleEngine()
@@ -97,10 +97,7 @@ fun pawnRuleEngine() {
         1
     )
 
-    val pawnPush = RulePawnPush(PawnContext(gameData))
-    val result = pawnPush.run()
+    val result = PawnPseudoMoveGenerator(PseudoMoveGenContext(gameData)).execute()
 
-    for (move in result.moveWords) {
-        BoardRep(move).print()
-    }
+    result.print()
 }

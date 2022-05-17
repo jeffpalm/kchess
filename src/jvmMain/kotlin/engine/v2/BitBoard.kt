@@ -1,24 +1,25 @@
 package engine.v2
 
 class BitBoard {
-    var _P: ULong = Constants.StartPosition.P
-    var _N: ULong = Constants.StartPosition.N
-    var _B: ULong = Constants.StartPosition.B
-    var _R: ULong = Constants.StartPosition.R
-    var _Q: ULong = Constants.StartPosition.Q
-    var _K: ULong = Constants.StartPosition.K
-    var _p: ULong = Constants.StartPosition.p
-    var _n: ULong = Constants.StartPosition.n
-    var _b: ULong = Constants.StartPosition.b
-    var _r: ULong = Constants.StartPosition.r
-    var _q: ULong = Constants.StartPosition.q
-    var _k: ULong = Constants.StartPosition.k
+    var enPassantTarget: ULong? = null
+    var whitePawns: ULong = Constants.StartPosition.P
+    var whiteKnights: ULong = Constants.StartPosition.N
+    var whiteBishops: ULong = Constants.StartPosition.B
+    var whiteRooks: ULong = Constants.StartPosition.R
+    var whiteQueens: ULong = Constants.StartPosition.Q
+    var whiteKing: ULong = Constants.StartPosition.K
+    var blackPawns: ULong = Constants.StartPosition.p
+    var blackNights: ULong = Constants.StartPosition.n
+    var blackBishops: ULong = Constants.StartPosition.b
+    var blackRooks: ULong = Constants.StartPosition.r
+    var blackQueens: ULong = Constants.StartPosition.q
+    var blackKing: ULong = Constants.StartPosition.k
 
     fun occupied(color: PieceColor? = null): ULong {
         return when (color) {
-            PieceColor.WHITE -> _P or _N or _B or _R or _Q or _K
-            PieceColor.BLACK -> _p or _n or _b or _r or _q or _k
-            else -> _P or _N or _B or _R or _Q or _K or _p or _n or _b or _r or _q or _k
+            PieceColor.WHITE -> whitePawns or whiteKnights or whiteBishops or whiteRooks or whiteQueens or whiteKing
+            PieceColor.BLACK -> blackPawns or blackNights or blackBishops or blackRooks or blackQueens or blackKing
+            else -> whitePawns or whiteKnights or whiteBishops or whiteRooks or whiteQueens or whiteKing or blackPawns or blackNights or blackBishops or blackRooks or blackQueens or blackKing
         }
     }
 
