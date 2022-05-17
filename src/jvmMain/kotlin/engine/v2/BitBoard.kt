@@ -9,7 +9,7 @@ class BitBoard {
     var whiteQueens: ULong = Constants.StartPosition.Q
     var whiteKing: ULong = Constants.StartPosition.K
     var blackPawns: ULong = Constants.StartPosition.p
-    var blackNights: ULong = Constants.StartPosition.n
+    var blackKnights: ULong = Constants.StartPosition.n
     var blackBishops: ULong = Constants.StartPosition.b
     var blackRooks: ULong = Constants.StartPosition.r
     var blackQueens: ULong = Constants.StartPosition.q
@@ -18,8 +18,8 @@ class BitBoard {
     fun occupied(color: PieceColor? = null): ULong {
         return when (color) {
             PieceColor.WHITE -> whitePawns or whiteKnights or whiteBishops or whiteRooks or whiteQueens or whiteKing
-            PieceColor.BLACK -> blackPawns or blackNights or blackBishops or blackRooks or blackQueens or blackKing
-            else -> whitePawns or whiteKnights or whiteBishops or whiteRooks or whiteQueens or whiteKing or blackPawns or blackNights or blackBishops or blackRooks or blackQueens or blackKing
+            PieceColor.BLACK -> blackPawns or blackKnights or blackBishops or blackRooks or blackQueens or blackKing
+            else -> whitePawns or whiteKnights or whiteBishops or whiteRooks or whiteQueens or whiteKing or blackPawns or blackKnights or blackBishops or blackRooks or blackQueens or blackKing
         }
     }
 
@@ -92,5 +92,29 @@ class BitBoard {
 
     fun rotate90(x: ULong, clockWise: Boolean = true): ULong {
         return if (clockWise) flipVertical(flipDiagA1H8(x)) else flipDiagA1H8(flipVertical(x))
+    }
+
+    fun rayMoves(x: ULong, direction: Direction, color: PieceColor): ULong {
+        var moves = CompassRose.ray(x, direction)
+        val blocker = moves and occupied()
+
+        if (blocker != 0UL) {
+            var square = when (direction) {
+                Direction.NW, Direction.N, Direction.NE, Direction.E -> {
+                    blocker.takeLowestOneBit()
+                }
+                Direction.SE, Direction.S, Direction.SW, Direction.W -> {
+                    blocker.takeHighestOneBit()
+                }
+                else -> throw IllegalArgumentException("Direction must be one of N, NE, E, SE, S, SW, W, NW")
+            }
+            val ray = CompassRose.ray(square, direction)
+            moves = if ((blocker and occupied(color)).countOneBits() > 0) {
+                moves xor square.or(ray)
+            } else {
+                moves xor ray
+            }
+        }
+        return moves
     }
 }

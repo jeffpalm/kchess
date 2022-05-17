@@ -1,5 +1,5 @@
 package engine.v2
 
 enum class Direction {
-    NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST
+    N, S, E, W, NE, NW, SE, SW, NNW, NNE, NWW, NEE, SWW, SSW, SSE, SEE
 }
