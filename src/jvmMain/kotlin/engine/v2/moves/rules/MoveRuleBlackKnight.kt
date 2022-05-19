@@ -4,9 +4,9 @@ import engine.v2.CompassRose
 import engine.v2.PieceColor
 import engine.v2.adapters.WordPairToKnightPseudoMoves
 import engine.v2.moves.AbstractMoveRule
-import engine.v2.moves.PseudoMoveGenContext
+import engine.v2.moves.MoveGenCtx
 
-class MoveRuleBlackKnight(context: PseudoMoveGenContext) : AbstractMoveRule<PseudoMoveGenContext>(context) {
+class MoveRuleBlackKnight(context: MoveGenCtx) : AbstractMoveRule<MoveGenCtx>(context) {
     override fun shouldRun(): Boolean {
         return context.gameData.turn == PieceColor.BLACK && context.gameData.board.blackKnights.countOneBits() > 0
     }

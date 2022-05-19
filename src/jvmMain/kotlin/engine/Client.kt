@@ -1,10 +1,27 @@
 package engine
 
 import engine.v2.*
-import engine.v2.moves.PseudoMoveGenContext
+import engine.v2.adapters.BoardSquaresToBitBoard
+import engine.v2.adapters.FenToBitBoard
+import engine.v2.moves.MoveGenCtx
 
 fun main() {
-    binaryMath()
+    val start = 0x1000000UL
+    BoardRep(start).print()
+    BoardRep(CompassRose.navigate(start, Direction.NE)).print()
+    BoardRep(CompassRose.navigate(start, Direction.NW) and Sets.NOT_H_FILE).print()
+    BoardRep(Fen("8/8/8/nn6/P7/8/8/8 w - - 0 1")).print()
+    val bb = FenToBitBoard(Fen("8/8/8/nn6/P7/8/8/8 w - - 0 1")).output
+    BoardRep(bb.whitePawns).print()
+    BoardRep(bb.blackKnights).print()
+    BoardRep(bb.empty()).print()
+}
+
+fun boardRepToBitBoard() {
+    val board = BoardRep(Fen("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1"))
+    val bitBoard = BoardSquaresToBitBoard(board.getSquares()).output
+
+    BoardRep(bitBoard.occupied()).print()
 }
 
 fun compassRoseDemo() {
@@ -77,8 +94,6 @@ fun binaryMath() {
 
     val start = 0x8000000UL
 
-    val offMap = CompassRose.navigate(start, Direction.SE, 4)
-
     BoardRep(bb.rayMoves(Constants.SquareWords.c1, Direction.NE, PieceColor.WHITE)).print()
     BoardRep(bb.occupied()).print()
 }
@@ -94,7 +109,7 @@ fun moveGeneration() {
         1
     )
 
-    val result = engine.v2.moves.MoveGenerator(PseudoMoveGenContext(gameData)).execute()
+    val result = engine.v2.moves.MoveGenerator(MoveGenCtx(gameData)).execute()
 
     result.print()
 }

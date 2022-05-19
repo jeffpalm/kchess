@@ -1,19 +1,19 @@
 package engine.v2
 
-class BitBoard {
+class BitBoard(empty: Boolean = false) {
     var enPassantTarget: ULong? = null
-    var whitePawns: ULong = Constants.StartPosition.P
-    var whiteKnights: ULong = Constants.StartPosition.N
-    var whiteBishops: ULong = Constants.StartPosition.B
-    var whiteRooks: ULong = Constants.StartPosition.R
-    var whiteQueens: ULong = Constants.StartPosition.Q
-    var whiteKing: ULong = Constants.StartPosition.K
-    var blackPawns: ULong = Constants.StartPosition.p
-    var blackKnights: ULong = Constants.StartPosition.n
-    var blackBishops: ULong = Constants.StartPosition.b
-    var blackRooks: ULong = Constants.StartPosition.r
-    var blackQueens: ULong = Constants.StartPosition.q
-    var blackKing: ULong = Constants.StartPosition.k
+    var whitePawns: ULong = if (empty) 0UL else Constants.StartPosition.P
+    var whiteKnights: ULong = if (empty) 0UL else Constants.StartPosition.N
+    var whiteBishops: ULong = if (empty) 0UL else Constants.StartPosition.B
+    var whiteRooks: ULong = if (empty) 0UL else Constants.StartPosition.R
+    var whiteQueens: ULong = if (empty) 0UL else Constants.StartPosition.Q
+    var whiteKing: ULong = if (empty) 0UL else Constants.StartPosition.K
+    var blackPawns: ULong = if (empty) 0UL else Constants.StartPosition.p
+    var blackKnights: ULong = if (empty) 0UL else Constants.StartPosition.n
+    var blackBishops: ULong = if (empty) 0UL else Constants.StartPosition.b
+    var blackRooks: ULong = if (empty) 0UL else Constants.StartPosition.r
+    var blackQueens: ULong = if (empty) 0UL else Constants.StartPosition.q
+    var blackKing: ULong = if (empty) 0UL else Constants.StartPosition.k
 
     fun occupied(color: PieceColor? = null): ULong {
         return when (color) {
@@ -117,4 +117,5 @@ class BitBoard {
         }
         return moves
     }
+
 }

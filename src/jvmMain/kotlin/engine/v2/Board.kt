@@ -3,7 +3,8 @@ package engine.v2
 import engine.Fen
 
 class Board(fen: Fen = Fen()) {
-    val rep: BoardRep<Fen> = BoardRep(fen)
+    val rep: BoardRep = BoardRep(fen)
+    val bitBoard: BitBoard = BitBoard()
 
     fun makeMove(move: Move) {
         rep.setSquare(move.fromSquare)

@@ -7,8 +7,12 @@ import engine.v2.adapters.OneBitMultiBitPairToPseudoMoves
 import engine.v2.moves.AbstractMoveRule
 import engine.v2.moves.MoveGenCtx
 
-class MoveRuleWhiteBishop(context: MoveGenCtx) : AbstractMoveRule<MoveGenCtx>(context) {
+class MoveRuleWhiteQueen(context: MoveGenCtx) : AbstractMoveRule<MoveGenCtx>(context) {
     private val directions: List<Direction> = listOf(
+        Direction.N,
+        Direction.W,
+        Direction.S,
+        Direction.E,
         Direction.NE,
         Direction.NW,
         Direction.SW,
@@ -16,16 +20,16 @@ class MoveRuleWhiteBishop(context: MoveGenCtx) : AbstractMoveRule<MoveGenCtx>(co
     )
 
     override fun shouldRun(): Boolean {
-        return context.gameData.turn == PieceColor.WHITE && context.gameData.board.whiteBishops.countOneBits() > 0
+        return context.gameData.turn == PieceColor.WHITE && context.gameData.board.whiteQueens.countOneBits() > 0
     }
 
     override suspend fun run() {
         val (board) = context.gameData
 
-        val individualBishops = MultiBitToListOfOneBits(board.whiteBishops).output
-        for (bishop in individualBishops) {
+        val individualQueens = MultiBitToListOfOneBits(board.whiteQueens).output
+        for (queen in individualQueens) {
             for (direction in directions) {
-                handleTargetSquares(bishop, direction)
+                handleTargetSquares(queen, direction)
             }
         }
     }

@@ -6,7 +6,7 @@ import engine.v2.SquareMap
 import engine.v2.moves.PseudoMove
 
 class WordPairToKnightPseudoMoves(input: Pair<ULong, ULong>) : Adapter<Pair<ULong, ULong>, List<PseudoMove>>(input){
-    override fun adapt(input: Pair<ULong, ULong>): List<PseudoMove> {
+    override fun adapt(input: Pair<ULong, ULong>, context: Any?): List<PseudoMove> {
         val moves: MutableList<PseudoMove> = mutableListOf()
         val startSquares = WordToSquareIndices(input.first).output
 

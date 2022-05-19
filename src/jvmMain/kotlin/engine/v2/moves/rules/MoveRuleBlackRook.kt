@@ -7,31 +7,31 @@ import engine.v2.adapters.OneBitMultiBitPairToPseudoMoves
 import engine.v2.moves.AbstractMoveRule
 import engine.v2.moves.MoveGenCtx
 
-class MoveRuleWhiteBishop(context: MoveGenCtx) : AbstractMoveRule<MoveGenCtx>(context) {
+class MoveRuleBlackRook(context: MoveGenCtx) : AbstractMoveRule<MoveGenCtx>(context) {
     private val directions: List<Direction> = listOf(
-        Direction.NE,
-        Direction.NW,
-        Direction.SW,
-        Direction.SE
+        Direction.N,
+        Direction.W,
+        Direction.S,
+        Direction.E
     )
 
     override fun shouldRun(): Boolean {
-        return context.gameData.turn == PieceColor.WHITE && context.gameData.board.whiteBishops.countOneBits() > 0
+        return context.gameData.turn == PieceColor.BLACK && context.gameData.board.blackRooks.countOneBits() > 0
     }
 
     override suspend fun run() {
         val (board) = context.gameData
 
-        val individualBishops = MultiBitToListOfOneBits(board.whiteBishops).output
-        for (bishop in individualBishops) {
+        val individualRooks = MultiBitToListOfOneBits(board.blackRooks).output
+        for (rook in individualRooks) {
             for (direction in directions) {
-                handleTargetSquares(bishop, direction)
+                handleTargetSquares(rook, direction)
             }
         }
     }
 
     private fun handleTargetSquares(x: ULong, direction: Direction) {
-        val targetSquares = context.gameData.board.rayMoves(x, direction, PieceColor.WHITE)
+        val targetSquares = context.gameData.board.rayMoves(x, direction, PieceColor.BLACK)
         context.addMoves(OneBitMultiBitPairToPseudoMoves(x to targetSquares).output)
     }
 

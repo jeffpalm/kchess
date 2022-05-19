@@ -1,7 +1,7 @@
 package engine.v2.adapters
 
-abstract class Adapter<I, O>(input: I) {
-    val output: O = adapt(input)
+sealed class Adapter<I, O>(input: I, context: Any? = null) {
+    val output: O = adapt(input, context)
 
-    protected abstract fun adapt(input: I): O
+    protected abstract fun adapt(input: I, context: Any? = null): O
 }

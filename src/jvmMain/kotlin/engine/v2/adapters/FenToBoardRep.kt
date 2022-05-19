@@ -4,7 +4,7 @@ import engine.Fen
 import engine.v2.Constants
 
 class FenToBoardRep(fen: Fen = Fen()) : Adapter<Fen, MutableMap<Byte, Char?>>(fen) {
-    override fun adapt(input: Fen): MutableMap<Byte, Char?> {
+    override fun adapt(input: Fen, context: Any?): MutableMap<Byte, Char?> {
         val boardRep = Constants.boardRep.toMutableMap()
         var i = 0.toByte()
         for (row in input.boardRepresentation.reversed().split('/')) {

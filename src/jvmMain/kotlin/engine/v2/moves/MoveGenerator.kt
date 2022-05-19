@@ -2,7 +2,7 @@ package engine.v2.moves
 
 import engine.v2.moves.rules.*
 
-class MoveGenerator(context: PseudoMoveGenContext) : AbstractMoveGenerator<PseudoMoveGenContext>(
+class MoveGenerator(context: MoveGenCtx) : AbstractMoveGenerator<MoveGenCtx>(
     context,
     listOf(
         MoveRuleWhitePawnPush(context),
@@ -13,5 +13,11 @@ class MoveGenerator(context: PseudoMoveGenContext) : AbstractMoveGenerator<Pseud
         MoveRuleBlackKnight(context),
         MoveRuleWhiteKing(context),
         MoveRuleBlackKing(context),
+        MoveRuleWhiteBishop(context),
+        MoveRuleBlackBishop(context),
+        MoveRuleWhiteRook(context),
+        MoveRuleBlackRook(context),
+        MoveRuleWhiteQueen(context),
+        MoveRuleBlackQueen(context)
     )
 )

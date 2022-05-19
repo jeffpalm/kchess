@@ -84,22 +84,23 @@ object CompassRose {
 
     // Must be single bit ULong for accurate measurement
     fun determineRayLength(start: ULong, direction: Direction, i: Int = 1): Int {
+        if (start.countOneBits() == 0) return 0
         val nextSquare = navigate(start, direction, i)
         if (nextSquare == 0UL) return i - 1
         when (direction) {
-            Direction.E, Direction.NE -> {
+            Direction.E, Direction.NE, Direction.SE -> {
                 if ((nextSquare and Sets.A_FILE).countOneBits() == 1) {
                     return i - 1
                 }
             }
-            Direction.W, Direction.NW -> {
+            Direction.W, Direction.SW, Direction.NW -> {
                 if ((nextSquare and Sets.H_FILE).countOneBits() == 1) {
                     return i - 1
                 }
             }
         }
 
-        return determineRayLength(start, direction, i + 1)
+        return if (i > 7) 7 else determineRayLength(start, direction, i + 1)
     }
 
 

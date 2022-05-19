@@ -5,7 +5,7 @@ import engine.Fen
 class Move(
     override val fromSquare: SquareMap,
     override val toSquare: SquareMap,
-    override val boardRep: BoardRep<Fen>
+    boardRep: BoardRep
 ) : IMove {
     override val piece: Char =
         boardRep.getPiece(fromSquare) ?: throw IllegalArgumentException("No piece at $fromSquare")

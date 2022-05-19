@@ -2,17 +2,17 @@ package engine.v2
 
 import engine.Fen
 import engine.v2.adapters.FenToBoardRep
-import engine.v2.adapters.WordToBoardRep
+import engine.v2.adapters.WordToBoardSquares
 
-
-class BoardRep<T>(input: T) {
+class BoardRep(input: Any) {
     private val squares: MutableMap<Byte, Char?>
 
     init {
         squares = when (input) {
             is Fen -> FenToBoardRep(input).output
-            is ULong -> WordToBoardRep(input).output
-            else -> throw IllegalArgumentException("Invalid input")
+            is ULong -> WordToBoardSquares(input).output
+            is MutableMap<*, *> -> input as MutableMap<Byte, Char?>
+            else -> throw IllegalArgumentException("Invalid input board rep input: $input")
         }
     }
 
