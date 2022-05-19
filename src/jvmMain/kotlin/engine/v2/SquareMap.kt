@@ -12,7 +12,7 @@ enum class SquareMap {
 
     companion object {
         operator fun get(str: String): SquareMap {
-            return SquareMap.valueOf(str.uppercase())
+            return SquareMap.valueOf(str.lowercase())
         }
         operator fun get(index: Int): SquareMap {
             return SquareMap.values()[index]
@@ -85,6 +85,10 @@ enum class SquareMap {
                 Square.h8 -> h8
                 else -> throw IllegalArgumentException("Invalid square: $word")
             }
+        }
+
+        operator fun get(byte: Byte): SquareMap {
+            return SquareMap.values()[byte.toInt()]
         }
     }
 }

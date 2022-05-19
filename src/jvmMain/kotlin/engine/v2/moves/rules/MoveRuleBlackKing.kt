@@ -2,7 +2,7 @@ package engine.v2.moves.rules
 
 import engine.v2.CompassRose
 import engine.v2.PieceColor
-import engine.v2.adapters.MultiBitMultiBitPairToPseudoMoves
+import engine.v2.adapters.BitsBitsPairToPseudoMoves
 import engine.v2.moves.AbstractMoveRule
 import engine.v2.moves.MoveGenCtx
 
@@ -17,7 +17,7 @@ class MoveRuleBlackKing(context: MoveGenCtx) : AbstractMoveRule<MoveGenCtx>(cont
         val validTargetSquares = targetSquares and board.occupied(PieceColor.BLACK).inv()
 
         if (validTargetSquares.countOneBits() > 0) {
-            context.addMoves(MultiBitMultiBitPairToPseudoMoves(board.blackKing to validTargetSquares).output)
+            context.addMoves(BitsBitsPairToPseudoMoves(board.blackKing to validTargetSquares).output)
         }
     }
 }

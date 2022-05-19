@@ -4,8 +4,8 @@ import engine.v2.CompassRose
 import engine.v2.Direction
 import engine.v2.PieceColor
 import engine.v2.Sets
-import engine.v2.adapters.MultiBitToListOfOneBits
-import engine.v2.adapters.OneBitMultiBitPairToPseudoMoves
+import engine.v2.adapters.BitsToListOfBit
+import engine.v2.adapters.BitBitsPairToPseudoMoves
 import engine.v2.moves.AbstractMoveRule
 import engine.v2.moves.MoveGenCtx
 
@@ -17,13 +17,13 @@ class MoveRuleWhitePawnAttack(context: MoveGenCtx) : AbstractMoveRule<MoveGenCtx
     override suspend fun run() {
         val (board) = context.gameData
 
-        val pawns = MultiBitToListOfOneBits(board.whitePawns).output
+        val pawns = BitsToListOfBit(board.whitePawns).output
 
         for (pawn in pawns) {
             val valEastAttacks = wPawnEastAttacks(pawn) and board.occupied(PieceColor.BLACK)
             val valWestAttacks = wPawnWestAttacks(pawn) and board.occupied(PieceColor.BLACK)
-            context.addMoves(OneBitMultiBitPairToPseudoMoves(pawn to valEastAttacks).output)
-            context.addMoves(OneBitMultiBitPairToPseudoMoves(pawn to valWestAttacks).output)
+            context.addMoves(BitBitsPairToPseudoMoves(pawn to valEastAttacks).output)
+            context.addMoves(BitBitsPairToPseudoMoves(pawn to valWestAttacks).output)
         }
 
     }

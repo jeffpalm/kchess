@@ -2,8 +2,8 @@ package engine.v2.moves.rules
 
 import engine.v2.Direction
 import engine.v2.PieceColor
-import engine.v2.adapters.MultiBitToListOfOneBits
-import engine.v2.adapters.OneBitMultiBitPairToPseudoMoves
+import engine.v2.adapters.BitsToListOfBit
+import engine.v2.adapters.BitBitsPairToPseudoMoves
 import engine.v2.moves.AbstractMoveRule
 import engine.v2.moves.MoveGenCtx
 
@@ -22,7 +22,7 @@ class MoveRuleWhiteBishop(context: MoveGenCtx) : AbstractMoveRule<MoveGenCtx>(co
     override suspend fun run() {
         val (board) = context.gameData
 
-        val individualBishops = MultiBitToListOfOneBits(board.whiteBishops).output
+        val individualBishops = BitsToListOfBit(board.whiteBishops).output
         for (bishop in individualBishops) {
             for (direction in directions) {
                 handleTargetSquares(bishop, direction)
@@ -32,7 +32,7 @@ class MoveRuleWhiteBishop(context: MoveGenCtx) : AbstractMoveRule<MoveGenCtx>(co
 
     private fun handleTargetSquares(x: ULong, direction: Direction) {
         val targetSquares = context.gameData.board.rayMoves(x, direction, PieceColor.WHITE)
-        context.addMoves(OneBitMultiBitPairToPseudoMoves(x to targetSquares).output)
+        context.addMoves(BitBitsPairToPseudoMoves(x to targetSquares).output)
     }
 
 }

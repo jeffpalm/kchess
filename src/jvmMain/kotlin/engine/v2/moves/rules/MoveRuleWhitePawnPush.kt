@@ -4,7 +4,7 @@ import engine.v2.CompassRose
 import engine.v2.Direction
 import engine.v2.PieceColor
 import engine.v2.Sets
-import engine.v2.adapters.MultiBitMultiBitPairToPseudoMoves
+import engine.v2.adapters.BitsBitsPairToPseudoMoves
 import engine.v2.moves.AbstractMoveRule
 import engine.v2.moves.MoveGenCtx
 
@@ -22,8 +22,8 @@ class MoveRuleWhitePawnPush(context: MoveGenCtx) : AbstractMoveRule<MoveGenCtx>(
         val pushTwoMovesFrom = wAbleToPushTwo(board.whitePawns, empty)
         val pushTwoMovesTo = CompassRose.navigate(pushTwoMovesFrom, Direction.N, 2)
 
-        context.addMoves(MultiBitMultiBitPairToPseudoMoves(pushMovesFrom to pushMovesTo).output)
-        context.addMoves(MultiBitMultiBitPairToPseudoMoves(pushTwoMovesFrom to pushTwoMovesTo).output)
+        context.addMoves(BitsBitsPairToPseudoMoves(pushMovesFrom to pushMovesTo).output)
+        context.addMoves(BitsBitsPairToPseudoMoves(pushTwoMovesFrom to pushTwoMovesTo).output)
     }
 
     private fun wAbleToPush(pawns: ULong, empty: ULong): ULong {

@@ -2,8 +2,8 @@ package engine.v2.moves.rules
 
 import engine.v2.Direction
 import engine.v2.PieceColor
-import engine.v2.adapters.MultiBitToListOfOneBits
-import engine.v2.adapters.OneBitMultiBitPairToPseudoMoves
+import engine.v2.adapters.BitsToListOfBit
+import engine.v2.adapters.BitBitsPairToPseudoMoves
 import engine.v2.moves.AbstractMoveRule
 import engine.v2.moves.MoveGenCtx
 
@@ -26,7 +26,7 @@ class MoveRuleBlackQueen(context: MoveGenCtx) : AbstractMoveRule<MoveGenCtx>(con
     override suspend fun run() {
         val (board) = context.gameData
 
-        val individualQueens = MultiBitToListOfOneBits(board.blackQueens).output
+        val individualQueens = BitsToListOfBit(board.blackQueens).output
         for (queen in individualQueens) {
             for (direction in directions) {
                 handleTargetSquares(queen, direction)
@@ -36,7 +36,7 @@ class MoveRuleBlackQueen(context: MoveGenCtx) : AbstractMoveRule<MoveGenCtx>(con
 
     private fun handleTargetSquares(x: ULong, direction: Direction) {
         val targetSquares = context.gameData.board.rayMoves(x, direction, PieceColor.BLACK)
-        context.addMoves(OneBitMultiBitPairToPseudoMoves(x to targetSquares).output)
+        context.addMoves(BitBitsPairToPseudoMoves(x to targetSquares).output)
     }
 
 }

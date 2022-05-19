@@ -1,6 +1,7 @@
 package engine.v2.adapters
 
 import engine.v2.BitBoard
+import engine.v2.Square
 
 class BoardSquaresToBitBoard(boardRep: Map<Byte, Char?>) : Adapter<Map<Byte, Char?>, BitBoard>(boardRep) {
     override fun adapt(input: Map<Byte, Char?>, context: Any?): BitBoard {
@@ -13,7 +14,7 @@ class BoardSquaresToBitBoard(boardRep: Map<Byte, Char?>) : Adapter<Map<Byte, Cha
 
     private fun populateBitBoard(idx: Byte, char: Char?, board: BitBoard) {
         if (char == null) return
-        val squareWord = SquareIndexToOneBitWord(idx.toInt()).output
+        val squareWord = Square[idx]
         when (char) {
             'P' -> board.whitePawns = board.whitePawns or squareWord
             'N' -> board.whiteKnights = board.whiteKnights or squareWord

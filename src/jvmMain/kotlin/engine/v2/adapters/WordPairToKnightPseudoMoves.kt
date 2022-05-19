@@ -11,12 +11,11 @@ class WordPairToKnightPseudoMoves(input: Pair<ULong, ULong>) : Adapter<Pair<ULon
         val startSquares = WordToSquareIndices(input.first).output
 
         for (squareIndex in startSquares) {
-            val fromSquare = SquareMap.values()[squareIndex]
-            val fromSquareWord = Square[fromSquare.name]
-            val targetSquares = input.second and CompassRose.knightMoveTargets(fromSquareWord)
+            val fromSquare = SquareMap[squareIndex]
+            val targetSquares = input.second and CompassRose.knightMoveTargets(Square[squareIndex])
             val targetSquareIndices = WordToSquareIndices(targetSquares).output
             for (targetSquareIndex in targetSquareIndices) {
-                val targetSquare = SquareMap.values()[targetSquareIndex]
+                val targetSquare = SquareMap[targetSquareIndex]
                 moves.add(PseudoMove(fromSquare, targetSquare))
             }
         }
