@@ -23,37 +23,37 @@ private class QueenMoveGenerator(context: MoveGenCtx) : AbstractMoveGenerator(
 internal class MoveRuleBlackQueenTest {
     private val queenOnD4 = MoveGenCtx(
         GameData(
-            BoardSquaresToBitBoard(WordToBoardSquares(Constants.SquareWords.d4, 'q').output).output,
+            BoardSquaresToBitBoard(WordToBoardSquares(Constants.Square.d4, 'q').output).output,
             PieceColor.BLACK,
         )
     )
     private val queenOnA1 = MoveGenCtx(
         GameData(
-            BoardSquaresToBitBoard(WordToBoardSquares(Constants.SquareWords.a1, 'q').output).output,
+            BoardSquaresToBitBoard(WordToBoardSquares(Constants.Square.a1, 'q').output).output,
             PieceColor.BLACK,
         )
     )
     private val queenOnH1 = MoveGenCtx(
         GameData(
-            BoardSquaresToBitBoard(WordToBoardSquares(Constants.SquareWords.h1, 'q').output).output,
+            BoardSquaresToBitBoard(WordToBoardSquares(Constants.Square.h1, 'q').output).output,
             PieceColor.BLACK,
         )
     )
     private val queenOnH8 = MoveGenCtx(
         GameData(
-            BoardSquaresToBitBoard(WordToBoardSquares(Constants.SquareWords.h8, 'q').output).output,
+            BoardSquaresToBitBoard(WordToBoardSquares(Constants.Square.h8, 'q').output).output,
             PieceColor.BLACK,
         )
     )
     private val queenOnA8 = MoveGenCtx(
         GameData(
-            BoardSquaresToBitBoard(WordToBoardSquares(Constants.SquareWords.a8, 'q').output).output,
+            BoardSquaresToBitBoard(WordToBoardSquares(Constants.Square.a8, 'q').output).output,
             PieceColor.BLACK,
         )
     )
     private val whiteToMove = MoveGenCtx(
         GameData(
-            BoardSquaresToBitBoard(WordToBoardSquares(Constants.SquareWords.d4, 'q').output).output,
+            BoardSquaresToBitBoard(WordToBoardSquares(Constants.Square.d4, 'q').output).output,
             PieceColor.WHITE,
         )
     )

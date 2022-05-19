@@ -93,7 +93,7 @@ fun binaryMath() {
 //    println(0xff00000000000000UL.toString(2).toCharArray().size)
 
 
-    BoardRep(bb.rayMoves(Constants.SquareWords.c1, Direction.NE, PieceColor.WHITE)).print()
+    BoardRep(bb.rayMoves(Constants.Square.c1, Direction.NE, PieceColor.WHITE)).print()
     BoardRep(bb.occupied()).print()
 }
 

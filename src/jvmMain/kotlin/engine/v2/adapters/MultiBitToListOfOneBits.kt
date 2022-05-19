@@ -6,6 +6,6 @@ import engine.v2.SquareMap
 class MultiBitToListOfOneBits(word: ULong) : Adapter<ULong, List<ULong>>(word) {
     override fun adapt(input: ULong, context: Any?): List<ULong> {
         val squareIndices = WordToSquareIndices(input).output
-        return squareIndices.map { idx -> Constants.SquareWords[SquareMap.values()[idx].name] }
+        return squareIndices.map { idx -> Constants.Square[SquareMap.values()[idx].name] }
     }
 }
