@@ -10,6 +10,7 @@ class BoardRep(input: Any) {
     init {
         squares = when (input) {
             is Fen -> FenToBoardRep(input).output
+            is String -> FenToBoardRep(Fen(input)).output
             is ULong -> WordToBoardSquares(input).output
             is MutableMap<*, *> -> input as MutableMap<Byte, Char?>
             else -> throw IllegalArgumentException("Invalid input board rep input: $input")

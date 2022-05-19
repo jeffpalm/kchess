@@ -1,9 +1,9 @@
 package engineTest.v2
 
 import engine.Fen
-import engine.v2.Constants
 import engine.v2.GameData
 import engine.v2.PieceColor
+import engine.v2.Square
 import engine.v2.adapters.BoardSquaresToBitBoard
 import engine.v2.adapters.FenToBitBoard
 import engine.v2.adapters.WordToBoardSquares
@@ -23,37 +23,37 @@ private class QueenMoveGenerator(context: MoveGenCtx) : AbstractMoveGenerator(
 internal class MoveRuleBlackQueenTest {
     private val queenOnD4 = MoveGenCtx(
         GameData(
-            BoardSquaresToBitBoard(WordToBoardSquares(Constants.Square.d4, 'q').output).output,
+            BoardSquaresToBitBoard(WordToBoardSquares(Square.d4, 'q').output).output,
             PieceColor.BLACK,
         )
     )
     private val queenOnA1 = MoveGenCtx(
         GameData(
-            BoardSquaresToBitBoard(WordToBoardSquares(Constants.Square.a1, 'q').output).output,
+            BoardSquaresToBitBoard(WordToBoardSquares(Square.a1, 'q').output).output,
             PieceColor.BLACK,
         )
     )
     private val queenOnH1 = MoveGenCtx(
         GameData(
-            BoardSquaresToBitBoard(WordToBoardSquares(Constants.Square.h1, 'q').output).output,
+            BoardSquaresToBitBoard(WordToBoardSquares(Square.h1, 'q').output).output,
             PieceColor.BLACK,
         )
     )
     private val queenOnH8 = MoveGenCtx(
         GameData(
-            BoardSquaresToBitBoard(WordToBoardSquares(Constants.Square.h8, 'q').output).output,
+            BoardSquaresToBitBoard(WordToBoardSquares(Square.h8, 'q').output).output,
             PieceColor.BLACK,
         )
     )
     private val queenOnA8 = MoveGenCtx(
         GameData(
-            BoardSquaresToBitBoard(WordToBoardSquares(Constants.Square.a8, 'q').output).output,
+            BoardSquaresToBitBoard(WordToBoardSquares(Square.a8, 'q').output).output,
             PieceColor.BLACK,
         )
     )
     private val whiteToMove = MoveGenCtx(
         GameData(
-            BoardSquaresToBitBoard(WordToBoardSquares(Constants.Square.d4, 'q').output).output,
+            BoardSquaresToBitBoard(WordToBoardSquares(Square.d4, 'q').output).output,
             PieceColor.WHITE,
         )
     )
