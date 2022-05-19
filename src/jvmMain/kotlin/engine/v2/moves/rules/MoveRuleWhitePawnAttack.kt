@@ -4,7 +4,8 @@ import engine.v2.CompassRose
 import engine.v2.Direction
 import engine.v2.PieceColor
 import engine.v2.Sets
-import engine.v2.adapters.MultiBitMultiBitPairToPseudoMoves
+import engine.v2.adapters.MultiBitToListOfOneBits
+import engine.v2.adapters.OneBitMultiBitPairToPseudoMoves
 import engine.v2.moves.AbstractMoveRule
 import engine.v2.moves.MoveGenCtx
 
@@ -15,13 +16,16 @@ class MoveRuleWhitePawnAttack(context: MoveGenCtx) : AbstractMoveRule<MoveGenCtx
 
     override suspend fun run() {
         val (board) = context.gameData
-        val valEastAttacks = wPawnEastAttacks(board.whitePawns) and board.occupied(PieceColor.BLACK)
-        val valWestAttacks = wPawnWestAttacks(board.whitePawns) and board.occupied(PieceColor.BLACK)
-        val valEastPawns = board.whitePawns and Sets.NOT_A_FILE
-        val valWestPawns = board.whitePawns and Sets.NOT_H_FILE
 
-        context.addMoves(MultiBitMultiBitPairToPseudoMoves(valEastPawns or valWestPawns to valEastAttacks).output)
-        context.addMoves(MultiBitMultiBitPairToPseudoMoves(valWestPawns or valEastPawns to valWestAttacks).output)
+        val pawns = MultiBitToListOfOneBits(board.whitePawns).output
+
+        for (pawn in pawns) {
+            val valEastAttacks = wPawnEastAttacks(pawn) and board.occupied(PieceColor.BLACK)
+            val valWestAttacks = wPawnWestAttacks(pawn) and board.occupied(PieceColor.BLACK)
+            context.addMoves(OneBitMultiBitPairToPseudoMoves(pawn to valEastAttacks).output)
+            context.addMoves(OneBitMultiBitPairToPseudoMoves(pawn to valWestAttacks).output)
+        }
+
     }
 
     private fun wPawnEastAttacks(pawns: ULong): ULong {

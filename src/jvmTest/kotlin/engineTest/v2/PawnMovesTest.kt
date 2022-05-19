@@ -116,4 +116,14 @@ internal class PawnMovesTest {
             PieceColor.WHITE
         ))), 0x200000000UL)
     }
+
+    @Test
+    fun `white pawns offset captures`() {
+        MoveTest(PawnMoveGenerator(MoveGenCtx(GameData(
+            FenToBitBoard(Fen("8/8/8/pppppppp/P1P1P1P1/8/8/8 w - - 0 1")).output,
+            PieceColor.WHITE
+        ))), 0xAA00000000UL)
+    }
+
+
 }

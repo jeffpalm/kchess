@@ -7,6 +7,7 @@ class OneBitMultiBitPairToPseudoMoves(input: Pair<ULong, ULong>) : Adapter<Pair<
     override fun adapt(input: Pair<ULong, ULong>, context: Any?): List<PseudoMove> {
         if (input.first.countOneBits() > 1) throw IllegalArgumentException("First word in pair must only contain 1 bit")
         if (input.second == 0UL) return listOf()
+        if (input.first == 0UL) return listOf()
         val squareMap = SquareMap.values()
         val output: MutableList<PseudoMove> = mutableListOf()
         val startSquare = squareMap[WordToSquareIndices(input.first).output[0]]

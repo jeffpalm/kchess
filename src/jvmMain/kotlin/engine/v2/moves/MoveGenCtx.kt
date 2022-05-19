@@ -1,8 +1,8 @@
 package engine.v2.moves
 
-import engine.v2.GameData
+import engine.v2.IGameData
 
-class MoveGenCtx(val gameData: GameData) {
+class MoveGenCtx(val gameData: IGameData) {
     private val moves: MutableList<PseudoMove> = mutableListOf()
 
     fun getCount(): Int {
