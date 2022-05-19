@@ -2,7 +2,7 @@ package engine.v2.moves
 
 import engine.v2.moves.rules.*
 
-class MoveGenerator(context: MoveGenCtx) : AbstractMoveGenerator<MoveGenCtx>(
+class MoveGenerator(context: MoveGenCtx) : AbstractMoveGenerator(
     context,
     listOf(
         MoveRuleWhitePawnPush(context),

@@ -3,11 +3,11 @@ package engine.v2.moves
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-abstract class AbstractMoveGenerator<T>(
-    private val context: T,
-    private val rules: List<AbstractMoveRule<T>>
+abstract class AbstractMoveGenerator(
+    private val context: MoveGenCtx,
+    private val rules: List<AbstractMoveRule<MoveGenCtx>>
 ) {
-    fun execute(): T = runBlocking {
+    fun execute(): List<PseudoMove> = runBlocking {
         for (rule in rules) {
             if (rule.shouldRun()) {
                 launch {
@@ -15,6 +15,6 @@ abstract class AbstractMoveGenerator<T>(
                 }
             }
         }
-        return@runBlocking context
+        return@runBlocking context.getMoves()
     }
 }

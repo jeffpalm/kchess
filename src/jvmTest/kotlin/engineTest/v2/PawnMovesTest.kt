@@ -14,7 +14,7 @@ import engine.v2.moves.rules.MoveRuleWhitePawnPush
 import org.junit.jupiter.api.Test
 import kotlin.test.assertTrue
 
-private class PawnMoveGenerator(context: MoveGenCtx) : AbstractMoveGenerator<MoveGenCtx>(
+private class PawnMoveGenerator(context: MoveGenCtx) : AbstractMoveGenerator(
     context, listOf(
         MoveRuleWhitePawnPush(context),
         MoveRuleWhitePawnAttack(context),

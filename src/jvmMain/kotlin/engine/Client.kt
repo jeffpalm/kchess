@@ -92,7 +92,6 @@ fun binaryMath() {
 //    println(0xff00000000000000UL.toString(2))
 //    println(0xff00000000000000UL.toString(2).toCharArray().size)
 
-    val start = 0x8000000UL
 
     BoardRep(bb.rayMoves(Constants.SquareWords.c1, Direction.NE, PieceColor.WHITE)).print()
     BoardRep(bb.occupied()).print()
@@ -111,5 +110,7 @@ fun moveGeneration() {
 
     val result = engine.v2.moves.MoveGenerator(MoveGenCtx(gameData)).execute()
 
-    result.print()
+    for(move in result) {
+        println(move.asString())
+    }
 }

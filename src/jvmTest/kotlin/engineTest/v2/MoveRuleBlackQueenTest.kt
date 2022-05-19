@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-private class QueenMoveGenerator(context: MoveGenCtx) : AbstractMoveGenerator<MoveGenCtx>(
+private class QueenMoveGenerator(context: MoveGenCtx) : AbstractMoveGenerator(
     context, listOf(
         MoveRuleBlackQueen(context)
     )
@@ -102,7 +102,7 @@ internal class MoveRuleBlackQueenTest {
                     PieceColor.BLACK
                 )
             )
-        ).execute().getMoves()
+        ).execute()
         assertEquals(0, moves.count())
     }
 
