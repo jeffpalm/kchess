@@ -6,5 +6,9 @@ data class GameData(
     override var castlingAvailability: String = "KQkq",
     override var enPassantTarget: String = "-",
     override var halfMoveClock: Int = 0,
-    override var fullMoveNumber: Int = 1
-) : IGameData
+    override var fullMoveClock: Int = 1
+) : IGameData {
+    override fun copy(): IGameData {
+        return GameData(board, turn, castlingAvailability, enPassantTarget, halfMoveClock, fullMoveClock)
+    }
+}

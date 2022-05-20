@@ -12,23 +12,20 @@ class BoardSquaresToBitBoard(boardRep: Map<Byte, Char?>) : Adapter<Map<Byte, Cha
         return board
     }
 
-    private fun populateBitBoard(idx: Byte, char: Char?, board: BitBoard) {
-        if (char == null) return
-        val squareWord = Square[idx]
-        when (char) {
-            'P' -> board.whitePawns = board.whitePawns or squareWord
-            'N' -> board.whiteKnights = board.whiteKnights or squareWord
-            'B' -> board.whiteBishops = board.whiteBishops or squareWord
-            'R' -> board.whiteRooks = board.whiteRooks or squareWord
-            'Q' -> board.whiteQueens = board.whiteQueens or squareWord
-            'K' -> board.whiteKing = board.whiteKing or squareWord
-            'p' -> board.blackPawns = board.blackPawns or squareWord
-            'n' -> board.blackKnights = board.blackKnights or squareWord
-            'b' -> board.blackBishops = board.blackBishops or squareWord
-            'r' -> board.blackRooks = board.blackRooks or squareWord
-            'q' -> board.blackQueens = board.blackQueens or squareWord
-            'k' -> board.blackKing = board.blackKing or squareWord
-            else -> throw IllegalArgumentException("Invalid character: $char")
-        }
+    private fun populateBitBoard(idx: Byte, char: Char?, board: BitBoard) = when (char) {
+        'P' -> board.whitePawns = board.whitePawns or Square[idx]
+        'N' -> board.whiteKnights = board.whiteKnights or Square[idx]
+        'B' -> board.whiteBishops = board.whiteBishops or Square[idx]
+        'R' -> board.whiteRooks = board.whiteRooks or Square[idx]
+        'Q' -> board.whiteQueens = board.whiteQueens or Square[idx]
+        'K' -> board.whiteKing = board.whiteKing or Square[idx]
+        'p' -> board.blackPawns = board.blackPawns or Square[idx]
+        'n' -> board.blackKnights = board.blackKnights or Square[idx]
+        'b' -> board.blackBishops = board.blackBishops or Square[idx]
+        'r' -> board.blackRooks = board.blackRooks or Square[idx]
+        'q' -> board.blackQueens = board.blackQueens or Square[idx]
+        'k' -> board.blackKing = board.blackKing or Square[idx]
+        null -> null
+        else -> throw IllegalArgumentException("Invalid character: $char")
     }
 }

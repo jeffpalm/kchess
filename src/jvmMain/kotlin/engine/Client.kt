@@ -2,19 +2,13 @@ package engine
 
 import engine.v2.*
 import engine.v2.adapters.BoardSquaresToBitBoard
-import engine.v2.adapters.FenToBitBoard
 import engine.v2.moves.MoveGenCtx
+import engine.v2.moves.PseudoMove
 
 fun main() {
-    val start = 0x1000000UL
-    BoardRep(start).print()
-    BoardRep(CompassRose.navigate(start, Direction.NE)).print()
-    BoardRep(CompassRose.navigate(start, Direction.NW) and Sets.NOT_H_FILE).print()
-    BoardRep(Fen("8/8/8/nn6/P7/8/8/8 w - - 0 1")).print()
-    val bb = FenToBitBoard(Fen("8/8/8/nn6/P7/8/8/8 w - - 0 1")).output
-    BoardRep(bb.whitePawns).print()
-    BoardRep(bb.blackKnights).print()
-    BoardRep(bb.empty()).print()
+    val game = Game()
+    game.makeMove(PseudoMove(SquareMap.e2, SquareMap.e4))
+    Perft.run(1, game)
 }
 
 fun boardRepToBitBoard() {
@@ -77,13 +71,13 @@ fun boardRotation() {
 
     BoardRep(R_SHAPE).print()
 
-    BoardRep(bb.flipVertical(R_SHAPE)).print()
-    BoardRep(bb.mirrorHorizontal(R_SHAPE)).print()
-    BoardRep(bb.flipDiagA1H8(R_SHAPE)).print()
-    BoardRep(bb.flipDiagA8H1(R_SHAPE)).print()
-    BoardRep(bb.rotate180(R_SHAPE)).print()
-    BoardRep(bb.rotate90(R_SHAPE)).print()
-    BoardRep(bb.rotate90(R_SHAPE, false)).print()
+    BoardRep(BitBoard.flipVertical(R_SHAPE)).print()
+    BoardRep(BitBoard.mirrorHorizontal(R_SHAPE)).print()
+    BoardRep(BitBoard.flipDiagA1H8(R_SHAPE)).print()
+    BoardRep(BitBoard.flipDiagA8H1(R_SHAPE)).print()
+    BoardRep(BitBoard.rotate180(R_SHAPE)).print()
+    BoardRep(BitBoard.rotate90(R_SHAPE)).print()
+    BoardRep(BitBoard.rotate90(R_SHAPE, false)).print()
 }
 
 fun binaryMath() {
@@ -111,6 +105,6 @@ fun moveGeneration() {
     val result = engine.v2.moves.MoveGenerator(MoveGenCtx(gameData)).execute()
 
     for(move in result) {
-        println(move.asString())
+        println("${move.first.name}${move.second.name}")
     }
 }

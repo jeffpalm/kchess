@@ -1,5 +1,6 @@
 package engineTest.v2
 
+import engine.v2.Square
 import engine.v2.moves.AbstractMoveGenerator
 import kotlin.test.assertEquals
 
@@ -8,7 +9,7 @@ class MoveTest(moveGenerator: AbstractMoveGenerator, expected: ULong) {
         val moves = moveGenerator.execute()
         var result = 0UL
         for (move in moves) {
-            result = result.or(move.toBit())
+            result = result.or(Square[move.second.ordinal])
         }
         assertEquals(
             expected,

@@ -11,4 +11,7 @@ data class PseudoMove(val fromSquare: SquareMap, val toSquare: SquareMap) {
     fun asString(): String {
         return "${fromSquare.name}${toSquare.name}"
     }
+    fun asPair(): Pair<SquareMap, SquareMap> {
+        return Pair(fromSquare, toSquare)
+    }
 }

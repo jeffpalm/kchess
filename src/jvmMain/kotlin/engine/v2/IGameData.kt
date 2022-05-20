@@ -22,7 +22,7 @@ interface IGameData {
     }
 
     operator fun component6(): Int {
-        return fullMoveNumber
+        return fullMoveClock
     }
 
     val board: BitBoard
@@ -30,5 +30,6 @@ interface IGameData {
     val castlingAvailability: String
     val enPassantTarget: String
     val halfMoveClock: Int
-    val fullMoveNumber: Int
+    val fullMoveClock: Int
+    fun copy(): IGameData
 }

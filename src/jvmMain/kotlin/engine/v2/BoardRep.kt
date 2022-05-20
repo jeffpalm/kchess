@@ -1,6 +1,7 @@
 package engine.v2
 
 import engine.Fen
+import engine.v2.adapters.BitBoardToBoardSquares
 import engine.v2.adapters.FenToBoardRep
 import engine.v2.adapters.WordToBoardSquares
 
@@ -9,6 +10,8 @@ class BoardRep(input: Any) {
 
     init {
         squares = when (input) {
+            is BitBoard -> BitBoardToBoardSquares(input).output
+            is IBitBoardPieces -> BitBoardToBoardSquares(input).output
             is Fen -> FenToBoardRep(input).output
             is String -> FenToBoardRep(Fen(input)).output
             is ULong -> WordToBoardSquares(input).output
