@@ -4,6 +4,8 @@ object Constants {
     val fenPieces = listOf('P', 'p', 'N', 'n', 'B', 'b', 'R', 'r', 'Q', 'q', 'K', 'k')
     val whitePawns = listOf('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H')
     val blackPawns = listOf('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h')
+    val rank8Indices = listOf(56, 57, 58, 59, 60, 61, 62, 63)
+    val rank1Indices = listOf(0, 1, 2, 3, 4, 5, 6, 7)
 
     object StartPosition {
         // White Pieces

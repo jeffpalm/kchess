@@ -1,6 +1,7 @@
 package engine.v2.adapters
 
 import engine.SquareMap
+import engine.v2.BitBoard
 import engine.v2.moves.PseudoMove
 
 class BitBitsPairToPseudoMoves(input: Pair<ULong, ULong>, char: Char) : Adapter<Pair<ULong, ULong>, List<PseudoMove>>(input, char) {
@@ -10,7 +11,17 @@ class BitBitsPairToPseudoMoves(input: Pair<ULong, ULong>, char: Char) : Adapter<
 
         val output: MutableList<PseudoMove> = mutableListOf()
         val startSquare = SquareMap[input.first]
-        val targetSquares = WordToSquareIndices(input.second).output
+        var targetSquares = WordToSquareIndices(input.second).output
+
+        val targetPromos = input.second and BitBoard.promoSquares(context as Char)
+
+        if (targetPromos != 0UL) {
+            val targetPromoIndices = WordToSquareIndices(targetPromos).output
+            for (toSquare in targetPromoIndices) {
+                targetSquares = targetSquares.filter { it != toSquare }
+                output.addAll(PseudoMove.getPromoMoves(startSquare, SquareMap[toSquare], context))
+            }
+        }
 
         for (targetIdx in targetSquares) {
             val targetSquare = SquareMap[targetIdx]
@@ -20,4 +31,5 @@ class BitBitsPairToPseudoMoves(input: Pair<ULong, ULong>, char: Char) : Adapter<
         }
         return output
     }
+
 }

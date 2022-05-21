@@ -170,6 +170,12 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
     }
 
     companion object {
+        fun promoSquares(piece: Char): ULong = when (piece) {
+            Piece.whitePawn -> Sets.RANK8
+            Piece.blackPawn -> Sets.RANK1
+            else -> 0UL
+        }
+
         fun rotate90(x: ULong, clockWise: Boolean = true): ULong {
             return if (clockWise) flipVertical(flipDiagA1H8(x)) else Companion.flipDiagA1H8(
                 flipVertical(x)
