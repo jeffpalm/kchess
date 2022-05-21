@@ -76,6 +76,8 @@ internal class CompassRoseTest {
         assertEquals(0x302030000UL, result, "NE Corner\n\nExpected: 0x302030000UL\nReceived: 0x${result.toString(16)}UL")
         result = CompassRose.kingMoveTargets(Square.h4)
         assertEquals(0xc040c00000UL, result, "NE Corner\n\nExpected: 0xc040c00000UL\nReceived: 0x${result.toString(16)}UL")
+        result = CompassRose.kingMoveTargets(Square.g1)
+        assertEquals(0xe0a0UL, result, "White King\n\nExpected: 0xe0a0UL\nReceived: 0x${result.toString(16)}UL")
     }
 
     @Test

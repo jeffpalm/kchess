@@ -33,7 +33,12 @@ class MoveFilterAbsolutePins : IMoveFilter {
     override suspend fun run(ctx: MoveGenCtx): MoveGenCtx {
         val absolutePins = getAbsolutePins(ctx, allDirections)
 
-        ctx.filterMoves { !(Square[it.from.ordinal].and(absolutePins) != 0UL && Square[it.to.ordinal].and(absolutePins) == 0UL) }
+        ctx.filterMoves {
+            when (it.piece) {
+                'K', 'k' -> true
+                else -> !(Square[it.from.ordinal].and(absolutePins) != 0UL && Square[it.to.ordinal].and(absolutePins) == 0UL)
+            }
+        }
 
         return ctx
     }
@@ -57,7 +62,7 @@ class MoveFilterAbsolutePins : IMoveFilter {
             }
             if (enemyOnXRay == 0UL) continue
 
-            val closestEnemy = when(direction) {
+            val closestEnemy = when (direction) {
                 Direction.NW, Direction.N, Direction.NE, Direction.E -> enemyOnXRay.takeLowestOneBit()
                 Direction.SE, Direction.S, Direction.SW, Direction.W -> enemyOnXRay.takeHighestOneBit()
                 else -> throw IllegalArgumentException("Invalid direction")

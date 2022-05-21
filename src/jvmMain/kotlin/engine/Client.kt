@@ -3,18 +3,17 @@ package engine
 import engine.v2.*
 import engine.v2.adapters.BoardSquaresToBitBoard
 import engine.v2.moves.MoveGenCtx
+import engine.v2.moves.MoveGenerator
 
 fun main() {
-    val game = Game(Fen("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1"))
+    val game = Game(Fen("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1"))
+    val moves = MoveGenerator(MoveGenCtx(game.data)).execute()
+    for (move in moves) {
+        println("${move.from.name}${move.to.name} - ${move.piece}")
+    }
 
-    val result = game.data.board.rayMoves(Square.a1, Direction.E, Color.WHITE)
-
-    BoardRep(result).print()
-    BoardRep( 0xEUL).print()
-
-//    for (move in moves) {
-//        println("${move.from.name}${move.to.name} - ${move.piece}")
-//    }
+//    val game = Game()
+//    Perft.run(3, game)
 }
 
 fun boardRepToBitBoard() {

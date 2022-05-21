@@ -8,6 +8,10 @@ object Perft {
     fun run(depth: Int, game: Game): Int {
         val moves = MoveGenerator(MoveGenCtx(game.data.copy())).execute()
 
+//        for (move in moves) {
+//            println("${move.from.name}${move.to.name} - ${move.piece}")
+//        }
+
         if (depth == 1) return moves.size
 
         var nodes = 0
@@ -15,7 +19,7 @@ object Perft {
 
         for (move in moves) {
             val validMove = game.makeMove(move)
-//            println("${move.first.name}${if(validMove.capture != null) "x" else ""}${move.second.name}")
+//            println("${move.from.name}${if(validMove.capture != null) "x" else ""}${move.to.name}")
             nodes += run(depth - 1, game)
             game.undoMove()
         }
