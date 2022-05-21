@@ -1,28 +1,27 @@
 package engine.v2.moves
 
 import engine.v2.IGameData
-import engine.v2.SquareMap
 
 class MoveGenCtx(val data: IGameData) {
-    private var moves: MutableSet<Pair<SquareMap, SquareMap>> = mutableSetOf()
+    private var moves: MutableSet<PseudoMove> = mutableSetOf()
 
     fun getCount(): Int {
         return moves.size
     }
 
     fun addMove(move: PseudoMove) {
-        moves.add(move.asPair())
+        moves.add(move)
     }
 
     fun addMoves(moves: List<PseudoMove>) {
-        this.moves.addAll(moves.map { it.asPair() })
+        this.moves.addAll(moves)
     }
 
-    fun moves(): Set<Pair<SquareMap, SquareMap>> {
+    fun moves(): Set<PseudoMove> {
         return moves
     }
 
-    fun filterMoves(filter: (Pair<SquareMap, SquareMap>) -> Boolean) {
+    fun filterMoves(filter: (PseudoMove) -> Boolean) {
         moves = moves.filter(filter).toMutableSet()
     }
 }

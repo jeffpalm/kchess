@@ -1,8 +1,8 @@
 package engine.v2.moves.rules
 
+import engine.Color
 import engine.v2.CompassRose
 import engine.v2.Direction
-import engine.v2.Color
 import engine.v2.Sets
 import engine.v2.adapters.BitsBitsPairToPseudoMoves
 import engine.v2.moves.IMoveRule
@@ -22,8 +22,8 @@ class MoveRuleWhitePawnPush : IMoveRule {
         val pushTwoMovesFrom = wAbleToPushTwo(board.whitePawns, empty)
         val pushTwoMovesTo = CompassRose.navigate(pushTwoMovesFrom, Direction.N, 2)
 
-        ctx.addMoves(BitsBitsPairToPseudoMoves(pushMovesFrom to pushMovesTo).output)
-        ctx.addMoves(BitsBitsPairToPseudoMoves(pushTwoMovesFrom to pushTwoMovesTo).output)
+        ctx.addMoves(BitsBitsPairToPseudoMoves(pushMovesFrom to pushMovesTo, 'P').output)
+        ctx.addMoves(BitsBitsPairToPseudoMoves(pushTwoMovesFrom to pushTwoMovesTo, 'P').output)
     }
 
     private fun wAbleToPush(pawns: ULong, empty: ULong): ULong {
@@ -33,5 +33,12 @@ class MoveRuleWhitePawnPush : IMoveRule {
     private fun wAbleToPushTwo(pawns: ULong, empty: ULong): ULong {
         val emptyRank3 = CompassRose.navigate(empty.and(Sets.RANK4), Direction.S).and(empty)
         return wAbleToPush(pawns, emptyRank3)
+    }
+
+    private fun handlePromotion(targetSquares: ULong, ctx: MoveGenCtx) {
+        val promotionTargets = Sets.RANK8 and targetSquares
+        if (promotionTargets == 0UL) return
+
+
     }
 }

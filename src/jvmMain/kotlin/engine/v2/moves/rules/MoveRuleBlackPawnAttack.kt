@@ -1,8 +1,9 @@
 package engine.v2.moves.rules
 
-import engine.v2.Color
+import engine.Color
 import engine.v2.CompassRose
 import engine.v2.Direction
+import engine.v2.Piece
 import engine.v2.Sets
 import engine.v2.adapters.BitBitsPairToPseudoMoves
 import engine.v2.adapters.BitsToListOfBit
@@ -23,8 +24,8 @@ class MoveRuleBlackPawnAttack : IMoveRule {
             val valEastAttacks = bPawnEastAttacks(pawn) and (board.occupied(Color.WHITE) or (board.enPassantTarget ?: 0UL))
             val valWestAttacks = bPawnWestAttacks(pawn) and (board.occupied(Color.WHITE) or (board.enPassantTarget ?: 0UL))
 
-            ctx.addMoves(BitBitsPairToPseudoMoves((pawn and Sets.NOT_A_FILE) to valEastAttacks).output)
-            ctx.addMoves(BitBitsPairToPseudoMoves((pawn and Sets.NOT_H_FILE) to valWestAttacks).output)
+            ctx.addMoves(BitBitsPairToPseudoMoves(pawn to (valEastAttacks and Sets.NOT_A_FILE), Piece.blackPawn).output)
+            ctx.addMoves(BitBitsPairToPseudoMoves(pawn to (valWestAttacks and Sets.NOT_H_FILE), Piece.blackPawn).output)
         }
     }
 

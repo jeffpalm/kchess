@@ -1,5 +1,7 @@
 package engine.v2
 
+import engine.SquareMap
+
 class Move(
     override val fromSquare: SquareMap,
     override val toSquare: SquareMap,

@@ -1,6 +1,5 @@
 package engine.v2.moves
 
-import engine.v2.SquareMap
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -9,7 +8,7 @@ abstract class AbstractMoveGenerator(
     private val rules: List<IMoveRule>,
     private val filters: List<IMoveFilter>
 ) {
-    fun execute(): Set<Pair<SquareMap, SquareMap>> = runBlocking {
+    fun execute(): Set<PseudoMove> = runBlocking {
         var ctx = generate(context)
         ctx = filter(ctx)
         return@runBlocking ctx.moves()

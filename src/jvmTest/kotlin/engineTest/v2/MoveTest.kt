@@ -9,7 +9,7 @@ class MoveTest(moveGenerator: AbstractMoveGenerator, expected: ULong) {
         val moves = moveGenerator.execute()
         var result = 0UL
         for (move in moves) {
-            result = result.or(Square[move.second.ordinal])
+            result = result.or(Square[move.to.ordinal])
         }
         assertEquals(
             expected,

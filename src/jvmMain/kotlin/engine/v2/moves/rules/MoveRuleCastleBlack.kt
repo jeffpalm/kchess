@@ -1,9 +1,10 @@
 package engine.v2.moves.rules
 
+import engine.Color
+import engine.SquareMap
 import engine.v2.Direction
-import engine.v2.Color
+import engine.v2.Piece
 import engine.v2.Square
-import engine.v2.SquareMap
 import engine.v2.moves.IMoveRule
 import engine.v2.moves.MoveGenCtx
 import engine.v2.moves.PseudoMove
@@ -21,10 +22,10 @@ class MoveRuleCastleBlack : IMoveRule {
     override suspend fun run(ctx: MoveGenCtx) {
         val (board) = ctx.data
         if (board.rayMoves(kingSideRook, Direction.W, Color.BLACK) == 0x6000000000000000UL) {
-            ctx.addMove(PseudoMove(SquareMap.e1, SquareMap.g1))
+            ctx.addMove(PseudoMove(SquareMap.e1, SquareMap.g1, Piece.blackKing))
         }
         if (board.rayMoves(queenSideRook, Direction.E, Color.BLACK) == 0xE00000000000000UL) {
-            ctx.addMove(PseudoMove(SquareMap.e1, SquareMap.c1))
+            ctx.addMove(PseudoMove(SquareMap.e1, SquareMap.c1, Piece.blackKing))
         }
     }
 }

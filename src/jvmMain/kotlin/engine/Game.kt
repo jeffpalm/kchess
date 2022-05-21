@@ -24,15 +24,15 @@ class Game(fen: Fen = Fen()) {
         get() = _data
 
     fun makeMove(move: PseudoMove): Move {
-        val validatedMove = Move(move.fromSquare, move.toSquare, _boardRep)
+        val validatedMove = Move(move.from, move.to, _boardRep)
         _moves.add(validatedMove)
-        _boardRep.setSquare(move.fromSquare.ordinal.toByte(), null)
-        _boardRep.setSquare(move.toSquare.ordinal.toByte(), validatedMove.piece)
+        _boardRep.setSquare(move.from.ordinal.toByte(), null)
+        _boardRep.setSquare(move.to.ordinal.toByte(), validatedMove.piece)
         flipSideToMove()
         incrementClocks()
         handleRemovingCastlingAvail(validatedMove)
         _data.board.makeMove(
-            Square[move.fromSquare.ordinal] to Square[move.toSquare.ordinal], validatedMove.piece, validatedMove.capture
+            Square[move.from.ordinal] to Square[move.to.ordinal], validatedMove.piece, validatedMove.capture
         )
 
         handleEnPassantTarget(validatedMove)

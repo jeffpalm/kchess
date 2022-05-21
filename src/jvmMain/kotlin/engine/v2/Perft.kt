@@ -3,7 +3,6 @@ package engine.v2
 import engine.Game
 import engine.v2.moves.MoveGenCtx
 import engine.v2.moves.MoveGenerator
-import engine.v2.moves.PseudoMove
 
 object Perft {
     fun run(depth: Int, game: Game): Int {
@@ -15,7 +14,7 @@ object Perft {
 
 
         for (move in moves) {
-            val validMove = game.makeMove(PseudoMove(move.first, move.second))
+            val validMove = game.makeMove(move)
 //            println("${move.first.name}${if(validMove.capture != null) "x" else ""}${move.second.name}")
             nodes += run(depth - 1, game)
             game.undoMove()

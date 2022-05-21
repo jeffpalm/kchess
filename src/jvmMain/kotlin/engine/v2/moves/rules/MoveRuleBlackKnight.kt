@@ -1,7 +1,8 @@
 package engine.v2.moves.rules
 
+import engine.Color
 import engine.v2.CompassRose
-import engine.v2.Color
+import engine.v2.Piece
 import engine.v2.adapters.WordPairToKnightPseudoMoves
 import engine.v2.moves.IMoveRule
 import engine.v2.moves.MoveGenCtx
@@ -17,7 +18,7 @@ class MoveRuleBlackKnight : IMoveRule {
         val legalMoveTargets = moveTargets and board.occupied(Color.BLACK).inv()
 
         if (legalMoveTargets.countOneBits() > 0) {
-            ctx.addMoves(WordPairToKnightPseudoMoves(board.blackKnights to legalMoveTargets).output)
+            ctx.addMoves(WordPairToKnightPseudoMoves(board.blackKnights to legalMoveTargets, Piece.blackKnight).output)
         }
     }
 }

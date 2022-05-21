@@ -1,8 +1,8 @@
 package engineTest.v2
 
+import engine.Color
 import engine.Fen
 import engine.v2.BitBoard
-import engine.v2.Color
 import engine.v2.GameData
 import engine.v2.adapters.FenToBitBoard
 import engine.v2.moves.AbstractMoveGenerator

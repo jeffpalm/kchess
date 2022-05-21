@@ -3,16 +3,17 @@ package engine
 import engine.v2.*
 import engine.v2.adapters.BoardSquaresToBitBoard
 import engine.v2.moves.MoveGenCtx
-import engine.v2.moves.MoveGenerator
 
 fun main() {
-    val game = Game(Fen("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1"))
+    val board = BitBoard()
 
-    val moves = MoveGenerator(MoveGenCtx(game.data)).execute()
 
-    for (move in moves) {
-        println("${move.first.name}${move.second.name}")
-    }
+    BoardRep(board.whiteKing).print()
+    val northRay = CompassRose.ray(board.whiteKing, Direction.N)
+    BoardRep(northRay).print()
+    println(northRay.toString(2))
+    BoardRep(CompassRose.ray(board.whiteKing, Direction.NE)).print()
+    BoardRep(CompassRose.ray(board.whiteKing, Direction.NW)).print()
 }
 
 fun boardRepToBitBoard() {
@@ -109,6 +110,6 @@ fun moveGeneration() {
     val result = engine.v2.moves.MoveGenerator(MoveGenCtx(gameData)).execute()
 
     for (move in result) {
-        println("${move.first.name}${move.second.name}")
+        println("${move.from.name}${move.to.name}")
     }
 }

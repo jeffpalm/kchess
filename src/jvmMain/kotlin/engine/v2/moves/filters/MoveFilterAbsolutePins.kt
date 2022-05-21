@@ -1,6 +1,10 @@
 package engine.v2.moves.filters
 
-import engine.v2.*
+import engine.Color
+import engine.v2.BitBoard
+import engine.v2.CompassRose
+import engine.v2.Direction
+import engine.v2.Square
 import engine.v2.moves.IMoveFilter
 import engine.v2.moves.MoveGenCtx
 
@@ -29,7 +33,7 @@ class MoveFilterAbsolutePins : IMoveFilter {
     override suspend fun run(ctx: MoveGenCtx): MoveGenCtx {
         val absolutePins = getAbsolutePins(ctx, allDirections)
 
-        ctx.filterMoves { !(Square[it.first.ordinal].and(absolutePins) != 0UL && Square[it.second.ordinal].and(absolutePins) == 0UL) }
+        ctx.filterMoves { !(Square[it.from.ordinal].and(absolutePins) != 0UL && Square[it.to.ordinal].and(absolutePins) == 0UL) }
 
         return ctx
     }

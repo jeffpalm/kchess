@@ -1,6 +1,7 @@
 package engine.v2
 
 import engine.Fen
+import engine.SquareMap
 import engine.v2.adapters.BitBoardToBoardSquares
 import engine.v2.adapters.FenToBoardRep
 import engine.v2.adapters.WordToBoardSquares

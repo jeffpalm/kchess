@@ -1,9 +1,8 @@
 package engine.v2.moves.filters
 
-import engine.v2.Color
+import engine.Color
 import engine.v2.CompassRose
 import engine.v2.Direction
-import engine.v2.Square
 import engine.v2.moves.IMoveFilter
 import engine.v2.moves.MoveGenCtx
 
@@ -43,7 +42,7 @@ class MoveFilterKingInActiveCheck : IMoveFilter {
             activeKingThreats or CompassRose.knightMoveTargets(friendlyKing).and(board.knights(enemyColor))
 
         if (activeKingThreats != 0UL) {
-            ctx.filterMoves { Square[it.second.ordinal] and activeKingThreats != 0UL }
+            ctx.filterMoves { it.to.asBit() and activeKingThreats != 0UL }
         }
 
         return ctx

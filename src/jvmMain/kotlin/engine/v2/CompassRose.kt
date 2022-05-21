@@ -1,5 +1,7 @@
 package engine.v2
 
+import engine.Color
+
 object CompassRose {
     const val NW = 7
     const val N = 8

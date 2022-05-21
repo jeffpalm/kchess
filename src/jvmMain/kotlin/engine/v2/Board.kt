@@ -1,6 +1,7 @@
 package engine.v2
 
 import engine.Fen
+import engine.SquareMap
 
 class Board(fen: Fen = Fen()) {
     val rep: BoardRep = BoardRep(fen)

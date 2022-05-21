@@ -2,7 +2,7 @@ package engineTest.v2
 
 import engine.Fen
 import engine.Game
-import engine.v2.Color
+import engine.Color
 import engine.v2.GameData
 import engine.v2.Square
 import engine.v2.adapters.BoardSquaresToBitBoard

@@ -1,7 +1,8 @@
 package engine.v2.moves.rules
 
-import engine.v2.Color
+import engine.Color
 import engine.v2.Direction
+import engine.v2.Piece
 import engine.v2.adapters.BitBitsPairToPseudoMoves
 import engine.v2.adapters.BitsToListOfBit
 import engine.v2.moves.IMoveRule
@@ -32,7 +33,7 @@ class MoveRuleBlackBishop : IMoveRule {
 
     private fun handleTargetSquares(x: ULong, direction: Direction, ctx: MoveGenCtx) {
         val targetSquares = ctx.data.board.rayMoves(x, direction, Color.BLACK)
-        ctx.addMoves(BitBitsPairToPseudoMoves(x to targetSquares).output)
+        ctx.addMoves(BitBitsPairToPseudoMoves(x to targetSquares, Piece.blackBishop).output)
     }
 
 }

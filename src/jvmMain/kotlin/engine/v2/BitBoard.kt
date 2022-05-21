@@ -1,5 +1,7 @@
 package engine.v2
 
+import engine.Color
+
 class BitBoard(empty: Boolean = false) : IBitBoardPieces {
     var enPassantTarget: ULong? = null
     override var whitePawns: ULong = if (empty) 0UL else Constants.StartPosition.P

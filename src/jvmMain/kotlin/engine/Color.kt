@@ -1,4 +1,4 @@
-package engine.v2
+package engine
 
 enum class Color {
     WHITE, BLACK;

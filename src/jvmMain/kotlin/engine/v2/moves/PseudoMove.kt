@@ -1,17 +1,17 @@
 package engine.v2.moves
 
+import engine.SquareMap
 import engine.v2.Square
-import engine.v2.SquareMap
 
-data class PseudoMove(val fromSquare: SquareMap, val toSquare: SquareMap) {
-    val fromBit = Square[fromSquare.name]
-    val toBit = Square[toSquare.name]
-    val asWord: () -> ULong = { Square[fromSquare.name] or Square[fromSquare.name] }
+data class PseudoMove(val from: SquareMap, val to: SquareMap, val piece: Char) {
+    val fromBit = Square[from.name]
+    val toBit = Square[to.name]
+    val asWord: ULong = Square[from.name] or Square[from.name]
 
     fun asString(): String {
-        return "${fromSquare.name}${toSquare.name}"
+        return "${from.name}${to.name}"
     }
     fun asPair(): Pair<SquareMap, SquareMap> {
-        return Pair(fromSquare, toSquare)
+        return Pair(from, to)
     }
 }

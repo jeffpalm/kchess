@@ -2,7 +2,7 @@ package engineTest.v2
 
 import engine.Fen
 import engine.Game
-import engine.v2.SquareMap
+import engine.SquareMap
 import engine.v2.moves.AbstractMoveGenerator
 import engine.v2.moves.MoveGenCtx
 import engine.v2.moves.filters.MoveFilterAbsolutePins
@@ -31,8 +31,8 @@ internal class MoveFilterAbsolutePinsTest {
         val game = Game(Fen("rnb1kbnr/pp1ppppp/8/q1p5/3P4/2N5/PPP1PPPP/R1BQKBNR w KQkq - 2 3"))
         val moves = MoveFilterGenerator(MoveGenCtx(game.data)).execute()
         for(move in moves) {
-            assertTrue("${move.first.name} cannot equal c3") {
-                move.first != SquareMap.c3
+            assertTrue("${move.from.name} cannot equal c3") {
+                move.from != SquareMap.c3
             }
         }
     }

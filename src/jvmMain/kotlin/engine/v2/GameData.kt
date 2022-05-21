@@ -1,5 +1,7 @@
 package engine.v2
 
+import engine.Color
+
 data class GameData(
     override var board: BitBoard,
     override var turn: Color,

@@ -1,5 +1,7 @@
 package engine.v2
 
+import engine.Color
+
 interface IGameData {
     operator fun component1(): BitBoard {
         return board
