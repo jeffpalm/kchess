@@ -1,6 +1,7 @@
 package engineTest.v2
 
 import engine.Fen
+import engine.Game
 import engine.v2.Color
 import engine.v2.GameData
 import engine.v2.Square
@@ -10,18 +11,20 @@ import engine.v2.adapters.WordToBoardSquares
 import engine.v2.moves.AbstractMoveGenerator
 import engine.v2.moves.MoveGenCtx
 import engine.v2.moves.rules.MoveRuleBlackQueen
+import engine.v2.moves.rules.MoveRuleWhiteQueen
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 private class QueenMoveGenerator(context: MoveGenCtx) : AbstractMoveGenerator(
     context, listOf(
-        MoveRuleBlackQueen()
+        MoveRuleBlackQueen(),
+        MoveRuleWhiteQueen()
     ),
     listOf()
 )
 
-internal class MoveRuleBlackQueenTest {
+internal class MoveRuleQueenTest {
     private val queenOnD4 = MoveGenCtx(
         GameData(
             BoardSquaresToBitBoard(WordToBoardSquares(Square.d4, 'q').output).output,
@@ -66,6 +69,7 @@ internal class MoveRuleBlackQueenTest {
         assertTrue("shouldRun") {
             validTestMove.shouldRun(queenOnD4)
             !invalidTestMove.shouldRun(whiteToMove)
+            MoveRuleWhiteQueen().shouldRun(MoveGenCtx(Game().data))
         }
     }
 
@@ -96,11 +100,20 @@ internal class MoveRuleBlackQueenTest {
 
     @Test
     fun `queen on d4 surrounded by friendly pawns`() {
-        val moves = QueenMoveGenerator(
+        var moves = QueenMoveGenerator(
             MoveGenCtx(
                 GameData(
                     FenToBitBoard(Fen("8/8/8/2ppp3/2pqp3/2ppp3/8/8 b - - 0 1")).output,
                     Color.BLACK
+                )
+            )
+        ).execute()
+        assertEquals(0, moves.count())
+        moves = QueenMoveGenerator(
+            MoveGenCtx(
+                GameData(
+                    FenToBitBoard(Fen("8/8/8/2PPP3/2PQP3/2PPP3/8/8 b - - 0 1")).output,
+                    Color.WHITE
                 )
             )
         ).execute()
@@ -119,6 +132,16 @@ internal class MoveRuleBlackQueenTest {
                 )
             ), 0x1C141C0000UL
         )
+        MoveTest(
+            QueenMoveGenerator(
+                MoveGenCtx(
+                    GameData(
+                        FenToBitBoard(Fen("8/8/8/2ppp3/2pQp3/2ppp3/8/8 b - - 0 1")).output,
+                        Color.WHITE
+                    )
+                )
+            ), 0x1C141C0000UL
+        )
     }
 
     @Test
@@ -129,6 +152,16 @@ internal class MoveRuleBlackQueenTest {
                     GameData(
                         FenToBitBoard(Fen("8/8/8/3PP3/2PqP3/2PPP3/8/8 b - - 0 1")).output,
                         Color.BLACK
+                    )
+                )
+            ), 0x1021C141C0000UL
+        )
+        MoveTest(
+            QueenMoveGenerator(
+                MoveGenCtx(
+                    GameData(
+                        FenToBitBoard(Fen("8/8/8/3pp3/2pQp3/2ppp3/8/8 b - - 0 1")).output,
+                        Color.WHITE
                     )
                 )
             ), 0x1021C141C0000UL

@@ -103,11 +103,6 @@ object CompassRose {
         return if (i > 7) 7 else determineRayLength(start, direction, i + 1)
     }
 
-
-    fun isOnMap(word: ULong): Boolean {
-        return word != 0UL
-    }
-
     fun knightMoveTargets(start: ULong): ULong {
         return navigate(start, Direction.NNE) or navigate(start, Direction.NNW) or
                 navigate(start, Direction.NEE) or navigate(start, Direction.SEE) or
