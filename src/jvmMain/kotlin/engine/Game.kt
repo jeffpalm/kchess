@@ -88,7 +88,7 @@ class Game(fen: Fen = Fen()) {
                 removeCastlingAbility { c -> c != 'K' && c != 'Q' }
             }
             m.piece == 'k' && m.fromSquare == SquareMap.e8 -> {
-                removeCastlingAbility { c -> c != 'k' && c != 'Q' }
+                removeCastlingAbility { c -> c != 'k' && c != 'q' }
             }
             m.piece == 'R' && m.fromSquare == SquareMap.a1 -> {
                 removeCastlingAbility { c -> c != 'Q' }
