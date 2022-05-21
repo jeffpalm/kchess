@@ -1,5 +1,6 @@
 package engineTest.v2
 
+import engine.Fen
 import engine.Game
 import engine.v2.Perft
 import kotlin.test.Test
@@ -21,9 +22,19 @@ class PerftTest {
         val game = Game()
         assertEquals(8902, Perft.run(3, game))
     }
-//    @Test
-//    fun `Position 2 - Depth 1`() {
-//        val game = Game(Fen("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1"))
-//        assertEquals(48, Perft.run(1, game))
-//    }
+    @Test
+    fun `Position 2 - Depth 1`() {
+        val game = Game(Fen("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1"))
+        assertEquals(48, Perft.run(1, game))
+    }
+    @Test
+    fun `Position 3 - Depth 1`() {
+        val game = Game(Fen("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1"))
+        assertEquals(14, Perft.run(1, game))
+    }
+    @Test
+    fun `Position 4 - Depth 1`() {
+        val game = Game(Fen("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1"))
+        assertEquals(6, Perft.run(1, game))
+    }
 }

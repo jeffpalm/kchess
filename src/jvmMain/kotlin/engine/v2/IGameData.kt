@@ -5,12 +5,12 @@ interface IGameData {
         return board
     }
 
-    operator fun component2(): PieceColor {
+    operator fun component2(): Color {
         return turn
     }
 
     operator fun component3(): String {
-        return castlingAvailability
+        return castleAvail
     }
 
     operator fun component4(): String {
@@ -26,8 +26,8 @@ interface IGameData {
     }
 
     val board: BitBoard
-    val turn: PieceColor
-    val castlingAvailability: String
+    val turn: Color
+    val castleAvail: String
     val enPassantTarget: String
     val halfMoveClock: Int
     val fullMoveClock: Int

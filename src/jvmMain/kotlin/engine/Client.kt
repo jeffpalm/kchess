@@ -3,12 +3,16 @@ package engine
 import engine.v2.*
 import engine.v2.adapters.BoardSquaresToBitBoard
 import engine.v2.moves.MoveGenCtx
-import engine.v2.moves.PseudoMove
+import engine.v2.moves.MoveGenerator
 
 fun main() {
-    val game = Game()
-    game.makeMove(PseudoMove(SquareMap.e2, SquareMap.e4))
-    Perft.run(1, game)
+    val game = Game(Fen("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1"))
+
+    val moves = MoveGenerator(MoveGenCtx(game.data)).execute()
+
+    for (move in moves) {
+        println("${move.first.name}${move.second.name}")
+    }
 }
 
 fun boardRepToBitBoard() {
@@ -87,7 +91,7 @@ fun binaryMath() {
 //    println(0xff00000000000000UL.toString(2).toCharArray().size)
 
 
-    BoardRep(bb.rayMoves(Square.c1, Direction.NE, PieceColor.WHITE)).print()
+    BoardRep(bb.rayMoves(Square.c1, Direction.NE, Color.WHITE)).print()
     BoardRep(bb.occupied()).print()
 }
 
@@ -95,7 +99,7 @@ fun moveGeneration() {
     val bb = BitBoard()
     val gameData = GameData(
         bb,
-        PieceColor.WHITE,
+        Color.WHITE,
         "KQkq",
         "-",
         0,
@@ -104,7 +108,7 @@ fun moveGeneration() {
 
     val result = engine.v2.moves.MoveGenerator(MoveGenCtx(gameData)).execute()
 
-    for(move in result) {
+    for (move in result) {
         println("${move.first.name}${move.second.name}")
     }
 }

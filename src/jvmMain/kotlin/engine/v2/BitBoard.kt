@@ -16,24 +16,54 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
     override var blackKing: ULong = if (empty) 0UL else Constants.StartPosition.k
 
     override fun pieceList(): List<Pair<Char, ULong>> = listOf(
-       'P' to whitePawns,
-       'N' to whiteKnights,
-       'B' to whiteBishops,
-       'R' to whiteRooks,
-       'Q' to whiteQueens,
-       'K' to whiteKing,
-       'p' to blackPawns,
-       'n' to blackKnights,
-       'b' to blackBishops,
-       'r' to blackRooks,
-       'q' to blackQueens,
-       'k' to blackKing
+        'P' to whitePawns,
+        'N' to whiteKnights,
+        'B' to whiteBishops,
+        'R' to whiteRooks,
+        'Q' to whiteQueens,
+        'K' to whiteKing,
+        'p' to blackPawns,
+        'n' to blackKnights,
+        'b' to blackBishops,
+        'r' to blackRooks,
+        'q' to blackQueens,
+        'k' to blackKing
     )
 
-    fun occupied(color: PieceColor? = null): ULong {
+    fun king(color: Color): ULong = when (color) {
+        Color.WHITE -> whiteKing
+        Color.BLACK -> blackKing
+    }
+
+    fun queens(color: Color): ULong = when (color) {
+        Color.WHITE -> whiteQueens
+        Color.BLACK -> blackQueens
+    }
+
+    fun rooks(color: Color): ULong = when (color) {
+        Color.WHITE -> whiteRooks
+        Color.BLACK -> blackRooks
+    }
+
+    fun bishops(color: Color): ULong = when (color) {
+        Color.WHITE -> whiteBishops
+        Color.BLACK -> blackBishops
+    }
+
+    fun knights(color: Color): ULong = when (color) {
+        Color.WHITE -> whiteKnights
+        Color.BLACK -> blackKnights
+    }
+
+    fun pawns(color: Color): ULong = when (color) {
+        Color.WHITE -> whitePawns
+        Color.BLACK -> blackPawns
+    }
+
+    fun occupied(color: Color? = null): ULong {
         return when (color) {
-            PieceColor.WHITE -> whitePawns or whiteKnights or whiteBishops or whiteRooks or whiteQueens or whiteKing
-            PieceColor.BLACK -> blackPawns or blackKnights or blackBishops or blackRooks or blackQueens or blackKing
+            Color.WHITE -> whitePawns or whiteKnights or whiteBishops or whiteRooks or whiteQueens or whiteKing
+            Color.BLACK -> blackPawns or blackKnights or blackBishops or blackRooks or blackQueens or blackKing
             else -> whitePawns or whiteKnights or whiteBishops or whiteRooks or whiteQueens or whiteKing or blackPawns or blackKnights or blackBishops or blackRooks or blackQueens or blackKing
         }
     }
@@ -42,20 +72,12 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
         return 0xffffffffffffffffUL xor occupied()
     }
 
-    fun rayMoves(x: ULong, direction: Direction, color: PieceColor): ULong {
+    fun rayMoves(x: ULong, direction: Direction, color: Color): ULong {
         var moves = CompassRose.ray(x, direction)
         val blocker = moves and occupied()
 
         if (blocker != 0UL) {
-            var square = when (direction) {
-                Direction.NW, Direction.N, Direction.NE, Direction.E -> {
-                    blocker.takeLowestOneBit()
-                }
-                Direction.SE, Direction.S, Direction.SW, Direction.W -> {
-                    blocker.takeHighestOneBit()
-                }
-                else -> throw IllegalArgumentException("Direction must be one of N, NE, E, SE, S, SW, W, NW")
-            }
+            var square = Direction.getClosestBit(direction, blocker)
             val ray = CompassRose.ray(square, direction)
             moves = if ((blocker and occupied(color)).countOneBits() > 0) {
                 moves xor square.or(ray)
@@ -64,6 +86,85 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
             }
         }
         return moves
+    }
+
+    fun rayAttack(x: ULong, direction: Direction, color: Color): ULong {
+        val enemyColor = Color.inv(color)
+        val moves = CompassRose.ray(x, direction)
+        val blockers = moves and occupied()
+
+        if (blockers != 0UL) {
+            val square = Direction.getClosestBit(direction, blockers)
+            val enemy = square and occupied(enemyColor)
+            if (enemy != 0UL) {
+                return enemy
+            }
+        }
+        return 0UL
+    }
+
+    fun makeMove(move: Pair<ULong, ULong>, piece: Char, capture: Char?) {
+        when (piece) {
+            'P' -> whitePawns = whitePawns.xor(move.first).or(move.second)
+            'N' -> whiteKnights = whiteKnights.xor(move.first).or(move.second)
+            'B' -> whiteBishops = whiteBishops.xor(move.first).or(move.second)
+            'R' -> whiteRooks = whiteRooks.xor(move.first).or(move.second)
+            'Q' -> whiteQueens = whiteQueens.xor(move.first).or(move.second)
+            'K' -> whiteKing = whiteKing.xor(move.first).or(move.second)
+            'p' -> blackPawns = blackPawns.xor(move.first).or(move.second)
+            'n' -> blackKnights = blackKnights.xor(move.first).or(move.second)
+            'b' -> blackBishops = blackBishops.xor(move.first).or(move.second)
+            'r' -> blackRooks = blackRooks.xor(move.first).or(move.second)
+            'q' -> blackQueens = blackQueens.xor(move.first).or(move.second)
+            'k' -> blackKing = blackKing.xor(move.first).or(move.second)
+            else -> throw IllegalArgumentException("Piece must be one of P, N, B, R, Q, K, p, n, b, r, q, k")
+        }
+        when (capture) {
+            'P' -> whitePawns = whitePawns.xor(move.second)
+            'N' -> whiteKnights = whiteKnights.xor(move.second)
+            'B' -> whiteBishops = whiteBishops.xor(move.second)
+            'R' -> whiteRooks = whiteRooks.xor(move.second)
+            'Q' -> whiteQueens = whiteQueens.xor(move.second)
+            'K' -> whiteKing = whiteKing.xor(move.second)
+            'p' -> blackPawns = blackPawns.xor(move.second)
+            'n' -> blackKnights = blackKnights.xor(move.second)
+            'b' -> blackBishops = blackBishops.xor(move.second)
+            'r' -> blackRooks = blackRooks.xor(move.second)
+            'q' -> blackQueens = blackQueens.xor(move.second)
+            'k' -> blackKing = blackKing.xor(move.second)
+        }
+    }
+
+    fun undoMove(move: Pair<ULong, ULong>, piece: Char, capture: Char?) {
+        when (piece) {
+            'P' -> whitePawns = whitePawns.xor(move.second).or(move.first)
+            'N' -> whiteKnights = whiteKnights.xor(move.second).or(move.first)
+            'B' -> whiteBishops = whiteBishops.xor(move.second).or(move.first)
+            'R' -> whiteRooks = whiteRooks.xor(move.second).or(move.first)
+            'Q' -> whiteQueens = whiteQueens.xor(move.second).or(move.first)
+            'K' -> whiteKing = whiteKing.xor(move.second).or(move.first)
+            'p' -> blackPawns = blackPawns.xor(move.second).or(move.first)
+            'n' -> blackKnights = blackKnights.xor(move.second).or(move.first)
+            'b' -> blackBishops = blackBishops.xor(move.second).or(move.first)
+            'r' -> blackRooks = blackRooks.xor(move.second).or(move.first)
+            'q' -> blackQueens = blackQueens.xor(move.second).or(move.first)
+            'k' -> blackKing = blackKing.xor(move.second).or(move.first)
+            else -> throw IllegalArgumentException("Piece must be one of P, N, B, R, Q, K, p, n, b, r, q, k")
+        }
+        when (capture) {
+            'P' -> whitePawns = whitePawns.or(move.first)
+            'N' -> whiteKnights = whiteKnights.or(move.first)
+            'B' -> whiteBishops = whiteBishops.or(move.first)
+            'R' -> whiteRooks = whiteRooks.or(move.first)
+            'Q' -> whiteQueens = whiteQueens.or(move.first)
+            'K' -> whiteKing = whiteKing.or(move.first)
+            'p' -> blackPawns = blackPawns.or(move.first)
+            'n' -> blackKnights = blackKnights.or(move.first)
+            'b' -> blackBishops = blackBishops.or(move.first)
+            'r' -> blackRooks = blackRooks.or(move.first)
+            'q' -> blackQueens = blackQueens.or(move.first)
+            'k' -> blackKing = blackKing.or(move.first)
+        }
     }
 
     companion object {

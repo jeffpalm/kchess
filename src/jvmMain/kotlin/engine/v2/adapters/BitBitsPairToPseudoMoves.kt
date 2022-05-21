@@ -13,7 +13,10 @@ class BitBitsPairToPseudoMoves(input: Pair<ULong, ULong>) : Adapter<Pair<ULong, 
         val targetSquares = WordToSquareIndices(input.second).output
 
         for (targetIdx in targetSquares) {
-            output.add(PseudoMove(startSquare, SquareMap[targetIdx]))
+            val targetSquare = SquareMap[targetIdx]
+            if (startSquare != targetSquare) {
+                output.add(PseudoMove(startSquare, SquareMap[targetIdx]))
+            }
         }
         return output
     }

@@ -1,20 +1,20 @@
 package engine.v2.moves.rules
 
+import engine.v2.Color
 import engine.v2.CompassRose
 import engine.v2.Direction
-import engine.v2.PieceColor
 import engine.v2.Sets
 import engine.v2.adapters.BitsBitsPairToPseudoMoves
-import engine.v2.moves.AbstractMoveRule
+import engine.v2.moves.IMoveRule
 import engine.v2.moves.MoveGenCtx
 
-class MoveRuleBlackPawnPush(context: MoveGenCtx) : AbstractMoveRule<MoveGenCtx>(context) {
-    override fun shouldRun(): Boolean {
-        return context.gameData.turn == PieceColor.BLACK && context.gameData.board.blackPawns.countOneBits() > 0
+class MoveRuleBlackPawnPush : IMoveRule {
+    override fun shouldRun(ctx: MoveGenCtx): Boolean {
+        return ctx.data.turn == Color.BLACK && ctx.data.board.blackPawns.countOneBits() > 0
     }
 
-    override suspend fun run() {
-        val (board) = context.gameData
+    override suspend fun run(ctx: MoveGenCtx) {
+        val (board) = ctx.data
 
         val empty = board.empty()
         val pushMovesFrom = bAbleToPush(board.blackPawns, empty)
@@ -22,8 +22,8 @@ class MoveRuleBlackPawnPush(context: MoveGenCtx) : AbstractMoveRule<MoveGenCtx>(
         val pushTwoMovesFrom = bAbleToPushTwo(board.blackPawns, empty)
         val pushTwoMovesTo = CompassRose.navigate(pushTwoMovesFrom, Direction.S, 2)
 
-        context.addMoves(BitsBitsPairToPseudoMoves(pushMovesFrom to pushMovesTo).output)
-        context.addMoves(BitsBitsPairToPseudoMoves(pushTwoMovesFrom to pushTwoMovesTo).output)
+        ctx.addMoves(BitsBitsPairToPseudoMoves(pushMovesFrom to pushMovesTo).output)
+        ctx.addMoves(BitsBitsPairToPseudoMoves(pushTwoMovesFrom to pushTwoMovesTo).output)
     }
 
     private fun bAbleToPush(pawns: ULong, empty: ULong): ULong {

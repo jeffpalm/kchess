@@ -1,13 +1,13 @@
 package engine.v2.moves.rules
 
 import engine.v2.Direction
-import engine.v2.PieceColor
-import engine.v2.adapters.BitsToListOfBit
+import engine.v2.Color
 import engine.v2.adapters.BitBitsPairToPseudoMoves
-import engine.v2.moves.AbstractMoveRule
+import engine.v2.adapters.BitsToListOfBit
+import engine.v2.moves.IMoveRule
 import engine.v2.moves.MoveGenCtx
 
-class MoveRuleWhiteRook(context: MoveGenCtx) : AbstractMoveRule<MoveGenCtx>(context) {
+class MoveRuleWhiteRook : IMoveRule {
     private val directions: List<Direction> = listOf(
         Direction.N,
         Direction.W,
@@ -15,24 +15,24 @@ class MoveRuleWhiteRook(context: MoveGenCtx) : AbstractMoveRule<MoveGenCtx>(cont
         Direction.E,
     )
 
-    override fun shouldRun(): Boolean {
-        return context.gameData.turn == PieceColor.WHITE && context.gameData.board.whiteRooks.countOneBits() > 0
+    override fun shouldRun(ctx: MoveGenCtx): Boolean {
+        return ctx.data.turn == Color.WHITE && ctx.data.board.whiteRooks.countOneBits() > 0
     }
 
-    override suspend fun run() {
-        val (board) = context.gameData
+    override suspend fun run(ctx: MoveGenCtx) {
+        val (board) = ctx.data
 
         val individualRooks = BitsToListOfBit(board.whiteRooks).output
         for (rook in individualRooks) {
             for (direction in directions) {
-                handleTargetSquares(rook, direction)
+                handleTargetSquares(rook, direction, ctx)
             }
         }
     }
 
-    private fun handleTargetSquares(x: ULong, direction: Direction) {
-        val targetSquares = context.gameData.board.rayMoves(x, direction, PieceColor.WHITE)
-        context.addMoves(BitBitsPairToPseudoMoves(x to targetSquares).output)
+    private fun handleTargetSquares(x: ULong, direction: Direction, ctx: MoveGenCtx) {
+        val targetSquares = ctx.data.board.rayMoves(x, direction, Color.WHITE)
+        ctx.addMoves(BitBitsPairToPseudoMoves(x to targetSquares).output)
     }
 
 }

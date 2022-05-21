@@ -1,6 +1,7 @@
 package engine.v2
 
 object CompassRose {
+    const val NW = 7
     const val N = 8
     const val NE = 9
     const val E = 1
@@ -8,7 +9,6 @@ object CompassRose {
     const val S = -8
     const val SW = -9
     const val W = -1
-    const val NW = 7
     const val NNE = 17
     const val NEE = 10
     const val SEE = -6
@@ -116,13 +116,14 @@ object CompassRose {
     }
 
     fun kingMoveTargets(start: ULong): ULong {
-        return navigate(start, Direction.N) or navigate(start, Direction.NE) or
-                navigate(start, Direction.E) or navigate(start, Direction.SE) or
-                navigate(start, Direction.S) or navigate(start, Direction.SW) or
-                navigate(start, Direction.W) or navigate(start, Direction.NW)
+        return navigate(start, Direction.N) or navigate(start, Direction.NE).and(Sets.NOT_A_FILE) or
+                navigate(start, Direction.E).and(Sets.NOT_A_FILE) or navigate(start, Direction.SE).and(Sets.NOT_A_FILE) or
+                navigate(start, Direction.S) or navigate(start, Direction.SW).and(Sets.NOT_H_FILE) or
+                navigate(start, Direction.W).and(Sets.NOT_H_FILE) or navigate(start, Direction.NW).and(Sets.NOT_H_FILE)
     }
 
-    fun generateStaticRaysBySquare() {
-
+    fun pawnAttackTargets(start: ULong, color: Color): ULong = when (color) {
+        Color.WHITE -> navigate(start, Direction.NE).and(Sets.NOT_A_FILE) or navigate(start, Direction.NW).and(Sets.NOT_H_FILE)
+        Color.BLACK -> navigate(start, Direction.SE).and(Sets.NOT_A_FILE) or navigate(start, Direction.SW).and(Sets.NOT_H_FILE)
     }
 }

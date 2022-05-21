@@ -1,8 +1,8 @@
 package engineTest.v2
 
 import engine.Fen
+import engine.v2.Color
 import engine.v2.GameData
-import engine.v2.PieceColor
 import engine.v2.Square
 import engine.v2.adapters.BoardSquaresToBitBoard
 import engine.v2.adapters.FenToBitBoard
@@ -16,55 +16,56 @@ import kotlin.test.assertTrue
 
 private class QueenMoveGenerator(context: MoveGenCtx) : AbstractMoveGenerator(
     context, listOf(
-        MoveRuleBlackQueen(context)
-    )
+        MoveRuleBlackQueen()
+    ),
+    listOf()
 )
 
 internal class MoveRuleBlackQueenTest {
     private val queenOnD4 = MoveGenCtx(
         GameData(
             BoardSquaresToBitBoard(WordToBoardSquares(Square.d4, 'q').output).output,
-            PieceColor.BLACK,
+            Color.BLACK,
         )
     )
     private val queenOnA1 = MoveGenCtx(
         GameData(
             BoardSquaresToBitBoard(WordToBoardSquares(Square.a1, 'q').output).output,
-            PieceColor.BLACK,
+            Color.BLACK,
         )
     )
     private val queenOnH1 = MoveGenCtx(
         GameData(
             BoardSquaresToBitBoard(WordToBoardSquares(Square.h1, 'q').output).output,
-            PieceColor.BLACK,
+            Color.BLACK,
         )
     )
     private val queenOnH8 = MoveGenCtx(
         GameData(
             BoardSquaresToBitBoard(WordToBoardSquares(Square.h8, 'q').output).output,
-            PieceColor.BLACK,
+            Color.BLACK,
         )
     )
     private val queenOnA8 = MoveGenCtx(
         GameData(
             BoardSquaresToBitBoard(WordToBoardSquares(Square.a8, 'q').output).output,
-            PieceColor.BLACK,
+            Color.BLACK,
         )
     )
     private val whiteToMove = MoveGenCtx(
         GameData(
             BoardSquaresToBitBoard(WordToBoardSquares(Square.d4, 'q').output).output,
-            PieceColor.WHITE,
+            Color.WHITE,
         )
     )
-    private val validTestMove = MoveRuleBlackQueen(queenOnD4)
-    private val invalidTestMove = MoveRuleBlackQueen(whiteToMove)
+    private val validTestMove = MoveRuleBlackQueen()
+    private val invalidTestMove = MoveRuleBlackQueen()
 
     @Test
     fun shouldRun() {
         assertTrue("shouldRun") {
-            validTestMove.shouldRun()
-            !invalidTestMove.shouldRun()
+            validTestMove.shouldRun(queenOnD4)
+            !invalidTestMove.shouldRun(whiteToMove)
         }
     }
 
@@ -99,7 +100,7 @@ internal class MoveRuleBlackQueenTest {
             MoveGenCtx(
                 GameData(
                     FenToBitBoard(Fen("8/8/8/2ppp3/2pqp3/2ppp3/8/8 b - - 0 1")).output,
-                    PieceColor.BLACK
+                    Color.BLACK
                 )
             )
         ).execute()
@@ -113,7 +114,7 @@ internal class MoveRuleBlackQueenTest {
                 MoveGenCtx(
                     GameData(
                         FenToBitBoard(Fen("8/8/8/2PPP3/2PqP3/2PPP3/8/8 b - - 0 1")).output,
-                        PieceColor.BLACK
+                        Color.BLACK
                     )
                 )
             ), 0x1C141C0000UL
@@ -127,7 +128,7 @@ internal class MoveRuleBlackQueenTest {
                 MoveGenCtx(
                     GameData(
                         FenToBitBoard(Fen("8/8/8/3PP3/2PqP3/2PPP3/8/8 b - - 0 1")).output,
-                        PieceColor.BLACK
+                        Color.BLACK
                     )
                 )
             ), 0x1021C141C0000UL

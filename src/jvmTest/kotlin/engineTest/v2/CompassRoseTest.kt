@@ -2,7 +2,9 @@ package engineTest.v2
 
 import engine.v2.CompassRose
 import engine.v2.Direction
+import engine.v2.Square
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 internal class CompassRoseTest {
@@ -62,6 +64,18 @@ internal class CompassRoseTest {
 
     @Test
     fun kingMoveTargets() {
+        var result: ULong = CompassRose.kingMoveTargets(Square.a1)
+        assertEquals(0x302UL, result, "SW Corner\n\nExpected: 0x302UL\nReceived: 0x${result.toString(16)}UL")
+        result = CompassRose.kingMoveTargets(Square.h1)
+        assertEquals(0xC040UL, result, "SE Corner\n\nExpected: 0xC040UL\nReceived: 0x${result.toString(16)}UL")
+        result = CompassRose.kingMoveTargets(Square.a8)
+        assertEquals(0x203000000000000UL, result, "NW Corner\n\nExpected: 0x203000000000000UL\nReceived: 0x${result.toString(16)}UL")
+        result = CompassRose.kingMoveTargets(Square.h8)
+        assertEquals(0x40c0000000000000UL, result, "NE Corner\n\nExpected: 0x40c0000000000000UL\nReceived: 0x${result.toString(16)}UL")
+        result = CompassRose.kingMoveTargets(Square.a4)
+        assertEquals(0x302030000UL, result, "NE Corner\n\nExpected: 0x302030000UL\nReceived: 0x${result.toString(16)}UL")
+        result = CompassRose.kingMoveTargets(Square.h4)
+        assertEquals(0xc040c00000UL, result, "NE Corner\n\nExpected: 0xc040c00000UL\nReceived: 0x${result.toString(16)}UL")
     }
 
     @Test

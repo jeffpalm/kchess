@@ -10,5 +10,6 @@ class BitsBitsPairToPseudoMoves(wordPair: Pair<ULong, ULong>) : Adapter<Pair<ULo
 
         return fromSquares.zip(toSquares)
             .map { PseudoMove(SquareMap[it.first], SquareMap[it.second]) }
+            .filter { it.fromBit != it.toBit }
     }
 }

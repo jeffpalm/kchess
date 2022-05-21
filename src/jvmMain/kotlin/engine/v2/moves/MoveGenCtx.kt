@@ -3,8 +3,8 @@ package engine.v2.moves
 import engine.v2.IGameData
 import engine.v2.SquareMap
 
-class MoveGenCtx(val gameData: IGameData) {
-    private val moves: MutableSet<Pair<SquareMap, SquareMap>> = mutableSetOf()
+class MoveGenCtx(val data: IGameData) {
+    private var moves: MutableSet<Pair<SquareMap, SquareMap>> = mutableSetOf()
 
     fun getCount(): Int {
         return moves.size
@@ -18,7 +18,11 @@ class MoveGenCtx(val gameData: IGameData) {
         this.moves.addAll(moves.map { it.asPair() })
     }
 
-    fun getMoves(): Set<Pair<SquareMap, SquareMap>> {
+    fun moves(): Set<Pair<SquareMap, SquareMap>> {
         return moves
+    }
+
+    fun filterMoves(filter: (Pair<SquareMap, SquareMap>) -> Boolean) {
+        moves = moves.filter(filter).toMutableSet()
     }
 }
