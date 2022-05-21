@@ -16,7 +16,7 @@ class MoveRuleCastleBlack : IMoveRule {
     override fun shouldRun(ctx: MoveGenCtx): Boolean {
         val turn = ctx.data.turn
         val castlingAvail = ctx.data.castleAvail
-        return turn == Color.BLACK && castlingAvail.contains('k') || castlingAvail.contains('q')
+        return turn == Color.BLACK && (castlingAvail.contains('k') || castlingAvail.contains('q'))
     }
 
     override suspend fun run(ctx: MoveGenCtx) {

@@ -5,15 +5,16 @@ import engine.v2.adapters.BoardSquaresToBitBoard
 import engine.v2.moves.MoveGenCtx
 
 fun main() {
-    val board = BitBoard()
+    val game = Game(Fen("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1"))
 
+    val result = game.data.board.rayMoves(Square.a1, Direction.E, Color.WHITE)
 
-    BoardRep(board.whiteKing).print()
-    val northRay = CompassRose.ray(board.whiteKing, Direction.N)
-    BoardRep(northRay).print()
-    println(northRay.toString(2))
-    BoardRep(CompassRose.ray(board.whiteKing, Direction.NE)).print()
-    BoardRep(CompassRose.ray(board.whiteKing, Direction.NW)).print()
+    BoardRep(result).print()
+    BoardRep( 0xEUL).print()
+
+//    for (move in moves) {
+//        println("${move.from.name}${move.to.name} - ${move.piece}")
+//    }
 }
 
 fun boardRepToBitBoard() {
