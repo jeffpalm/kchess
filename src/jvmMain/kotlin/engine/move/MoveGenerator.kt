@@ -1,8 +1,8 @@
 package engine.move
 
-import engine.move.rules.*
 import engine.move.filters.MoveFilterAbsolutePins
 import engine.move.filters.MoveFilterKingInActiveCheck
+import engine.move.rules.*
 
 class MoveGenerator(context: MoveGenCtx) : AbstractMoveGenerator(
     context,
@@ -15,8 +15,7 @@ class MoveGenerator(context: MoveGenCtx) : AbstractMoveGenerator(
         MoveRuleBlackKnight(),
         MoveRuleWhiteKing(),
         MoveRuleBlackKing(),
-        MoveRuleWhiteBishop(),
-        MoveRuleBlackBishop(),
+        MoveRuleBishop(),
         MoveRuleWhiteRook(),
         MoveRuleBlackRook(),
         MoveRuleWhiteQueen(),
