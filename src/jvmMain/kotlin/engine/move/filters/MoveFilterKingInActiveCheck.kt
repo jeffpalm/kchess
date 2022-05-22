@@ -6,9 +6,6 @@ import engine.move.IMoveFilter
 import engine.move.MoveGenCtx
 
 class MoveFilterKingInActiveCheck : IMoveFilter {
-    override fun shouldRun(ctx: MoveGenCtx): Boolean {
-        return true
-    }
 
     override suspend fun run(ctx: MoveGenCtx): MoveGenCtx {
         val (board, turn) = ctx.data

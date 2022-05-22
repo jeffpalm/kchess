@@ -25,10 +25,8 @@ abstract class AbstractMoveGenerator(
 
     private suspend fun filter(context: MoveGenCtx) = runBlocking {
         for (filter in filters) {
-            if (filter.shouldRun(context)) {
-                launch {
-                    filter.run(context)
-                }
+            launch {
+                filter.run(context)
             }
         }
         return@runBlocking context

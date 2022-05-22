@@ -1,38 +1,20 @@
 package engine.move.filters
 
-import engine.*
+import engine.BitBoard
+import engine.Color
+import engine.Compass
+import engine.Direction
 import engine.move.IMoveFilter
 import engine.move.MoveGenCtx
 
 class MoveFilterAbsolutePins : IMoveFilter {
-    private val bishopDirections: List<Direction> = listOf(
-        Direction.NE,
-        Direction.NW,
-        Direction.SE,
-        Direction.SW
-    )
-    private val rookDirections: List<Direction> = listOf(
-        Direction.N,
-        Direction.W,
-        Direction.S,
-        Direction.E,
-    )
-    private val allDirections: List<Direction> = buildList {
-        addAll(bishopDirections)
-        addAll(rookDirections)
-    }
-
-    override fun shouldRun(ctx: MoveGenCtx): Boolean {
-        return true
-    }
-
     override suspend fun run(ctx: MoveGenCtx): MoveGenCtx {
-        val absolutePins = getAbsolutePins(ctx, allDirections)
+        val absolutePins = getAbsolutePins(ctx, Direction.sliding)
 
         ctx.filterMoves {
             when (it.piece) {
                 'K', 'k' -> true
-                else -> !(Square[it.from.ordinal].and(absolutePins) != 0UL && Square[it.to.ordinal].and(absolutePins) == 0UL)
+                else -> !(it.fromBit.and(absolutePins) != 0UL && it.toBit.and(absolutePins) == 0UL)
             }
         }
 
@@ -46,11 +28,11 @@ class MoveFilterAbsolutePins : IMoveFilter {
         for (direction in directions) {
             val xRay = Compass.ray(friendlyKing(board, turn), direction)
             val enemyOnXRay = when (direction) {
-                in bishopDirections -> when (turn) {
+                in Direction.bishops -> when (turn) {
                     Color.WHITE -> xRay and (board.blackBishops or board.blackQueens)
                     Color.BLACK -> xRay and (board.whiteBishops or board.whiteQueens)
                 }
-                in rookDirections -> when (turn) {
+                in Direction.rooks -> when (turn) {
                     Color.WHITE -> xRay and (board.blackRooks or board.blackQueens)
                     Color.BLACK -> xRay and (board.whiteRooks or board.whiteQueens)
                 }
