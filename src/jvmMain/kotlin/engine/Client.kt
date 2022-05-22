@@ -3,17 +3,16 @@ package engine
 import engine.v2.*
 import engine.v2.adapters.BoardSquaresToBitBoard
 import engine.v2.moves.MoveGenCtx
-import engine.v2.moves.MoveGenerator
 
 fun main() {
-    val game = Game(Fen("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1"))
-    val moves = MoveGenerator(MoveGenCtx(game.data)).execute()
-    for (move in moves) {
-        println("${move.from.name}${move.to.name} - ${move.piece}")
-    }
+//    val game = Game(Fen("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1"))
+//    val moves = MoveGenerator(MoveGenCtx(game.data)).execute()
+//    for (move in moves) {
+//        println("${move.from.name}${move.to.name} - ${move.piece}")
+//    }
 
-//    val game = Game()
-//    Perft.run(3, game)
+    val game = Game()
+    Perft.run(3, game)
 }
 
 fun boardRepToBitBoard() {
@@ -27,7 +26,7 @@ fun compassRoseDemo() {
     val board = Board(Fen("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1"))
     board.rep.print()
 
-    val move = Move(SquareMap.d2, SquareMap.d4, board.rep)
+    val move = Move(SquareMap.d2, SquareMap.d4, board.rep, "-")
     board.makeMove(move)
     println()
     println(move.asString())

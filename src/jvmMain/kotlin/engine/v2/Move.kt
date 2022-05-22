@@ -5,7 +5,8 @@ import engine.SquareMap
 class Move(
     override val fromSquare: SquareMap,
     override val toSquare: SquareMap,
-    boardRep: BoardRep
+    boardRep: BoardRep,
+    val prevEnPassantTarget: String
 ) : IMove {
     override val piece: Char =
         boardRep.getPiece(fromSquare) ?: throw IllegalArgumentException("No piece at $fromSquare")

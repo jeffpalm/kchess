@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class GameTest {
@@ -21,6 +22,12 @@ internal class GameTest {
 
     @Test
     fun getMoves() {
+        val game = Game()
+        game.makeMove(PseudoMove(SquareMap.d2, SquareMap.d4, Piece.whitePawn))
+        assertEquals(Piece.whitePawn, game.moves[0].piece)
+        assertEquals(SquareMap.d4, game.moves[0].toSquare)
+        assertEquals(SquareMap.d2, game.moves[0].fromSquare)
+        assertNull(game.moves[0].capture)
     }
 
     @Test
@@ -53,11 +60,13 @@ internal class GameTest {
     }
 
     @Test
-    fun `makeMove occupied all`() {
-
-    }
-
-    @Test
     fun undoMove() {
+        val game = Game()
+        game.makeMove(PseudoMove(SquareMap.d2, SquareMap.d4, Piece.whitePawn))
+        game.undoMove()
+        assertEquals("-", game.data.enPassantTarget)
+        assertEquals("KQkq", game.data.castleAvail)
+        assertEquals(0, game.data.halfMoveClock)
+        assertEquals(1, game.data.fullMoveClock)
     }
 }

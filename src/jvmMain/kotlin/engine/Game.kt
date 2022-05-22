@@ -2,13 +2,13 @@ package engine
 
 import engine.v2.*
 import engine.v2.adapters.BoardSquaresToBitBoard
+import engine.v2.adapters.GameToFen
 import engine.v2.moves.PseudoMove
 
-class Game(fen: Fen = Fen()) {
+class Game(private val fen: Fen = Fen(), private val _boardRep: BoardRep = BoardRep(fen)) {
     private val _moves: MutableList<Move> = mutableListOf()
     val moves: List<Move>
         get() = _moves
-    private val _boardRep: BoardRep = BoardRep(fen)
     val boardRep: BoardRep
         get() = _boardRep
 
@@ -24,7 +24,7 @@ class Game(fen: Fen = Fen()) {
         get() = _data
 
     fun makeMove(move: PseudoMove): Move {
-        val validatedMove = Move(move.from, move.to, _boardRep)
+        val validatedMove = Move(move.from, move.to, _boardRep, _data.enPassantTarget)
         _moves.add(validatedMove)
         _boardRep.setSquare(move.from.ordinal.toByte(), null)
         _boardRep.setSquare(move.to.ordinal.toByte(), validatedMove.piece)
@@ -57,7 +57,7 @@ class Game(fen: Fen = Fen()) {
         _data.board.undoMove(
             Square[lastMove.fromSquare.ordinal] to Square[lastMove.toSquare.ordinal], lastMove.piece, lastMove.capture
         )
-        handleEnPassantTarget(lastMove)
+        _data.enPassantTarget = lastMove.prevEnPassantTarget
     }
 
     private fun flipSideToMove() {
@@ -143,5 +143,9 @@ class Game(fen: Fen = Fen()) {
         } else {
             _data.castleAvail += c
         }
+    }
+
+    fun clone(): Game {
+        return Game(GameToFen(this).output)
     }
 }
