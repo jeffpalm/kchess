@@ -2,8 +2,10 @@ package engine
 
 enum class Direction {
     N, S, E, W, NE, NW, SE, SW, NNW, NNE, NWW, NEE, SWW, SSW, SSE, SEE;
+    fun inv(): Direction = Direction.inv(this)
 
     companion object {
+
         fun inv(direction: Direction) = when (direction) {
             N -> S
             S -> N

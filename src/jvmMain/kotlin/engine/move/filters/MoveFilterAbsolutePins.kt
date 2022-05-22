@@ -63,7 +63,7 @@ class MoveFilterAbsolutePins : IMoveFilter {
                 Direction.SE, Direction.S, Direction.SW, Direction.W -> enemyOnXRay.takeHighestOneBit()
                 else -> throw IllegalArgumentException("Invalid direction")
             }
-            val protectRay = board.rayMoves(closestEnemy, Direction.inv(direction), Color.inv(turn))
+            val protectRay = board.rayMoves(closestEnemy, direction.inv(), turn.inv())
             output = output or protectRay
         }
         return output

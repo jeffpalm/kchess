@@ -89,13 +89,12 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
     }
 
     fun rayAttack(x: ULong, direction: Direction, color: Color): ULong {
-        val enemyColor = Color.inv(color)
         val moves = Compass.ray(x, direction)
         val blockers = moves and occupied()
 
         if (blockers != 0UL) {
             val square = Direction.getClosestBit(direction, blockers)
-            val enemy = square and occupied(enemyColor)
+            val enemy = square and occupied(color.inv())
             if (enemy != 0UL) {
                 return enemy
             }

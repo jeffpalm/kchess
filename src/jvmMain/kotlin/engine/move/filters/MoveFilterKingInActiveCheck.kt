@@ -1,6 +1,5 @@
 package engine.move.filters
 
-import engine.Color
 import engine.Compass
 import engine.Direction
 import engine.move.IMoveFilter
@@ -15,7 +14,7 @@ class MoveFilterKingInActiveCheck : IMoveFilter {
         val (board, turn) = ctx.data
 
         val friendlyKing = board.king(turn)
-        val enemyColor = Color.inv(turn)
+        val enemyColor = turn.inv()
         var activeKingThreats: ULong = 0UL
 
         for (direction in Direction.bishops) {
