@@ -43,4 +43,9 @@ object Piece {
         Color.BLACK -> blackKing
         Color.WHITE -> whiteKing
     }
+
+    fun attackPieces(color: Color): List<Char> = when (color) {
+        Color.WHITE -> listOf(whitePawn, whiteKnight, whiteBishop, whiteRook, whiteQueen)
+        Color.BLACK -> listOf(blackPawn, blackKnight, blackBishop, blackRook, blackQueen)
+    }
 }

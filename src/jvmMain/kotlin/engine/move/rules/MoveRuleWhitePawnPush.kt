@@ -34,11 +34,4 @@ class MoveRuleWhitePawnPush : IMoveRule {
         val emptyRank3 = Compass.navigate(empty.and(Sets.RANK4), Direction.S).and(empty)
         return wAbleToPush(pawns, emptyRank3)
     }
-
-    private fun handlePromotion(targetSquares: ULong, ctx: MoveGenCtx) {
-        val promotionTargets = Sets.RANK8 and targetSquares
-        if (promotionTargets == 0UL) return
-
-
-    }
 }

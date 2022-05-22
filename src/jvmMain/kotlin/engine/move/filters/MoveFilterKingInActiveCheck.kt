@@ -19,7 +19,7 @@ class MoveFilterKingInActiveCheck : IMoveFilter {
             if (enemySquare != 0UL) {
                 val enemyThreats = enemySquare and (board.queens(enemyColor) or board.bishops(enemyColor))
                 if (enemyThreats != 0UL) {
-                    activeKingThreats = activeKingThreats or board.rayMoves(friendlyKing, direction, turn)
+                    activeKingThreats = activeKingThreats or board.rayMoves(friendlyKing, direction, turn) or board.rayMoves(friendlyKing, direction.inv(), turn)
                 }
             }
         }
@@ -29,7 +29,7 @@ class MoveFilterKingInActiveCheck : IMoveFilter {
             if (enemySquare != 0UL) {
                 val enemyThreats = enemySquare and (board.queens(enemyColor) or board.rooks(enemyColor))
                 if (enemyThreats != 0UL) {
-                    activeKingThreats = activeKingThreats or board.rayMoves(friendlyKing, direction, turn)
+                    activeKingThreats = activeKingThreats or board.rayMoves(friendlyKing, direction, turn) or board.rayMoves(friendlyKing, direction.inv(), turn)
                 }
             }
         }

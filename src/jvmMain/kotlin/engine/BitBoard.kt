@@ -72,6 +72,39 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
         return 0xffffffffffffffffUL xor occupied()
     }
 
+    fun allAttackTargets(color: Color): ULong {
+        var output: ULong = 0UL
+        for (piece in Piece.attackPieces(color)) {
+            output = when (piece) {
+                Piece.whitePawn, Piece.blackPawn -> output or Compass.pawnAttackTargets(pawns(color), color)
+                Piece.whiteKnight, Piece.blackKnight -> output or Compass.knightMoveTargets(knights(color))
+                Piece.whiteBishop, Piece.blackBishop -> {
+                    var bishopAttacks: ULong = 0UL
+                    for (direction in Direction.bishops) {
+                        bishopAttacks = bishopAttacks or rayAttack(bishops(color), direction, color) or rayMoves(bishops(color), direction, color)
+                    }
+                    output or bishopAttacks
+                }
+                Piece.whiteRook, Piece.blackRook -> {
+                    var rookAttacks: ULong = 0UL
+                    for (direction in Direction.rooks) {
+                        rookAttacks = rookAttacks or rayAttack(rooks(color), direction, color) or rayMoves(rooks(color), direction, color)
+                    }
+                    output or rookAttacks
+                }
+                Piece.whiteQueen, Piece.blackQueen -> {
+                    var queenAttacks: ULong = 0UL
+                    for (direction in Direction.sliding) {
+                        queenAttacks = queenAttacks or rayAttack(queens(color), direction, color) or rayMoves(queens(color), direction, color)
+                    }
+                    output or queenAttacks
+                }
+                else -> output
+            }
+        }
+        return output
+    }
+
     fun rayMoves(x: ULong, direction: Direction, color: Color): ULong {
         var moves = Compass.ray(x, direction)
         val blocker = moves and occupied()
