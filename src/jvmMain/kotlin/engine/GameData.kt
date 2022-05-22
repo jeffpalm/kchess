@@ -8,7 +8,7 @@ data class GameData(
     override var halfMoveClock: Int = 0,
     override var fullMoveClock: Int = 1
 ) : IGameData {
-    override fun copy(): IGameData {
+    override fun clone(): IGameData {
         return GameData(board, turn, castleAvail, enPassantTarget, halfMoveClock, fullMoveClock)
     }
 }

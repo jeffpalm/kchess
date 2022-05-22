@@ -1,7 +1,7 @@
 package engine.move.rules
 
 import engine.Color
-import engine.CompassRose
+import engine.Compass
 import engine.Direction
 import engine.Piece
 import engine.Sets
@@ -30,10 +30,10 @@ class MoveRuleWhitePawnAttack : IMoveRule {
     }
 
     private fun wPawnEastAttacks(pawns: ULong): ULong {
-        return (CompassRose.navigate(pawns, Direction.NE) and Sets.NOT_A_FILE)
+        return (Compass.navigate(pawns, Direction.NE) and Sets.NOT_A_FILE)
     }
 
     private fun wPawnWestAttacks(pawns: ULong): ULong {
-        return (CompassRose.navigate(pawns, Direction.NW) and Sets.NOT_H_FILE)
+        return (Compass.navigate(pawns, Direction.NW) and Sets.NOT_H_FILE)
     }
 }

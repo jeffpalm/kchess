@@ -31,5 +31,5 @@ interface IGameData {
     val enPassantTarget: String
     val halfMoveClock: Int
     val fullMoveClock: Int
-    fun copy(): IGameData
+    fun clone(): IGameData
 }

@@ -44,7 +44,7 @@ class MoveFilterAbsolutePins : IMoveFilter {
         var output: ULong = 0UL
 
         for (direction in directions) {
-            val xRay = CompassRose.ray(friendlyKing(board, turn), direction)
+            val xRay = Compass.ray(friendlyKing(board, turn), direction)
             val enemyOnXRay = when (direction) {
                 in bishopDirections -> when (turn) {
                     Color.WHITE -> xRay and (board.blackBishops or board.blackQueens)

@@ -4,15 +4,15 @@ import engine.adapter.BoardSquaresToBitBoard
 import engine.adapter.GameToFen
 import engine.move.PseudoMove
 
-class Game(private val fen: Fen = Fen(), private val _boardRep: BoardRep = BoardRep(fen)) {
+class Game(private val fen: Fen = Fen(), private val _board: Board = Board(fen)) {
     private val _moves: MutableList<Move> = mutableListOf()
     val moves: List<Move>
         get() = _moves
-    val boardRep: BoardRep
-        get() = _boardRep
+    val board: Board
+        get() = _board
 
     private val _data: GameData = GameData(
-        BoardSquaresToBitBoard(_boardRep.getSquares()).output,
+        BoardSquaresToBitBoard(_board.getSquares()).output,
         if (fen.sideToMove == "w") Color.WHITE else Color.BLACK,
         fen.castlingAvailability,
         fen.enPassantTarget,
@@ -23,10 +23,10 @@ class Game(private val fen: Fen = Fen(), private val _boardRep: BoardRep = Board
         get() = _data
 
     fun makeMove(move: PseudoMove): Move {
-        val validatedMove = Move(move.from, move.to, _boardRep, _data.enPassantTarget)
+        val validatedMove = Move(move.from, move.to, _board, _data.enPassantTarget)
         _moves.add(validatedMove)
-        _boardRep.setSquare(move.from.ordinal.toByte(), null)
-        _boardRep.setSquare(move.to.ordinal.toByte(), validatedMove.piece)
+        _board.setSquare(move.from.ordinal.toByte(), null)
+        _board.setSquare(move.to.ordinal.toByte(), validatedMove.piece)
         flipSideToMove()
         incrementClocks()
         handleRemovingCastlingAvail(validatedMove)
@@ -48,8 +48,8 @@ class Game(private val fen: Fen = Fen(), private val _boardRep: BoardRep = Board
 
     fun undoMove() {
         val lastMove = _moves.removeLast()
-        _boardRep.setSquare(lastMove.fromSquare.ordinal.toByte(), lastMove.piece)
-        _boardRep.setSquare(lastMove.toSquare.ordinal.toByte(), lastMove.capture)
+        _board.setSquare(lastMove.fromSquare.ordinal.toByte(), lastMove.piece)
+        _board.setSquare(lastMove.toSquare.ordinal.toByte(), lastMove.capture)
         flipSideToMove()
         decrementClocks()
         handleAddingCastlingAvail(lastMove)

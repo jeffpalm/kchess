@@ -1,13 +1,13 @@
 package engineTest
 
-import engine.CompassRose
+import engine.Compass
 import engine.Direction
 import engine.Square
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-internal class CompassRoseTest {
+internal class CompassTest {
     private val directions = Direction.values()
     private val cardinalDirections = listOf(
         Direction.N,
@@ -44,7 +44,7 @@ internal class CompassRoseTest {
             }
             for (test in tests) {
                 assertTrue("${direction.name} - ${test.first.toString(16)} - ${test.second.toString(16)}") {
-                    CompassRose.ray(test.first, direction) == test.second
+                    Compass.ray(test.first, direction) == test.second
                 }
             }
         }
@@ -64,19 +64,19 @@ internal class CompassRoseTest {
 
     @Test
     fun kingMoveTargets() {
-        var result: ULong = CompassRose.kingMoveTargets(Square.a1)
+        var result: ULong = Compass.kingMoveTargets(Square.a1)
         assertEquals(0x302UL, result, "SW Corner\n\nExpected: 0x302UL\nReceived: 0x${result.toString(16)}UL")
-        result = CompassRose.kingMoveTargets(Square.h1)
+        result = Compass.kingMoveTargets(Square.h1)
         assertEquals(0xC040UL, result, "SE Corner\n\nExpected: 0xC040UL\nReceived: 0x${result.toString(16)}UL")
-        result = CompassRose.kingMoveTargets(Square.a8)
+        result = Compass.kingMoveTargets(Square.a8)
         assertEquals(0x203000000000000UL, result, "NW Corner\n\nExpected: 0x203000000000000UL\nReceived: 0x${result.toString(16)}UL")
-        result = CompassRose.kingMoveTargets(Square.h8)
+        result = Compass.kingMoveTargets(Square.h8)
         assertEquals(0x40c0000000000000UL, result, "NE Corner\n\nExpected: 0x40c0000000000000UL\nReceived: 0x${result.toString(16)}UL")
-        result = CompassRose.kingMoveTargets(Square.a4)
+        result = Compass.kingMoveTargets(Square.a4)
         assertEquals(0x302030000UL, result, "NE Corner\n\nExpected: 0x302030000UL\nReceived: 0x${result.toString(16)}UL")
-        result = CompassRose.kingMoveTargets(Square.h4)
+        result = Compass.kingMoveTargets(Square.h4)
         assertEquals(0xc040c00000UL, result, "NE Corner\n\nExpected: 0xc040c00000UL\nReceived: 0x${result.toString(16)}UL")
-        result = CompassRose.kingMoveTargets(Square.g1)
+        result = Compass.kingMoveTargets(Square.g1)
         assertEquals(0xe0a0UL, result, "White King\n\nExpected: 0xe0a0UL\nReceived: 0x${result.toString(16)}UL")
     }
 

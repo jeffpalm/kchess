@@ -1,7 +1,7 @@
 package engine.adapter
 
 import engine.SquareMap
-import engine.CompassRose
+import engine.Compass
 import engine.Square
 import engine.move.PseudoMove
 
@@ -12,7 +12,7 @@ class WordPairToKnightPseudoMoves(input: Pair<ULong, ULong>, char: Char) : Adapt
 
         for (squareIndex in startSquares) {
             val fromSquare = SquareMap[squareIndex]
-            val targetSquares = input.second and CompassRose.knightMoveTargets(Square[squareIndex])
+            val targetSquares = input.second and Compass.knightMoveTargets(Square[squareIndex])
             val targetSquareIndices = WordToSquareIndices(targetSquares).output
             for (targetSquareIndex in targetSquareIndices) {
                 val targetSquare = SquareMap[targetSquareIndex]

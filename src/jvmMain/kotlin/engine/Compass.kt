@@ -1,6 +1,6 @@
 package engine
 
-object CompassRose {
+object Compass {
     const val NW = 7
     const val N = 8
     const val NE = 9
@@ -37,28 +37,6 @@ object CompassRose {
             Direction.NWW -> start.shl(6 * steps) and Sets.NOT_GH_FILE
             Direction.SWW -> start.shr(10 * steps) and Sets.NOT_GH_FILE
             Direction.SSW -> start.shr(17 * steps) and Sets.NOT_H_FILE
-        }
-    }
-
-    fun waypoint(start: ULong, direction: Direction, steps: Int = 1): ULong {
-        if (steps < 1) return start
-        return when (direction) {
-            Direction.N -> start.or(start.shl(8 * steps))
-            Direction.NE -> start.or(start.shl(9 * steps))
-            Direction.E -> start.or(start.shl(1 * steps))
-            Direction.SE -> start.or(start.shr(7 * steps))
-            Direction.S -> start.or(start.shr(8 * steps))
-            Direction.SW -> start.or(start.shr(9 * steps))
-            Direction.W -> start.or(start.shr(1 * steps))
-            Direction.NW -> start.or(start.shl(7 * steps))
-            Direction.NNE -> start.or(start.shl(17 * steps))
-            Direction.NEE -> start.or(start.shl(10 * steps))
-            Direction.SEE -> start.or(start.shr(6 * steps))
-            Direction.SSE -> start.or(start.shr(15 * steps))
-            Direction.SSW -> start.or(start.shr(17 * steps))
-            Direction.SWW -> start.or(start.shr(10 * steps))
-            Direction.NWW -> start.or(start.shl(6 * steps))
-            Direction.NNW -> start.or(start.shl(15 * steps))
         }
     }
 

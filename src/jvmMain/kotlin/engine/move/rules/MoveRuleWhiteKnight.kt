@@ -1,7 +1,7 @@
 package engine.move.rules
 
 import engine.Color
-import engine.CompassRose
+import engine.Compass
 import engine.Piece
 import engine.adapter.WordPairToKnightPseudoMoves
 import engine.move.IMoveRule
@@ -14,7 +14,7 @@ class MoveRuleWhiteKnight : IMoveRule {
 
     override suspend fun run(ctx: MoveGenCtx) {
         val (board) = ctx.data
-        val moveTargets = CompassRose.knightMoveTargets(board.whiteKnights)
+        val moveTargets = Compass.knightMoveTargets(board.whiteKnights)
         val legalMoveTargets = moveTargets and board.occupied(Color.WHITE).inv()
 
         if (legalMoveTargets.countOneBits() > 0) {

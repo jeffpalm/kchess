@@ -8,7 +8,7 @@ class GameToFen(game: Game) : Adapter<Game, Fen>(game) {
     override fun adapt(input: Game, context: Any?): Fen {
         var fenSquares: String = ""
 
-        val squares = input.boardRep.getSquares()
+        val squares = input.board.getSquares()
 
         var lastSquareIdx = 63
         for (x in 0..7) {

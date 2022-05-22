@@ -1,7 +1,7 @@
 package engine.move.rules
 
 import engine.Color
-import engine.CompassRose
+import engine.Compass
 import engine.Piece
 import engine.adapter.BitBitsPairToPseudoMoves
 import engine.move.IMoveRule
@@ -14,8 +14,8 @@ class MoveRuleBlackKing : IMoveRule {
 
     override suspend fun run(ctx: MoveGenCtx) {
         val (board) = ctx.data
-        val targetSquares = CompassRose.kingMoveTargets(board.blackKing)
-        val enemyPawnAttacks = CompassRose.pawnAttackTargets(board.whitePawns, Color.WHITE)
+        val targetSquares = Compass.kingMoveTargets(board.blackKing)
+        val enemyPawnAttacks = Compass.pawnAttackTargets(board.whitePawns, Color.WHITE)
 
         val validTargetSquares = (targetSquares and board.occupied(Color.BLACK).inv()) and enemyPawnAttacks.inv()
 

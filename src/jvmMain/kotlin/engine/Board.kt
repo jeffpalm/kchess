@@ -1,18 +1,54 @@
 package engine
 
-class Board(fen: Fen = Fen()) {
-    val rep: BoardRep = BoardRep(fen)
-    val bitBoard: BitBoard = BitBoard()
+import engine.adapter.BitBoardToBoardSquares
+import engine.adapter.FenToBoardRep
+import engine.adapter.WordToBoardSquares
 
-    fun makeMove(move: Move) {
-        rep.setSquare(move.fromSquare)
-        rep.setSquare(move.toSquare, move.piece)
+class Board(input: Any) {
+    private val squares: MutableMap<Byte, Char?>
+
+    init {
+        squares = when (input) {
+            is BitBoard -> BitBoardToBoardSquares(input).output
+            is IBitBoardPieces -> BitBoardToBoardSquares(input).output
+            is Fen -> FenToBoardRep(input).output
+            is String -> FenToBoardRep(Fen(input)).output
+            is ULong -> WordToBoardSquares(input).output
+            is MutableMap<*, *> -> input as MutableMap<Byte, Char?>
+            else -> throw IllegalArgumentException("Invalid input board rep input: $input")
+        }
     }
 
-    fun makeMoveByDirection(startSquare: SquareMap, direction: Int, steps: Int = 1) {
-        val piece = rep.getPiece(startSquare)
-        rep.setSquare(startSquare)
-        val nextSquareIdx = (startSquare.ordinal + (direction * steps)).toByte()
-        rep.setSquare(nextSquareIdx, piece)
+    fun print() {
+        println()
+        var idx = 63
+        for (i in 0..7) {
+            print("    ")
+            for (j in 7 downTo 0) {
+                print(if (squares[(idx - j).toByte()] == null) " . " else " ${squares[(idx - j).toByte()]} ")
+            }
+            idx -= 8
+            println()
+        }
+    }
+
+    fun getPiecesByType(type: Char): List<Byte> {
+        return squares.filter { it.value == type }.keys.toList()
+    }
+
+    fun setSquare(index: Byte, value: Char? = null) {
+        squares[index] = value
+    }
+
+    fun setSquare(sq: SquareMap, value: Char? = null) {
+        squares[sq.ordinal.toByte()] = value
+    }
+
+    fun getPiece(sq: SquareMap): Char? {
+        return squares[sq.ordinal.toByte()]
+    }
+
+    fun getSquares(): Map<Byte, Char?> {
+        return squares
     }
 }

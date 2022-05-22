@@ -2,18 +2,18 @@ package engine
 
 class BitBoard(empty: Boolean = false) : IBitBoardPieces {
     var enPassantTarget: ULong? = null
-    override var whitePawns: ULong = if (empty) 0UL else Constants.StartPosition.P
-    override var whiteKnights: ULong = if (empty) 0UL else Constants.StartPosition.N
-    override var whiteBishops: ULong = if (empty) 0UL else Constants.StartPosition.B
-    override var whiteRooks: ULong = if (empty) 0UL else Constants.StartPosition.R
-    override var whiteQueens: ULong = if (empty) 0UL else Constants.StartPosition.Q
-    override var whiteKing: ULong = if (empty) 0UL else Constants.StartPosition.K
-    override var blackPawns: ULong = if (empty) 0UL else Constants.StartPosition.p
-    override var blackKnights: ULong = if (empty) 0UL else Constants.StartPosition.n
-    override var blackBishops: ULong = if (empty) 0UL else Constants.StartPosition.b
-    override var blackRooks: ULong = if (empty) 0UL else Constants.StartPosition.r
-    override var blackQueens: ULong = if (empty) 0UL else Constants.StartPosition.q
-    override var blackKing: ULong = if (empty) 0UL else Constants.StartPosition.k
+    override var whitePawns: ULong = if (empty) 0UL else StartPosition.P
+    override var whiteKnights: ULong = if (empty) 0UL else StartPosition.N
+    override var whiteBishops: ULong = if (empty) 0UL else StartPosition.B
+    override var whiteRooks: ULong = if (empty) 0UL else StartPosition.R
+    override var whiteQueens: ULong = if (empty) 0UL else StartPosition.Q
+    override var whiteKing: ULong = if (empty) 0UL else StartPosition.K
+    override var blackPawns: ULong = if (empty) 0UL else StartPosition.p
+    override var blackKnights: ULong = if (empty) 0UL else StartPosition.n
+    override var blackBishops: ULong = if (empty) 0UL else StartPosition.b
+    override var blackRooks: ULong = if (empty) 0UL else StartPosition.r
+    override var blackQueens: ULong = if (empty) 0UL else StartPosition.q
+    override var blackKing: ULong = if (empty) 0UL else StartPosition.k
 
     override fun pieceList(): List<Pair<Char, ULong>> = listOf(
         'P' to whitePawns,
@@ -73,12 +73,12 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
     }
 
     fun rayMoves(x: ULong, direction: Direction, color: Color): ULong {
-        var moves = CompassRose.ray(x, direction)
+        var moves = Compass.ray(x, direction)
         val blocker = moves and occupied()
 
         if (blocker != 0UL) {
             var square = Direction.getClosestBit(direction, blocker)
-            val ray = CompassRose.ray(square, direction)
+            val ray = Compass.ray(square, direction)
             moves = if ((blocker and occupied(color)).countOneBits() > 0) {
                 moves xor square.or(ray)
             } else {
@@ -90,7 +90,7 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
 
     fun rayAttack(x: ULong, direction: Direction, color: Color): ULong {
         val enemyColor = Color.inv(color)
-        val moves = CompassRose.ray(x, direction)
+        val moves = Compass.ray(x, direction)
         val blockers = moves and occupied()
 
         if (blockers != 0UL) {
@@ -242,5 +242,24 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
 
             return x
         }
+
+        object StartPosition {
+            // White Pieces
+            const val P = 0xff00UL
+            const val R = 0x81UL
+            const val N = 0x42UL
+            const val B = 0x24UL
+            const val Q = 0x8UL
+            const val K = 0x10UL
+
+            // Black Pieces
+            const val p = 0xff000000000000UL
+            const val r = 0x8100000000000000UL
+            const val n = 0x4200000000000000UL
+            const val b = 0x2400000000000000UL
+            const val q = 0x800000000000000UL
+            const val k = 0x1000000000000000UL
+        }
     }
+
 }

@@ -5,7 +5,7 @@ import engine.move.MoveGenerator
 
 object Perft {
     fun run(depth: Int, game: Game): Int {
-        val moves = MoveGenerator(MoveGenCtx(game.data.copy())).execute()
+        val moves = MoveGenerator(MoveGenCtx(game.data.clone())).execute()
 
 //        if (depth == 1) {
 //            for (move in moves) {

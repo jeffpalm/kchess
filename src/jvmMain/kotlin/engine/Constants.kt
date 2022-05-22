@@ -7,24 +7,6 @@ object Constants {
     val rank8Indices = listOf(56, 57, 58, 59, 60, 61, 62, 63)
     val rank1Indices = listOf(0, 1, 2, 3, 4, 5, 6, 7)
 
-    object StartPosition {
-        // White Pieces
-        const val P = 0xff00UL
-        const val R = 0x81UL
-        const val N = 0x42UL
-        const val B = 0x24UL
-        const val Q = 0x8UL
-        const val K = 0x10UL
-
-        // Black Pieces
-        const val p = 0xff000000000000UL
-        const val r = 0x8100000000000000UL
-        const val n = 0x4200000000000000UL
-        const val b = 0x2400000000000000UL
-        const val q = 0x800000000000000UL
-        const val k = 0x1000000000000000UL
-    }
-
     val boardRep = mapOf<Byte, Char?>(
         0.toByte() to null,
         1.toByte() to null,
