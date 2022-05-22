@@ -1,5 +1,5 @@
 
 
 fun main() {
-
+    Demos.startPositionBitboard()
 }
