@@ -1,9 +1,8 @@
 package engine
 
-import engine.v2.*
-import engine.v2.adapters.BoardSquaresToBitBoard
-import engine.v2.adapters.GameToFen
-import engine.v2.moves.PseudoMove
+import engine.adapter.BoardSquaresToBitBoard
+import engine.adapter.GameToFen
+import engine.move.PseudoMove
 
 class Game(private val fen: Fen = Fen(), private val _boardRep: BoardRep = BoardRep(fen)) {
     private val _moves: MutableList<Move> = mutableListOf()

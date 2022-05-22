@@ -1,8 +1,8 @@
 package engine
 
-import engine.v2.*
-import engine.v2.adapters.BoardSquaresToBitBoard
-import engine.v2.moves.MoveGenCtx
+import engine.move.MoveGenerator
+import engine.adapter.BoardSquaresToBitBoard
+import engine.move.MoveGenCtx
 
 fun main() {
 //    val game = Game(Fen("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1"))
@@ -106,7 +106,7 @@ fun moveGeneration() {
         1
     )
 
-    val result = engine.v2.moves.MoveGenerator(MoveGenCtx(gameData)).execute()
+    val result = MoveGenerator(MoveGenCtx(gameData)).execute()
 
     for (move in result) {
         println("${move.from.name}${move.to.name}")
