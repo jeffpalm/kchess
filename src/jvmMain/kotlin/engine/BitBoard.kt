@@ -135,7 +135,7 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
         return 0UL
     }
 
-    fun makeMove(move: Pair<ULong, ULong>, piece: Char, capture: Char?) {
+    fun makeMove(move: Pair<ULong, ULong>, piece: Char, capture: Char? = null) {
         when (piece) {
             'P' -> whitePawns = whitePawns.xor(move.first).or(move.second)
             'N' -> whiteKnights = whiteKnights.xor(move.first).or(move.second)

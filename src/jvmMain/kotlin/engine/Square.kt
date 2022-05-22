@@ -276,6 +276,7 @@ object Square {
             else -> throw IllegalArgumentException("Invalid square $name")
         }
     }
+
     object Name {
         operator fun get(word: ULong): String = when (word) {
             a1 -> "a1"
