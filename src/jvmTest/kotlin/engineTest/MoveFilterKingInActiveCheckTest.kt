@@ -96,17 +96,6 @@ internal class MoveFilterKingInActiveCheckTest {
         assertEquals(1, kingMoves.size)
     }
 
-//    @Test
-//    fun `white king attacked multiple escapes`() {
-//        val game = Game(Fen("rn2kbnr/ppp3pp/5p2/3pp3/3PPPbq/3Q4/PPP1K1PP/RNB2BNR w kq - 2 6"))
-//        val moves = KingInActiveCheckGenerator(MoveGenCtx(game.data.clone())).execute()
-//        val kingMoves = moves.filter { it.piece == Piece.whiteKing }
-//        val correctMoves = listOf(
-//            PseudoMove(SquareMap.g1, SquareMap.f3, Piece.whiteKnight),
-////            PseudoMove()
-//        )
-//    }
-
     @Test
     fun `black king passive threats`() {
         val game = Game(Fen("rnb3nr/ppp1k2p/5qp1/1B1ppp2/P2PPP2/B4N2/P1P3PP/RN1QK2R b KQ - 3 8"))

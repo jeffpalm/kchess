@@ -48,5 +48,16 @@ internal class MoveFilterAbsolutePinsTest {
         }
     }
 
+    @Test
+    fun `double pin`() {
+        val game = Game(Fen("1nbqk1nr/1ppp2pp/4p3/p3r3/Pb3p1N/R3P1PP/1PPP1PB1/1NBQK2R w Kk - 2 9"))
+        val moves = MoveFilterGenerator(MoveGenCtx(game.data)).execute()
+        for (move in moves) {
+            assertTrue { move.from != SquareMap.d2 }
+            if (move.from == SquareMap.e3) {
+                assertTrue { move.to == SquareMap.e4 }
+            }
+        }
+    }
 
 }
