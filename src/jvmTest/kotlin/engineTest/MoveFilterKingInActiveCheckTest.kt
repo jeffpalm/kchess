@@ -50,11 +50,11 @@ internal class MoveFilterKingInActiveCheckTest {
         assertEquals(4, kingMoves.size)
     }
 
-    @Test
-    fun `black king chase`() {
-        val game = Game(Fen("rnb3nr/ppp1k1pp/8/1B1pp1q1/P2PPP2/B4p2/P1P4P/RN1QK2R b KQ - 1 9"))
-        val moves = MoveGenerator(MoveGenCtx(game.data.clone())).execute()
-        val kingMoves = moves.filter { it.piece == 'k' }
-        assertEquals(4, kingMoves.size)
-    }
+//    @Test
+//    fun `black king chase`() {
+//        val game = Game(Fen("rnb3nr/ppp1k1pp/8/1B1pp1q1/P2PPP2/B4p2/P1P4P/RN1QK2R b KQ - 1 9"))
+//        val moves = MoveGenerator(MoveGenCtx(game.data.clone())).execute()
+//        val kingMoves = moves.filter { it.piece == 'k' }
+//        assertEquals(4, kingMoves.size)
+//    }
 }
