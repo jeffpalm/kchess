@@ -16,8 +16,7 @@ class MoveGenerator(context: MoveGenCtx) : AbstractMoveGenerator(
         MoveRuleBishop(),
         MoveRuleRook(),
         MoveRuleQueen(),
-        MoveRuleCastleWhite(),
-        MoveRuleCastleBlack()
+        MoveRuleCastle(),
     ),
     listOf(
         MoveFilterAbsolutePins(),
