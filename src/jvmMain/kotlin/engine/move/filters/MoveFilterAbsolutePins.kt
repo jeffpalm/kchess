@@ -1,6 +1,5 @@
 package engine.move.filters
 
-import engine.BitBoard
 import engine.Color
 import engine.Compass
 import engine.Direction
@@ -9,7 +8,7 @@ import engine.move.MoveGenCtx
 
 class MoveFilterAbsolutePins : IMoveFilter {
     override suspend fun run(ctx: MoveGenCtx): MoveGenCtx {
-        val absolutePins = getAbsolutePins(ctx, Direction.sliding)
+        val absolutePins = getAbsolutePins(ctx)
 
         ctx.filterMoves {
             when (it.piece) {
@@ -21,12 +20,12 @@ class MoveFilterAbsolutePins : IMoveFilter {
         return ctx
     }
 
-    private fun getAbsolutePins(ctx: MoveGenCtx, directions: List<Direction>): ULong {
+    private fun getAbsolutePins(ctx: MoveGenCtx): ULong {
         val (board, turn) = ctx.data
         var output: ULong = 0UL
 
-        for (direction in directions) {
-            val xRay = Compass.ray(friendlyKing(board, turn), direction)
+        for (direction in Direction.sliding) {
+            val xRay = Compass.ray(board.king(turn), direction)
             val enemyOnXRay = when (direction) {
                 in Direction.bishops -> when (turn) {
                     Color.WHITE -> xRay and (board.blackBishops or board.blackQueens)
@@ -41,18 +40,15 @@ class MoveFilterAbsolutePins : IMoveFilter {
             if (enemyOnXRay == 0UL) continue
 
             val closestEnemy = when (direction) {
-                Direction.NW, Direction.N, Direction.NE, Direction.E -> enemyOnXRay.takeLowestOneBit()
-                Direction.SE, Direction.S, Direction.SW, Direction.W -> enemyOnXRay.takeHighestOneBit()
+                in Direction.positive -> enemyOnXRay.takeLowestOneBit()
+                in Direction.negative -> enemyOnXRay.takeHighestOneBit()
                 else -> throw IllegalArgumentException("Invalid direction")
             }
-            val protectRay = board.rayMoves(closestEnemy, direction.inv(), turn.inv())
-            output = output or protectRay
+            val protector = board.rayAttack(closestEnemy, direction.inv(), turn.inv())
+            if (protector != board.king(turn)) {
+                output = output or protector
+            }
         }
         return output
-    }
-
-    private fun friendlyKing(board: BitBoard, turn: Color): ULong = when (turn) {
-        Color.WHITE -> board.whiteKing
-        Color.BLACK -> board.blackKing
     }
 }
