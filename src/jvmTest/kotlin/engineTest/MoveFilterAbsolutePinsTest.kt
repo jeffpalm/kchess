@@ -6,14 +6,14 @@ import engine.SquareMap
 import engine.move.AbstractMoveGenerator
 import engine.move.MoveGenCtx
 import engine.move.filters.MoveFilterAbsolutePins
-import engine.move.rules.MoveRuleWhiteKnight
+import engine.move.rules.MoveRuleKnight
 import org.junit.jupiter.api.Test
 import kotlin.test.assertTrue
 
 private class MoveFilterGenerator(context: MoveGenCtx) : AbstractMoveGenerator(
     context,
     listOf(
-        MoveRuleWhiteKnight()
+        MoveRuleKnight()
     ),
     listOf(
         MoveFilterAbsolutePins()
