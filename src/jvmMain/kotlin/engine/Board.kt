@@ -4,7 +4,7 @@ import engine.adapter.BitBoardToBoardSquares
 import engine.adapter.FenToBoardRep
 import engine.adapter.WordToBoardSquares
 
-class Board(input: Any) {
+class Board(input: Any = Fen()) {
     private val squares: MutableMap<Byte, Char?>
 
     init {
@@ -15,7 +15,7 @@ class Board(input: Any) {
             is String -> FenToBoardRep(Fen(input)).output
             is ULong -> WordToBoardSquares(input).output
             is MutableMap<*, *> -> input as MutableMap<Byte, Char?>
-            else -> throw IllegalArgumentException("Invalid input board rep input: $input")
+            else -> throw IllegalArgumentException("Invalid input board input: $input")
         }
     }
 
