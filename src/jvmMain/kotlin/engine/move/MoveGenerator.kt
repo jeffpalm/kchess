@@ -15,8 +15,7 @@ class MoveGenerator(context: MoveGenCtx) : AbstractMoveGenerator(
         MoveRuleKing(),
         MoveRuleBishop(),
         MoveRuleRook(),
-        MoveRuleWhiteQueen(),
-        MoveRuleBlackQueen(),
+        MoveRuleQueen(),
         MoveRuleCastleWhite(),
         MoveRuleCastleBlack()
     ),

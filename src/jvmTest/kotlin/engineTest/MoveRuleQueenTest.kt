@@ -11,7 +11,7 @@ import engine.adapter.WordToBoardSquares
 import engine.move.AbstractMoveGenerator
 import engine.move.MoveGenCtx
 import engine.move.rules.MoveRuleBlackQueen
-import engine.move.rules.MoveRuleWhiteQueen
+import engine.move.rules.MoveRuleQueen
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -19,7 +19,7 @@ import kotlin.test.assertTrue
 private class QueenMoveGenerator(context: MoveGenCtx) : AbstractMoveGenerator(
     context, listOf(
         MoveRuleBlackQueen(),
-        MoveRuleWhiteQueen()
+        MoveRuleQueen()
     ),
     listOf()
 )
@@ -69,7 +69,7 @@ internal class MoveRuleQueenTest {
         assertTrue("shouldRun") {
             validTestMove.shouldRun(queenOnD4)
             !invalidTestMove.shouldRun(whiteToMove)
-            MoveRuleWhiteQueen().shouldRun(MoveGenCtx(Game().data))
+            MoveRuleQueen().shouldRun(MoveGenCtx(Game().data))
         }
     }
 
