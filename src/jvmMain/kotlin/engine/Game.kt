@@ -131,7 +131,7 @@ class Game(private val fen: Fen = Fen(), private val _boardRep: BoardRep = Board
     }
 
     private fun removeCastlingAbility(filter: (Char) -> Boolean) {
-        _data.castleAvail = _data.castleAvail.toCharArray().filter(filter).toString()
+        _data.castleAvail = _data.castleAvail.toCharArray().filter(filter).joinToString("")
         if (_data.castleAvail.isEmpty()) {
             _data.castleAvail = "-"
         }

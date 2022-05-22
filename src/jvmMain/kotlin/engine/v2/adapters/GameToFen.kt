@@ -37,6 +37,8 @@ class GameToFen(game: Game) : Adapter<Game, Fen>(game) {
             input.data.fullMoveClock
         )
 
-        return Fen(fenElements.joinToString(" "))
+        val fenString = fenElements.joinToString(" ")
+
+        return Fen(fenString)
     }
 }

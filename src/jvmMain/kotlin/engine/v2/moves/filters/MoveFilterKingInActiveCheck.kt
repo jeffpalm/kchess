@@ -41,7 +41,7 @@ class MoveFilterKingInActiveCheck : IMoveFilter {
         activeKingThreats =
             activeKingThreats or CompassRose.knightMoveTargets(friendlyKing).and(board.knights(enemyColor))
 
-        if (activeKingThreats != 0UL) {
+       if (activeKingThreats != 0UL) {
             ctx.filterMoves {
                 when (it.piece) {
                     'k', 'K' -> it.toBit.and(activeKingThreats) == 0UL
