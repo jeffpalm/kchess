@@ -17,4 +17,8 @@ data class Fen(val string: String = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR
         halfMoveClock = fenArray[4].toInt()
         fullMoveClock = fenArray[5].toInt()
     }
+
+    companion object {
+        val pieces = listOf('P', 'p', 'N', 'n', 'B', 'b', 'R', 'r', 'Q', 'q', 'K', 'k')
+    }
 }

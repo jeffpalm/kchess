@@ -1,16 +1,16 @@
 package engine.adapter
 
+import engine.Board
 import engine.Fen
-import engine.Constants
 
 class FenToBoardRep(fen: Fen = Fen()) : Adapter<Fen, MutableMap<Byte, Char?>>(fen) {
     override fun adapt(input: Fen, context: Any?): MutableMap<Byte, Char?> {
-        val boardRep = Constants.boardRep.toMutableMap()
+        val boardRep = Board.emptySquares.toMutableMap()
         var i = 0.toByte()
         for (row in input.boardRepresentation.reversed().split('/')) {
             for (char in row.reversed().toCharArray()) {
                 when {
-                    char in Constants.fenPieces -> {
+                    char in Fen.pieces -> {
                         boardRep[i] = char
                         i++
                     }

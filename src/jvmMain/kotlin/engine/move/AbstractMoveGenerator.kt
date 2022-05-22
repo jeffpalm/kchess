@@ -9,9 +9,7 @@ abstract class AbstractMoveGenerator(
     private val filters: List<IMoveFilter>
 ) {
     fun execute(): Set<PseudoMove> = runBlocking {
-        var ctx = generate(context)
-        ctx = filter(ctx)
-        return@runBlocking ctx.moves()
+        return@runBlocking filter(generate(context)).moves()
     }
 
     private suspend fun generate(context: MoveGenCtx) = runBlocking {
