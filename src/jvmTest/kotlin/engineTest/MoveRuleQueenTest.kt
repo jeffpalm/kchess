@@ -1,16 +1,11 @@
 package engineTest
 
-import engine.Fen
-import engine.Game
-import engine.Color
-import engine.GameData
-import engine.Square
+import engine.*
 import engine.adapter.BoardSquaresToBitBoard
 import engine.adapter.FenToBitBoard
 import engine.adapter.WordToBoardSquares
 import engine.move.AbstractMoveGenerator
 import engine.move.MoveGenCtx
-import engine.move.rules.MoveRuleBlackQueen
 import engine.move.rules.MoveRuleQueen
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -18,7 +13,6 @@ import kotlin.test.assertTrue
 
 private class QueenMoveGenerator(context: MoveGenCtx) : AbstractMoveGenerator(
     context, listOf(
-        MoveRuleBlackQueen(),
         MoveRuleQueen()
     ),
     listOf()
@@ -55,21 +49,14 @@ internal class MoveRuleQueenTest {
             Color.BLACK,
         )
     )
-    private val whiteToMove = MoveGenCtx(
-        GameData(
-            BoardSquaresToBitBoard(WordToBoardSquares(Square.d4, 'q').output).output,
-            Color.WHITE,
-        )
-    )
-    private val validTestMove = MoveRuleBlackQueen()
-    private val invalidTestMove = MoveRuleBlackQueen()
 
     @Test
     fun shouldRun() {
+        val boardWithoutQueen = BitBoard()
+        boardWithoutQueen.whiteQueens = 0UL
         assertTrue("shouldRun") {
-            validTestMove.shouldRun(queenOnD4)
-            !invalidTestMove.shouldRun(whiteToMove)
             MoveRuleQueen().shouldRun(MoveGenCtx(Game().data))
+            !MoveRuleQueen().shouldRun(MoveGenCtx(GameData(boardWithoutQueen, Color.WHITE)))
         }
     }
 
