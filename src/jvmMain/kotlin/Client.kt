@@ -1,7 +1,9 @@
+import engine.BitBoard
+
 fun main() {
-    val num = 0xff0000UL
+    val board = BitBoard()
 
 
-    println(num.toString(2))
+    println(board.castlingRightsToString())
 
 }

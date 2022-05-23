@@ -14,6 +14,7 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
     override var blackRooks: ULong = if (empty) 0UL else StartPosition.r
     override var blackQueens: ULong = if (empty) 0UL else StartPosition.q
     override var blackKing: ULong = if (empty) 0UL else StartPosition.k
+    var castlingRights: UByte = 0xFU
 
     override fun pieceList(): List<Pair<Char, ULong>> = listOf(
         'P' to whitePawns,
@@ -29,6 +30,21 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
         'q' to blackQueens,
         'k' to blackKing
     )
+
+    fun castlingRightsToString(): String {
+        var output = ""
+        for ((idx, char) in castlingRights.toString(2).toCharArray().withIndex()) {
+            if (char == '0') continue
+            when (idx) {
+                0 -> output += "K"
+                1 -> output += "Q"
+                2 -> output += "k"
+                3 -> output += "q"
+            }
+        }
+        if (output == "") return "-"
+        return output
+    }
 
     fun king(color: Color): ULong = when (color) {
         Color.WHITE -> whiteKing
@@ -292,6 +308,7 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
             const val q = 0x800000000000000UL
             const val k = 0x1000000000000000UL
         }
+
     }
 
 }
