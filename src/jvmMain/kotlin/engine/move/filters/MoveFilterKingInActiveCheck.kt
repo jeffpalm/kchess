@@ -23,8 +23,7 @@ class MoveFilterKingInActiveCheck : IMoveFilter {
             passiveKingThreats = passiveKingThreats or passiveThreats
         }
 
-        activeKingThreats =
-            activeKingThreats or Compass.knightMoveTargets(friendlyKing).and(board.knights(enemyColor))
+        activeKingThreats = activeKingThreats or Compass.knightMoveTargets(friendlyKing).and(board.knights(enemyColor))
 
         if (activeKingThreats != 0UL) {
             ctx.filterMoves {

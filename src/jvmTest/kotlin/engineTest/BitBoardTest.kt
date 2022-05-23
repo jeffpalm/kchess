@@ -1,6 +1,7 @@
 package engineTest
 
 import engine.*
+import engine.adapter.FenToBitBoard
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -61,6 +62,19 @@ internal class BitBoardTest {
         }
         assertEquals(0x49000000000000UL, wResult, "Expected 0x49000000000000UL\nReceived: 0x${wResult.toString(16)}UL")
         assertEquals(0x2a00UL, bResult, "Expected 0x2a00UL\nReceived: 0x${bResult.toString(16)}UL")
+    }
+    @Test
+    fun `rayAttack fake queen position friendly pieces`() {
+        val board = FenToBitBoard(Fen("8/1PPPPP2/1P3P2/1P1Q1P2/1P3P2/1PPPPP2/8/8 w - - 0 1")).output
+        var wResult: ULong = 0UL
+        var bResult: ULong = 0UL
+
+        for (direction in Direction.sliding) {
+            wResult = wResult or board.rayAttack(Square.d5, direction, Color.WHITE)
+            bResult = bResult or board.rayAttack(Square.d5, direction, Color.BLACK)
+        }
+        assertEquals(0UL, wResult, "Expected 0UL\nReceived: 0x${wResult.toString(16)}UL")
+        assertEquals(0x2a0022002a0000UL, bResult, "Expected 0x2a0022002a0000UL\nReceived: 0x${bResult.toString(16)}UL")
     }
 
     @Test

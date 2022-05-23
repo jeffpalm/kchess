@@ -5,10 +5,6 @@ import engine.IGameData
 class MoveGenCtx(val data: IGameData) {
     private var moves: MutableSet<PseudoMove> = mutableSetOf()
 
-    fun getCount(): Int {
-        return moves.size
-    }
-
     fun addMove(move: PseudoMove) {
         moves.add(move)
     }

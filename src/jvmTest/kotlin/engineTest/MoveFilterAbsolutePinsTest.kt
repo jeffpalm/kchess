@@ -14,13 +14,9 @@ import org.junit.jupiter.api.Test
 import kotlin.test.assertTrue
 
 private class MoveFilterGenerator(context: MoveGenCtx) : AbstractMoveGenerator(
-    context,
-    listOf(
-        MoveRuleKnight(),
-        MoveRuleWhitePawnAttack(),
-        MoveRuleWhitePawnPush()
-    ),
-    listOf(
+    context, listOf(
+        MoveRuleKnight(), MoveRuleWhitePawnAttack(), MoveRuleWhitePawnPush()
+    ), listOf(
         MoveFilterAbsolutePins()
     )
 )

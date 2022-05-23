@@ -11,8 +11,7 @@ import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 private class KingInActiveCheckGenerator(context: MoveGenCtx) : AbstractMoveGenerator(
-    context,
-    listOf(
+    context, listOf(
         MoveRuleWhitePawnPush(),
         MoveRuleWhitePawnAttack(),
         MoveRuleBlackPawnPush(),
@@ -23,19 +22,12 @@ private class KingInActiveCheckGenerator(context: MoveGenCtx) : AbstractMoveGene
         MoveRuleRook(),
         MoveRuleQueen(),
         MoveRuleCastle(),
-    ),
-    listOf(
+    ), listOf(
         MoveFilterKingInActiveCheck(),
     )
 )
 
 internal class MoveFilterKingInActiveCheckTest {
-
-    @Test
-    fun shouldRun() {
-
-    }
-
     @Test
     fun `black king active check no escape squares`() {
         val game = Game(Fen("rnbqkbnr/ppp1pppp/8/1B1p4/4P3/8/PPPP1PPP/RNBQK1NR b KQkq - 1 2"))
@@ -85,7 +77,7 @@ internal class MoveFilterKingInActiveCheckTest {
         val game = Game(Fen("rnb1kbnr/pppp1ppp/8/4p3/5PPq/8/PPPPP2P/RNBQKBNR w KQkq - 1 3"))
         val moves = KingInActiveCheckGenerator(MoveGenCtx(game.data.clone())).execute()
 
-        assertEquals(0,moves.size)
+        assertEquals(0, moves.size)
     }
 
     @Test
