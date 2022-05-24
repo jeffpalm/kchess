@@ -154,6 +154,21 @@ internal class MoveRuleQueenTest {
             ), 0x1021C141C0000UL
         )
     }
+
+    @Test
+    fun `perft Position 4 scenario`() {
+        MoveTest(
+            QueenMoveGenerator(
+                MoveGenCtx(
+                    GameData(
+                        FenToBitBoard(Fen("r3k2r/Pppp1ppp/1b3nbN/nPP5/BB2P3/q4N2/Pp1P2PP/R2Q1RK1 b kq - 0 1")).output,
+                        Color.BLACK
+                    )
+                )
+            ),
+            0x33e0100UL
+        )
+    }
 }
 
 

@@ -60,6 +60,10 @@ internal class CompassTest {
 
     @Test
     fun knightMoveTargets() {
+        for ((square, expected) in knightTargetTests) {
+            val actual = Compass.knightMoveTargets(square)
+            assertEquals(expected, actual , "Expected: 0x${expected}UL\nActual: 0x${actual}")
+        }
     }
 
     @Test
@@ -84,6 +88,20 @@ internal class CompassTest {
     fun generateStaticRaysBySquare() {
     }
 }
+
+private val knightTargetTests = listOf(
+    Square.a1 to 0x20400UL,
+    Square.b1 to 0x50800UL,
+    Square.a8 to 0x4020000000000UL,
+    Square.h8 to 0x20400000000000UL,
+    Square.h1 to 0x402000UL,
+    Square.h4 to 0x402000204000UL,
+    Square.a4 to 0x20400040200UL,
+    Square.b2 to 0x5080008UL,
+    Square.g2 to 0xa0100010UL,
+    Square.b7 to 0x800080500000000UL,
+    Square.g7 to 0x100010a000000000UL
+)
 
 
 private val northEastRayTests = listOf(

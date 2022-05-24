@@ -50,6 +50,16 @@ internal class BitBoardTest {
         assertEquals(0x90503fe030000UL, wResult, "Expected 0x90503fe030000UL\nReceived: 0x${wResult.toString(16)}UL")
         assertEquals(0x503fe030500UL, bResult, "Expected 0x503fe030500UL\nReceived: 0x${bResult.toString(16)}UL")
     }
+
+    @Test
+    fun `rayMoves Perft Position 4`() {
+        val board = FenToBitBoard(Fen("r3k2r/Pppp1ppp/1b3nbN/nPP5/BB2P3/q4N2/Pp1P2PP/R2Q1RK1 b kq - 0 1")).output
+
+        val result = board.rayMoves(Square.a3, Direction.N, Color.BLACK)
+
+        Board(result).print()
+        assertEquals(0x1000000UL, result)
+    }
     @Test
     fun `rayAttack all sliding directions from d4`() {
         val board = BitBoard()

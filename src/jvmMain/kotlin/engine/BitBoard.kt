@@ -128,7 +128,7 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
         if (blocker != 0UL) {
             var square = Direction.getClosestBit(direction, blocker)
             val ray = Compass.ray(square, direction)
-            moves = if ((blocker and occupied(color)).countOneBits() > 0) {
+            moves = if ((square and occupied(color)).countOneBits() > 0) {
                 moves xor square.or(ray)
             } else {
                 moves xor ray

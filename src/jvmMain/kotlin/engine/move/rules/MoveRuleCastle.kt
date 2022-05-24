@@ -28,10 +28,10 @@ class MoveRuleCastle : IMoveRule {
             }
             Color.BLACK -> {
                 if (board.rayMoves(Square.h8, Direction.W, Color.BLACK) == 0x6000000000000000UL) {
-                    ctx.addMove(PseudoMove(SquareMap.e1, SquareMap.g1, Piece.blackKing))
+                    ctx.addMove(PseudoMove(SquareMap.e8, SquareMap.g8, Piece.blackKing))
                 }
                 if (board.rayMoves(Square.a8, Direction.E, Color.BLACK) == 0xE00000000000000UL) {
-                    ctx.addMove(PseudoMove(SquareMap.e1, SquareMap.c1, Piece.blackKing))
+                    ctx.addMove(PseudoMove(SquareMap.e8, SquareMap.c8, Piece.blackKing))
                 }
             }
         }

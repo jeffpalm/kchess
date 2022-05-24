@@ -14,7 +14,6 @@ class MoveRuleKing : IMoveRule {
     override suspend fun run(ctx: MoveGenCtx) {
         val (board, turn) = ctx.data
         val targetSquares = Compass.kingMoveTargets(board.king(turn))
-//        val enemyPawnAttacks = Compass.pawnAttackTargets(board.pawns(turn.inv()), turn.inv())
 
         val validTargetSquares = (targetSquares and board.occupied(turn).inv()) and board.allAttackTargets(turn.inv()).inv()
 

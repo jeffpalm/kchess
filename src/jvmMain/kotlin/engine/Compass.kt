@@ -1,23 +1,6 @@
 package engine
 
 object Compass {
-    const val NW = 7
-    const val N = 8
-    const val NE = 9
-    const val E = 1
-    const val SE = -7
-    const val S = -8
-    const val SW = -9
-    const val W = -1
-    const val NNE = 17
-    const val NEE = 10
-    const val SEE = -6
-    const val SSE = -15
-    const val SSW = -17
-    const val SWW = -10
-    const val NWW = 6
-    const val NNW = 15
-
     fun navigate(start: ULong, direction: Direction, steps: Int = 1): ULong {
         if (steps < 1) return start
         return when (direction) {

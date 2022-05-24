@@ -6,8 +6,10 @@ import engine.Piece
 import engine.SquareMap
 import engine.move.AbstractMoveGenerator
 import engine.move.MoveGenCtx
+import engine.move.PseudoMove
 import engine.move.filters.MoveFilterAbsolutePins
 import engine.move.rules.MoveRuleKnight
+import engine.move.rules.MoveRuleQueen
 import engine.move.rules.MoveRuleWhitePawnAttack
 import engine.move.rules.MoveRuleWhitePawnPush
 import org.junit.jupiter.api.Test
@@ -15,7 +17,7 @@ import kotlin.test.assertTrue
 
 private class MoveFilterGenerator(context: MoveGenCtx) : AbstractMoveGenerator(
     context, listOf(
-        MoveRuleKnight(), MoveRuleWhitePawnAttack(), MoveRuleWhitePawnPush()
+        MoveRuleQueen(), MoveRuleKnight(), MoveRuleWhitePawnAttack(), MoveRuleWhitePawnPush(),
     ), listOf(
         MoveFilterAbsolutePins()
     )
@@ -53,6 +55,16 @@ internal class MoveFilterAbsolutePinsTest {
             if (move.from == SquareMap.e3) {
                 assertTrue { move.to == SquareMap.e4 }
             }
+        }
+    }
+
+    @Test
+    fun `neighbor pin`() {
+        val game = Game(Fen("r3k2r/Pppp1ppp/1b3nbN/nPP5/BB2P3/q4N2/Pp1P2PP/R2Q1RK1 b kq - 0 1"))
+        val moves = MoveFilterGenerator(MoveGenCtx(game.data)).execute()
+
+        assertTrue {
+            moves.contains(PseudoMove(SquareMap.a3, SquareMap.a4, 'q'))
         }
     }
 
