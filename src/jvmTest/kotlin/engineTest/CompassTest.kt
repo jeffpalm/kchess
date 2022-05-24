@@ -2,7 +2,7 @@ package engineTest
 
 import engine.Compass
 import engine.Direction
-import engine.Square
+import engine.Sq
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -68,19 +68,19 @@ internal class CompassTest {
 
     @Test
     fun kingMoveTargets() {
-        var result: ULong = Compass.kingMoveTargets(Square.a1)
+        var result: ULong = Compass.kingMoveTargets(Sq.a1)
         assertEquals(0x302UL, result, "SW Corner\n\nExpected: 0x302UL\nReceived: 0x${result.toString(16)}UL")
-        result = Compass.kingMoveTargets(Square.h1)
+        result = Compass.kingMoveTargets(Sq.h1)
         assertEquals(0xC040UL, result, "SE Corner\n\nExpected: 0xC040UL\nReceived: 0x${result.toString(16)}UL")
-        result = Compass.kingMoveTargets(Square.a8)
+        result = Compass.kingMoveTargets(Sq.a8)
         assertEquals(0x203000000000000UL, result, "NW Corner\n\nExpected: 0x203000000000000UL\nReceived: 0x${result.toString(16)}UL")
-        result = Compass.kingMoveTargets(Square.h8)
+        result = Compass.kingMoveTargets(Sq.h8)
         assertEquals(0x40c0000000000000UL, result, "NE Corner\n\nExpected: 0x40c0000000000000UL\nReceived: 0x${result.toString(16)}UL")
-        result = Compass.kingMoveTargets(Square.a4)
+        result = Compass.kingMoveTargets(Sq.a4)
         assertEquals(0x302030000UL, result, "NE Corner\n\nExpected: 0x302030000UL\nReceived: 0x${result.toString(16)}UL")
-        result = Compass.kingMoveTargets(Square.h4)
+        result = Compass.kingMoveTargets(Sq.h4)
         assertEquals(0xc040c00000UL, result, "NE Corner\n\nExpected: 0xc040c00000UL\nReceived: 0x${result.toString(16)}UL")
-        result = Compass.kingMoveTargets(Square.g1)
+        result = Compass.kingMoveTargets(Sq.g1)
         assertEquals(0xe0a0UL, result, "White King\n\nExpected: 0xe0a0UL\nReceived: 0x${result.toString(16)}UL")
     }
 
@@ -90,17 +90,17 @@ internal class CompassTest {
 }
 
 private val knightTargetTests = listOf(
-    Square.a1 to 0x20400UL,
-    Square.b1 to 0x50800UL,
-    Square.a8 to 0x4020000000000UL,
-    Square.h8 to 0x20400000000000UL,
-    Square.h1 to 0x402000UL,
-    Square.h4 to 0x402000204000UL,
-    Square.a4 to 0x20400040200UL,
-    Square.b2 to 0x5080008UL,
-    Square.g2 to 0xa0100010UL,
-    Square.b7 to 0x800080500000000UL,
-    Square.g7 to 0x100010a000000000UL
+    Sq.a1 to 0x20400UL,
+    Sq.b1 to 0x50800UL,
+    Sq.a8 to 0x4020000000000UL,
+    Sq.h8 to 0x20400000000000UL,
+    Sq.h1 to 0x402000UL,
+    Sq.h4 to 0x402000204000UL,
+    Sq.a4 to 0x20400040200UL,
+    Sq.b2 to 0x5080008UL,
+    Sq.g2 to 0xa0100010UL,
+    Sq.b7 to 0x800080500000000UL,
+    Sq.g7 to 0x100010a000000000UL
 )
 
 

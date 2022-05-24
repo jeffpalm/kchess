@@ -16,7 +16,7 @@ object Demos {
 
         println("Any ULong")
         Board(0x1UL).print()
-        Board(Square.h1).print()
+        Board(Sq.h1).print()
     }
 
     fun startPositionBitboard() {
@@ -63,7 +63,7 @@ object Demos {
     fun binaryMath() {
         val bb = BitBoard()
 
-        Board(bb.rayMoves(Square.c1, Direction.NE, Color.WHITE)).print()
+        Board(bb.rayMoves(Sq.c1, Direction.NE, Color.WHITE)).print()
         Board(bb.occupied()).print()
     }
 

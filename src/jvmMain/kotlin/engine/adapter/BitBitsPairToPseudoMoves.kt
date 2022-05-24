@@ -1,7 +1,7 @@
 package engine.adapter
 
-import engine.SquareMap
 import engine.BitBoard
+import engine.Square
 import engine.move.PseudoMove
 
 class BitBitsPairToPseudoMoves(input: Pair<ULong, ULong>, char: Char) : Adapter<Pair<ULong, ULong>, List<PseudoMove>>(input, char) {
@@ -10,7 +10,7 @@ class BitBitsPairToPseudoMoves(input: Pair<ULong, ULong>, char: Char) : Adapter<
         if (input.first == 0UL || input.second == 0UL) return listOf()
 
         val output: MutableList<PseudoMove> = mutableListOf()
-        val startSquare = SquareMap[input.first]
+        val startSquare = Square[input.first]
         var targetSquares = WordToSquareIndices(input.second).output
 
         val targetPromos = input.second and BitBoard.promoSquares(context as Char)
@@ -19,14 +19,14 @@ class BitBitsPairToPseudoMoves(input: Pair<ULong, ULong>, char: Char) : Adapter<
             val targetPromoIndices = WordToSquareIndices(targetPromos).output
             for (toSquare in targetPromoIndices) {
                 targetSquares = targetSquares.filter { it != toSquare }
-                output.addAll(PseudoMove.getPromoMoves(startSquare, SquareMap[toSquare], context))
+                output.addAll(PseudoMove.getPromoMoves(startSquare, Square[toSquare], context))
             }
         }
 
         for (targetIdx in targetSquares) {
-            val targetSquare = SquareMap[targetIdx]
+            val targetSquare = Square[targetIdx]
             if (startSquare != targetSquare) {
-                output.add(PseudoMove(startSquare, SquareMap[targetIdx], context as Char))
+                output.add(PseudoMove(startSquare, Square[targetIdx], context as Char))
             }
         }
         return output

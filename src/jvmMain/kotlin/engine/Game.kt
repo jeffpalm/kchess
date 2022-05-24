@@ -31,7 +31,7 @@ class Game(private val fen: Fen = Fen(), private val _board: Board = Board(fen))
         incrementClocks()
         handleRemovingCastlingAvail(validatedMove)
         _data.board.makeMove(
-            Square[move.from.ordinal] to Square[move.to.ordinal], validatedMove.piece, validatedMove.capture
+            Sq[move.from.ordinal] to Sq[move.to.ordinal], validatedMove.piece, validatedMove.capture
         )
 
         handleEnPassantTarget(validatedMove)
@@ -41,7 +41,7 @@ class Game(private val fen: Fen = Fen(), private val _board: Board = Board(fen))
     private fun handleEnPassantTarget(move: Move) {
         _data.enPassantTarget = move.enPassantTarget()
         if (_data.enPassantTarget != "-") {
-            _data.board.enPassantTarget = Square[_data.enPassantTarget]
+            _data.board.enPassantTarget = Sq[_data.enPassantTarget]
         }
     }
 
@@ -54,7 +54,7 @@ class Game(private val fen: Fen = Fen(), private val _board: Board = Board(fen))
         decrementClocks()
         handleAddingCastlingAvail(lastMove)
         _data.board.undoMove(
-            Square[lastMove.fromSquare.ordinal] to Square[lastMove.toSquare.ordinal], lastMove.piece, lastMove.capture
+            Sq[lastMove.fromSquare.ordinal] to Sq[lastMove.toSquare.ordinal], lastMove.piece, lastMove.capture
         )
         _data.enPassantTarget = lastMove.prevEnPassantTarget
     }
@@ -83,22 +83,22 @@ class Game(private val fen: Fen = Fen(), private val _board: Board = Board(fen))
 
     private fun handleRemovingCastlingAvail(m: Move) {
         when {
-            m.piece == 'K' && m.fromSquare == SquareMap.e1 -> {
+            m.piece == 'K' && m.fromSquare == Square.e1 -> {
                 removeCastlingAbility { c -> c != 'K' && c != 'Q' }
             }
-            m.piece == 'k' && m.fromSquare == SquareMap.e8 -> {
+            m.piece == 'k' && m.fromSquare == Square.e8 -> {
                 removeCastlingAbility { c -> c != 'k' && c != 'q' }
             }
-            m.piece == 'R' && m.fromSquare == SquareMap.a1 -> {
+            m.piece == 'R' && m.fromSquare == Square.a1 -> {
                 removeCastlingAbility { c -> c != 'Q' }
             }
-            m.piece == 'R' && m.fromSquare == SquareMap.h1 -> {
+            m.piece == 'R' && m.fromSquare == Square.h1 -> {
                 removeCastlingAbility { c -> c != 'K' }
             }
-            m.piece == 'r' && m.fromSquare == SquareMap.a8 -> {
+            m.piece == 'r' && m.fromSquare == Square.a8 -> {
                 removeCastlingAbility { c -> c != 'q' }
             }
-            m.piece == 'r' && m.fromSquare == SquareMap.h8 -> {
+            m.piece == 'r' && m.fromSquare == Square.h8 -> {
                 removeCastlingAbility { c -> c != 'k' }
             }
         }
@@ -106,24 +106,24 @@ class Game(private val fen: Fen = Fen(), private val _board: Board = Board(fen))
 
     private fun handleAddingCastlingAvail(m: Move) {
         when {
-            m.piece == 'K' && m.fromSquare == SquareMap.e1 -> {
+            m.piece == 'K' && m.fromSquare == Square.e1 -> {
                 addCastlingAbility('K')
                 addCastlingAbility('Q')
             }
-            m.piece == 'k' && m.fromSquare == SquareMap.e8 -> {
+            m.piece == 'k' && m.fromSquare == Square.e8 -> {
                 addCastlingAbility('k')
                 addCastlingAbility('q')
             }
-            m.piece == 'R' && m.fromSquare == SquareMap.a1 -> {
+            m.piece == 'R' && m.fromSquare == Square.a1 -> {
                 addCastlingAbility('Q')
             }
-            m.piece == 'R' && m.fromSquare == SquareMap.h1 -> {
+            m.piece == 'R' && m.fromSquare == Square.h1 -> {
                 addCastlingAbility('K')
             }
-            m.piece == 'r' && m.fromSquare == SquareMap.a8 -> {
+            m.piece == 'r' && m.fromSquare == Square.a8 -> {
                 addCastlingAbility('q')
             }
-            m.piece == 'r' && m.fromSquare == SquareMap.h8 -> {
+            m.piece == 'r' && m.fromSquare == Square.h8 -> {
                 addCastlingAbility('k')
             }
         }

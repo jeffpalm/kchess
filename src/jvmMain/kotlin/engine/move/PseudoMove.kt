@@ -1,24 +1,24 @@
 package engine.move
 
-import engine.SquareMap
-import engine.Piece
 import engine.Square
+import engine.Piece
+import engine.Sq
 
-data class PseudoMove(val from: SquareMap, val to: SquareMap, val piece: Char, val promo: Char? = null) {
-    val fromBit = Square[from.name]
-    val toBit = Square[to.name]
-    val asWord: ULong = Square[from.name] or Square[from.name]
+data class PseudoMove(val from: Square, val to: Square, val piece: Char, val promo: Char? = null) {
+    val fromBit = Sq[from.name]
+    val toBit = Sq[to.name]
+    val asWord: ULong = Sq[from.name] or Sq[from.name]
 
     fun asString(): String {
         return "${from.name}${to.name}"
     }
 
-    fun asPair(): Pair<SquareMap, SquareMap> {
+    fun asPair(): Pair<Square, Square> {
         return Pair(from, to)
     }
 
     companion object {
-        fun getPromoMoves(from: SquareMap, to: SquareMap, piece: Char): List<PseudoMove> = when (piece) {
+        fun getPromoMoves(from: Square, to: Square, piece: Char): List<PseudoMove> = when (piece) {
             Piece.whitePawn -> listOf(
                 PseudoMove(from, to, piece, 'Q'),
                 PseudoMove(from, to, piece, 'R'),

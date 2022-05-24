@@ -3,7 +3,7 @@ package engineTest
 import engine.Fen
 import engine.Game
 import engine.Piece
-import engine.SquareMap
+import engine.Square
 import engine.move.AbstractMoveGenerator
 import engine.move.MoveGenCtx
 import engine.move.PseudoMove
@@ -30,7 +30,7 @@ internal class MoveFilterAbsolutePinsTest {
         val moves = MoveFilterGenerator(MoveGenCtx(game.data)).execute()
         for (move in moves) {
             assertTrue("${move.from.name} cannot equal c3") {
-                move.from != SquareMap.c3
+                move.from != Square.c3
             }
         }
     }
@@ -39,10 +39,10 @@ internal class MoveFilterAbsolutePinsTest {
     fun `pinned pawn by rook`() {
         val game = Game(Fen("1nbqkbnr/1pppp1pp/4r3/p7/P4p2/R3PN1P/1PPP1PP1/1NBQKB1R w Kk - 0 6"))
         val moves = MoveFilterGenerator(MoveGenCtx(game.data)).execute()
-        val e3PawnMoves = moves.filter { it.from == SquareMap.e3 }
+        val e3PawnMoves = moves.filter { it.from == Square.e3 }
         for (move in e3PawnMoves) {
             assertTrue { move.piece == Piece.whitePawn }
-            assertTrue { move.to == SquareMap.e4 }
+            assertTrue { move.to == Square.e4 }
         }
     }
 
@@ -51,9 +51,9 @@ internal class MoveFilterAbsolutePinsTest {
         val game = Game(Fen("1nbqk1nr/1ppp2pp/4p3/p3r3/Pb3p1N/R3P1PP/1PPP1PB1/1NBQK2R w Kk - 2 9"))
         val moves = MoveFilterGenerator(MoveGenCtx(game.data)).execute()
         for (move in moves) {
-            assertTrue { move.from != SquareMap.d2 }
-            if (move.from == SquareMap.e3) {
-                assertTrue { move.to == SquareMap.e4 }
+            assertTrue { move.from != Square.d2 }
+            if (move.from == Square.e3) {
+                assertTrue { move.to == Square.e4 }
             }
         }
     }
@@ -64,7 +64,7 @@ internal class MoveFilterAbsolutePinsTest {
         val moves = MoveFilterGenerator(MoveGenCtx(game.data)).execute()
 
         assertTrue {
-            moves.contains(PseudoMove(SquareMap.a3, SquareMap.a4, 'q'))
+            moves.contains(PseudoMove(Square.a3, Square.a4, 'q'))
         }
     }
 

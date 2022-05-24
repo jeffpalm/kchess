@@ -1,7 +1,6 @@
 package engine
 
 class BitBoard(empty: Boolean = false) : IBitBoardPieces {
-    var enPassantTarget: ULong? = null
     override var whitePawns: ULong = if (empty) 0UL else StartPosition.P
     override var whiteKnights: ULong = if (empty) 0UL else StartPosition.N
     override var whiteBishops: ULong = if (empty) 0UL else StartPosition.B
@@ -14,7 +13,9 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
     override var blackRooks: ULong = if (empty) 0UL else StartPosition.r
     override var blackQueens: ULong = if (empty) 0UL else StartPosition.q
     override var blackKing: ULong = if (empty) 0UL else StartPosition.k
+    var enPassantTarget: ULong? = null
     var castlingRights: UByte = 0xFU
+    var turn: Boolean = true
 
     override fun pieceList(): List<Pair<Char, ULong>> = listOf(
         'P' to whitePawns,
@@ -30,6 +31,10 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
         'q' to blackQueens,
         'k' to blackKing
     )
+
+    fun print() {
+        Board(this).print()
+    }
 
     fun castlingRightsToString(): String {
         var output = ""

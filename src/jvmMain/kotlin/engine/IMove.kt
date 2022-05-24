@@ -1,8 +1,8 @@
 package engine
 
 interface IMove {
-    val fromSquare: SquareMap
-    val toSquare: SquareMap
+    val fromSquare: Square
+    val toSquare: Square
     val piece: Char
     val capture: Char?
 }

@@ -1,6 +1,6 @@
 package engine.adapter
 
-import engine.SquareMap
+import engine.Square
 import engine.BitBoard
 import engine.move.PseudoMove
 
@@ -24,7 +24,7 @@ class PawnPushPairToPseudoMoves(wordPair: Pair<ULong, ULong>, piece: Char) :
             val fromSquare = fromSquares[toSquaresIdx]
             fromSquares = fromSquares.filter { it != fromSquare }
             toSquares = toSquares.filter { it != toSquare }
-            output.addAll(PseudoMove.getPromoMoves(SquareMap[fromSquare], SquareMap[toSquare], context as Char))
+            output.addAll(PseudoMove.getPromoMoves(Square[fromSquare], Square[toSquare], context as Char))
         }
 
         output.addAll(getPushMoves(fromSquares, toSquares, context as Char))
@@ -33,7 +33,7 @@ class PawnPushPairToPseudoMoves(wordPair: Pair<ULong, ULong>, piece: Char) :
     }
 
     private fun getPushMoves(from: List<Int>, to: List<Int>, char: Char): List<PseudoMove> =  from.zip(to)
-        .map { PseudoMove(SquareMap[it.first], SquareMap[it.second], char) }
+        .map { PseudoMove(Square[it.first], Square[it.second], char) }
         .filter { it.fromBit != it.toBit }
 
 }

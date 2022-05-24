@@ -2,7 +2,7 @@ package engine.adapter
 
 import engine.Board
 import engine.IBitBoardPieces
-import engine.Square
+import engine.Sq
 
 private typealias BoardSquares = MutableMap<Byte, Char?>
 
@@ -16,5 +16,5 @@ class BitBoardToBoardSquares(bitBoard: IBitBoardPieces) : Adapter<IBitBoardPiece
     }
 
     private fun populateBoardSquares(word: ULong, board: BoardSquares, char: Char) =
-        BitsToListOfBit(word).output.forEach { bit -> board[Square.IdxByte[bit]] = char }
+        BitsToListOfBit(word).output.forEach { bit -> board[Sq.IdxByte[bit]] = char }
 }

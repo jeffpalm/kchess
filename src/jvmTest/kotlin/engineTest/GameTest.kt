@@ -2,7 +2,7 @@ package engineTest
 
 import engine.Fen
 import engine.Game
-import engine.SquareMap
+import engine.Square
 import engine.Piece
 import engine.move.PseudoMove
 import org.junit.jupiter.api.BeforeAll
@@ -17,16 +17,16 @@ internal class GameTest {
 
     @BeforeAll
     fun setup() {
-        defaultGame.makeMove(PseudoMove(SquareMap.d2, SquareMap.d4, Piece.whitePawn))
+        defaultGame.makeMove(PseudoMove(Square.d2, Square.d4, Piece.whitePawn))
     }
 
     @Test
     fun getMoves() {
         val game = Game()
-        game.makeMove(PseudoMove(SquareMap.d2, SquareMap.d4, Piece.whitePawn))
+        game.makeMove(PseudoMove(Square.d2, Square.d4, Piece.whitePawn))
         assertEquals(Piece.whitePawn, game.moves[0].piece)
-        assertEquals(SquareMap.d4, game.moves[0].toSquare)
-        assertEquals(SquareMap.d2, game.moves[0].fromSquare)
+        assertEquals(Square.d4, game.moves[0].toSquare)
+        assertEquals(Square.d2, game.moves[0].fromSquare)
         assertNull(game.moves[0].capture)
     }
 
@@ -43,7 +43,7 @@ internal class GameTest {
     @Test
     fun `makeMove updates bitboard correctly - capture`() {
         val game = Game(Fen("rnb1kbnr/pp1ppppp/8/q1p5/3P4/2N5/PPP1PPPP/R1BQKBNR w KQkq - 2 3"))
-        game.makeMove(PseudoMove(SquareMap.d4, SquareMap.c5, Piece.whitePawn))
+        game.makeMove(PseudoMove(Square.d4, Square.c5, Piece.whitePawn))
         val result = game.data.board.blackPawns
         assertEquals(0xfb000000000000UL, result, "Expected: 0xf7000000000000UL\nReceived: 0x${result.toString(16)}UL")
     }
@@ -62,7 +62,7 @@ internal class GameTest {
     @Test
     fun undoMove() {
         val game = Game()
-        game.makeMove(PseudoMove(SquareMap.d2, SquareMap.d4, Piece.whitePawn))
+        game.makeMove(PseudoMove(Square.d2, Square.d4, Piece.whitePawn))
         game.undoMove()
         assertEquals("-", game.data.enPassantTarget)
         assertEquals("KQkq", game.data.castleAvail)

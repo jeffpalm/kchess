@@ -1,6 +1,6 @@
 package engineTest
 
-import engine.Square
+import engine.Sq
 import engine.move.AbstractMoveGenerator
 import kotlin.test.assertEquals
 
@@ -9,7 +9,7 @@ class MoveTest(moveGenerator: AbstractMoveGenerator, expected: ULong) {
         val moves = moveGenerator.execute()
         var result = 0UL
         for (move in moves) {
-            result = result.or(Square[move.to.ordinal])
+            result = result.or(Sq[move.to.ordinal])
         }
         assertEquals(
             expected,

@@ -21,31 +21,31 @@ private class QueenMoveGenerator(context: MoveGenCtx) : AbstractMoveGenerator(
 internal class MoveRuleQueenTest {
     private val queenOnD4 = MoveGenCtx(
         GameData(
-            BoardSquaresToBitBoard(WordToBoardSquares(Square.d4, 'q').output).output,
+            BoardSquaresToBitBoard(WordToBoardSquares(Sq.d4, 'q').output).output,
             Color.BLACK,
         )
     )
     private val queenOnA1 = MoveGenCtx(
         GameData(
-            BoardSquaresToBitBoard(WordToBoardSquares(Square.a1, 'q').output).output,
+            BoardSquaresToBitBoard(WordToBoardSquares(Sq.a1, 'q').output).output,
             Color.BLACK,
         )
     )
     private val queenOnH1 = MoveGenCtx(
         GameData(
-            BoardSquaresToBitBoard(WordToBoardSquares(Square.h1, 'q').output).output,
+            BoardSquaresToBitBoard(WordToBoardSquares(Sq.h1, 'q').output).output,
             Color.BLACK,
         )
     )
     private val queenOnH8 = MoveGenCtx(
         GameData(
-            BoardSquaresToBitBoard(WordToBoardSquares(Square.h8, 'q').output).output,
+            BoardSquaresToBitBoard(WordToBoardSquares(Sq.h8, 'q').output).output,
             Color.BLACK,
         )
     )
     private val queenOnA8 = MoveGenCtx(
         GameData(
-            BoardSquaresToBitBoard(WordToBoardSquares(Square.a8, 'q').output).output,
+            BoardSquaresToBitBoard(WordToBoardSquares(Sq.a8, 'q').output).output,
             Color.BLACK,
         )
     )

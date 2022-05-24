@@ -40,11 +40,11 @@ class Board(input: Any = Fen()) {
         squares[index] = value
     }
 
-    fun setSquare(sq: SquareMap, value: Char? = null) {
+    fun setSquare(sq: Square, value: Char? = null) {
         squares[sq.ordinal.toByte()] = value
     }
 
-    fun getPiece(sq: SquareMap): Char? {
+    fun getPiece(sq: Square): Char? {
         return squares[sq.ordinal.toByte()]
     }
 
