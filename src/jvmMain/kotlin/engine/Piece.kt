@@ -1,51 +1,51 @@
 package engine
 
 object Piece {
-    const val blackPawn = 'p'
-    const val blackKnight = 'n'
-    const val blackBishop = 'b'
-    const val blackRook = 'r'
-    const val blackQueen = 'q'
-    const val blackKing = 'k'
-    const val whitePawn = 'P'
-    const val whiteKnight = 'N'
-    const val whiteBishop = 'B'
-    const val whiteRook = 'R'
-    const val whiteQueen = 'Q'
-    const val whiteKing = 'K'
+    const val bPawn = 'p'
+    const val bKnight = 'n'
+    const val bBishop = 'b'
+    const val bRook = 'r'
+    const val bQueen = 'q'
+    const val bKing = 'k'
+    const val wPawn = 'P'
+    const val wKnight = 'N'
+    const val wBishop = 'B'
+    const val wRook = 'R'
+    const val wQueen = 'Q'
+    const val wKing = 'K'
 
     fun pawn(color: Color): Char = when (color) {
-        Color.BLACK -> blackPawn
-        Color.WHITE -> whitePawn
+        Color.BLACK -> bPawn
+        Color.WHITE -> wPawn
     }
 
     fun knight(color: Color): Char = when (color) {
-        Color.BLACK -> blackKnight
-        Color.WHITE -> whiteKnight
+        Color.BLACK -> bKnight
+        Color.WHITE -> wKnight
     }
 
     fun bishop(color: Color): Char = when (color) {
-        Color.BLACK -> blackBishop
-        Color.WHITE -> whiteBishop
+        Color.BLACK -> bBishop
+        Color.WHITE -> wBishop
     }
 
     fun rook(color: Color): Char = when (color) {
-        Color.BLACK -> blackRook
-        Color.WHITE -> whiteRook
+        Color.BLACK -> bRook
+        Color.WHITE -> wRook
     }
 
     fun queen(color: Color): Char = when (color) {
-        Color.BLACK -> blackQueen
-        Color.WHITE -> whiteQueen
+        Color.BLACK -> bQueen
+        Color.WHITE -> wQueen
     }
 
     fun king(color: Color): Char = when (color) {
-        Color.BLACK -> blackKing
-        Color.WHITE -> whiteKing
+        Color.BLACK -> bKing
+        Color.WHITE -> wKing
     }
 
     fun attackPieces(color: Color): List<Char> = when (color) {
-        Color.WHITE -> listOf(whitePawn, whiteKnight, whiteBishop, whiteRook, whiteQueen)
-        Color.BLACK -> listOf(blackPawn, blackKnight, blackBishop, blackRook, blackQueen)
+        Color.WHITE -> listOf(wPawn, wKnight, wBishop, wRook, wQueen)
+        Color.BLACK -> listOf(bPawn, bKnight, bBishop, bRook, bQueen)
     }
 }

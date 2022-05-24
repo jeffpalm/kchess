@@ -28,7 +28,7 @@ class MoveFilterKingInActiveCheck : IMoveFilter {
         if (activeKingThreats != 0UL) {
             ctx.filterMoves {
                 when (it.piece) {
-                    Piece.whiteKing, Piece.blackKing -> it.toBit.and(activeKingThreats) == 0UL
+                    Piece.wKing, Piece.bKing -> it.toBit.and(activeKingThreats) == 0UL
                     else -> it.toBit.and(activeKingThreats) != 0UL
                 }
             }

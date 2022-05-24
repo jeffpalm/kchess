@@ -11,20 +11,20 @@ import engine.move.MoveGenCtx
 
 class MoveRuleBlackPawnPush : IMoveRule {
     override fun shouldRun(ctx: MoveGenCtx): Boolean {
-        return ctx.data.turn == Color.BLACK && ctx.data.board.blackPawns.countOneBits() > 0
+        return ctx.data.turn == Color.BLACK && ctx.data.board.bPawns.countOneBits() > 0
     }
 
     override suspend fun run(ctx: MoveGenCtx) {
         val (board) = ctx.data
 
         val empty = board.empty()
-        val pushMovesFrom = bAbleToPush(board.blackPawns, empty)
+        val pushMovesFrom = bAbleToPush(board.bPawns, empty)
         val pushMovesTo = Compass.navigate(pushMovesFrom, Direction.S)
-        val pushTwoMovesFrom = bAbleToPushTwo(board.blackPawns, empty)
+        val pushTwoMovesFrom = bAbleToPushTwo(board.bPawns, empty)
         val pushTwoMovesTo = Compass.navigate(pushTwoMovesFrom, Direction.S, 2)
 
-        ctx.addMoves(PawnPushPairToPseudoMoves(pushMovesFrom to pushMovesTo, Piece.blackPawn).output)
-        ctx.addMoves(PawnPushPairToPseudoMoves(pushTwoMovesFrom to pushTwoMovesTo, Piece.blackPawn).output)
+        ctx.addMoves(PawnPushPairToPseudoMoves(pushMovesFrom to pushMovesTo, Piece.bPawn).output)
+        ctx.addMoves(PawnPushPairToPseudoMoves(pushTwoMovesFrom to pushTwoMovesTo, Piece.bPawn).output)
     }
 
     private fun bAbleToPush(pawns: ULong, empty: ULong): ULong {

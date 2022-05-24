@@ -13,18 +13,18 @@ class BoardSquaresToBitBoard(boardRep: Map<Byte, Char?>) : Adapter<Map<Byte, Cha
     }
 
     private fun populateBitBoard(idx: Byte, char: Char?, board: BitBoard) = when (char) {
-        'P' -> board.whitePawns = board.whitePawns or Sq[idx]
-        'N' -> board.whiteKnights = board.whiteKnights or Sq[idx]
-        'B' -> board.whiteBishops = board.whiteBishops or Sq[idx]
-        'R' -> board.whiteRooks = board.whiteRooks or Sq[idx]
-        'Q' -> board.whiteQueens = board.whiteQueens or Sq[idx]
-        'K' -> board.whiteKing = board.whiteKing or Sq[idx]
-        'p' -> board.blackPawns = board.blackPawns or Sq[idx]
-        'n' -> board.blackKnights = board.blackKnights or Sq[idx]
-        'b' -> board.blackBishops = board.blackBishops or Sq[idx]
-        'r' -> board.blackRooks = board.blackRooks or Sq[idx]
-        'q' -> board.blackQueens = board.blackQueens or Sq[idx]
-        'k' -> board.blackKing = board.blackKing or Sq[idx]
+        'P' -> board.wPawns = board.wPawns or Sq[idx]
+        'N' -> board.wKnights = board.wKnights or Sq[idx]
+        'B' -> board.wBishops = board.wBishops or Sq[idx]
+        'R' -> board.wRooks = board.wRooks or Sq[idx]
+        'Q' -> board.wQueens = board.wQueens or Sq[idx]
+        'K' -> board.wKing = board.wKing or Sq[idx]
+        'p' -> board.bPawns = board.bPawns or Sq[idx]
+        'n' -> board.bKnights = board.bKnights or Sq[idx]
+        'b' -> board.bBishops = board.bBishops or Sq[idx]
+        'r' -> board.bRooks = board.bRooks or Sq[idx]
+        'q' -> board.bQueens = board.bQueens or Sq[idx]
+        'k' -> board.bKing = board.bKing or Sq[idx]
         null -> null
         else -> throw IllegalArgumentException("Invalid character: $char")
     }

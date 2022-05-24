@@ -28,12 +28,12 @@ class MoveFilterAbsolutePins : IMoveFilter {
             val xRay = Compass.ray(board.king(turn), direction)
             val enemyOnXRay = when (direction) {
                 in Direction.bishops -> when (turn) {
-                    Color.WHITE -> xRay and (board.blackBishops or board.blackQueens)
-                    Color.BLACK -> xRay and (board.whiteBishops or board.whiteQueens)
+                    Color.WHITE -> xRay and (board.bBishops or board.bQueens)
+                    Color.BLACK -> xRay and (board.wBishops or board.wQueens)
                 }
                 in Direction.rooks -> when (turn) {
-                    Color.WHITE -> xRay and (board.blackRooks or board.blackQueens)
-                    Color.BLACK -> xRay and (board.whiteRooks or board.whiteQueens)
+                    Color.WHITE -> xRay and (board.bRooks or board.bQueens)
+                    Color.BLACK -> xRay and (board.wRooks or board.wQueens)
                 }
                 else -> throw IllegalArgumentException("Invalid direction")
             }

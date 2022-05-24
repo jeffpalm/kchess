@@ -10,16 +10,16 @@ import engine.move.MoveGenCtx
 
 class MoveRuleWhitePawnPush : IMoveRule {
     override fun shouldRun(ctx: MoveGenCtx): Boolean {
-        return ctx.data.turn == Color.WHITE && ctx.data.board.whitePawns.countOneBits() > 0
+        return ctx.data.turn == Color.WHITE && ctx.data.board.wPawns.countOneBits() > 0
     }
 
     override suspend fun run(ctx: MoveGenCtx) {
         val (board) = ctx.data
 
         val empty = board.empty()
-        val pushMovesFrom = wAbleToPush(board.whitePawns, empty)
+        val pushMovesFrom = wAbleToPush(board.wPawns, empty)
         val pushMovesTo = Compass.navigate(pushMovesFrom, Direction.N)
-        val pushTwoMovesFrom = wAbleToPushTwo(board.whitePawns, empty)
+        val pushTwoMovesFrom = wAbleToPushTwo(board.wPawns, empty)
         val pushTwoMovesTo = Compass.navigate(pushTwoMovesFrom, Direction.N, 2)
 
         ctx.addMoves(PawnPushPairToPseudoMoves(pushMovesFrom to pushMovesTo, 'P').output)

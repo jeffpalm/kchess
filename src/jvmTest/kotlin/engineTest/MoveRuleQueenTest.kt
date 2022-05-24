@@ -53,7 +53,7 @@ internal class MoveRuleQueenTest {
     @Test
     fun shouldRun() {
         val boardWithoutQueen = BitBoard()
-        boardWithoutQueen.whiteQueens = 0UL
+        boardWithoutQueen.wQueens = 0UL
         assertTrue("shouldRun") {
             MoveRuleQueen().shouldRun(MoveGenCtx(Game().data))
             !MoveRuleQueen().shouldRun(MoveGenCtx(GameData(boardWithoutQueen, Color.WHITE)))

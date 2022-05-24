@@ -25,26 +25,26 @@ object Compass {
 
     fun ray(start: ULong, direction: Direction): ULong {
         val steps = determineRayLength(start, direction)
-        return start xor runRay(start, direction, steps)
+        return start xor walkRay(start, direction, steps)
     }
 
-    private fun runRay(start: ULong, direction: Direction, steps: Int = 1): ULong {
+    private fun walkRay(start: ULong, direction: Direction, steps: Int = 1): ULong {
         if (steps < 1) return start
         return when (direction) {
-            Direction.NW -> runRay(start or start.shl(7), direction, steps - 1)
-            Direction.N -> runRay(start or start.shl(8), direction, steps - 1)
-            Direction.NE -> runRay(start or start.shl(9), direction, steps - 1)
-            Direction.E -> runRay(start or start.shl(1), direction, steps - 1)
-            Direction.SE -> runRay(start or start.shr(7), direction, steps - 1)
-            Direction.S -> runRay(start or start.shr(8), direction, steps - 1)
-            Direction.SW -> runRay(start or start.shr(9), direction, steps - 1)
-            Direction.W -> runRay(start or start.shr(1), direction, steps - 1)
+            Direction.NW -> walkRay(start or start.shl(7), direction, steps - 1)
+            Direction.N -> walkRay(start or start.shl(8), direction, steps - 1)
+            Direction.NE -> walkRay(start or start.shl(9), direction, steps - 1)
+            Direction.E -> walkRay(start or start.shl(1), direction, steps - 1)
+            Direction.SE -> walkRay(start or start.shr(7), direction, steps - 1)
+            Direction.S -> walkRay(start or start.shr(8), direction, steps - 1)
+            Direction.SW -> walkRay(start or start.shr(9), direction, steps - 1)
+            Direction.W -> walkRay(start or start.shr(1), direction, steps - 1)
             else -> throw IllegalArgumentException("Invalid ray direction: $direction")
         }
     }
 
     // Must be single bit ULong for accurate measurement
-    fun determineRayLength(start: ULong, direction: Direction, i: Int = 1): Int {
+    private fun determineRayLength(start: ULong, direction: Direction, i: Int = 1): Int {
         if (start.countOneBits() == 0) return 0
         val nextSquare = navigate(start, direction, i)
         if (nextSquare == 0UL) return i - 1
@@ -59,6 +59,7 @@ object Compass {
                     return i - 1
                 }
             }
+            else -> throw IllegalArgumentException("Invalid ray direction: $direction")
         }
 
         return if (i > 7) 7 else determineRayLength(start, direction, i + 1)

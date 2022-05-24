@@ -1,17 +1,17 @@
 package engine
 
 interface IBitBoardPieces {
-    val whitePawns: ULong
-    val whiteKnights: ULong
-    val whiteBishops: ULong
-    val whiteRooks: ULong
-    val whiteQueens: ULong
-    val whiteKing: ULong
-    val blackPawns: ULong
-    val blackKnights: ULong
-    val blackBishops: ULong
-    val blackRooks: ULong
-    val blackQueens: ULong
-    val blackKing: ULong
+    val wPawns: ULong
+    val wKnights: ULong
+    val wBishops: ULong
+    val wRooks: ULong
+    val wQueens: ULong
+    val wKing: ULong
+    val bPawns: ULong
+    val bKnights: ULong
+    val bBishops: ULong
+    val bRooks: ULong
+    val bQueens: ULong
+    val bKing: ULong
     fun pieceList(): List<Pair<Char, ULong>>
 }

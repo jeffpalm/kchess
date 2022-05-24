@@ -93,18 +93,18 @@ internal class BitBoardTest {
 
         for ((piece, bitBoard) in pieces) {
             when (piece) {
-                Piece.whitePawn -> assertEquals(BitBoard.Companion.StartPosition.P, bitBoard)
-                Piece.blackPawn -> assertEquals(BitBoard.Companion.StartPosition.p, bitBoard)
-                Piece.whiteKnight -> assertEquals(BitBoard.Companion.StartPosition.N, bitBoard)
-                Piece.blackKnight -> assertEquals(BitBoard.Companion.StartPosition.n, bitBoard)
-                Piece.whiteBishop -> assertEquals(BitBoard.Companion.StartPosition.B, bitBoard)
-                Piece.blackBishop -> assertEquals(BitBoard.Companion.StartPosition.b, bitBoard)
-                Piece.whiteRook -> assertEquals(BitBoard.Companion.StartPosition.R, bitBoard)
-                Piece.blackRook -> assertEquals(BitBoard.Companion.StartPosition.r, bitBoard)
-                Piece.whiteQueen -> assertEquals(BitBoard.Companion.StartPosition.Q, bitBoard)
-                Piece.blackQueen -> assertEquals(BitBoard.Companion.StartPosition.q, bitBoard)
-                Piece.whiteKing -> assertEquals(BitBoard.Companion.StartPosition.K, bitBoard)
-                Piece.blackKing -> assertEquals(BitBoard.Companion.StartPosition.k, bitBoard)
+                Piece.wPawn -> assertEquals(BitBoard.Companion.StartPosition.P, bitBoard)
+                Piece.bPawn -> assertEquals(BitBoard.Companion.StartPosition.p, bitBoard)
+                Piece.wKnight -> assertEquals(BitBoard.Companion.StartPosition.N, bitBoard)
+                Piece.bKnight -> assertEquals(BitBoard.Companion.StartPosition.n, bitBoard)
+                Piece.wBishop -> assertEquals(BitBoard.Companion.StartPosition.B, bitBoard)
+                Piece.bBishop -> assertEquals(BitBoard.Companion.StartPosition.b, bitBoard)
+                Piece.wRook -> assertEquals(BitBoard.Companion.StartPosition.R, bitBoard)
+                Piece.bRook -> assertEquals(BitBoard.Companion.StartPosition.r, bitBoard)
+                Piece.wQueen -> assertEquals(BitBoard.Companion.StartPosition.Q, bitBoard)
+                Piece.bQueen -> assertEquals(BitBoard.Companion.StartPosition.q, bitBoard)
+                Piece.wKing -> assertEquals(BitBoard.Companion.StartPosition.K, bitBoard)
+                Piece.bKing -> assertEquals(BitBoard.Companion.StartPosition.k, bitBoard)
             }
         }
     }
@@ -113,28 +113,28 @@ internal class BitBoardTest {
     fun `test makeMove`() {
         val board = BitBoard()
 
-        board.makeMove(Sq.e2 to Sq.e4, Piece.whitePawn)
+        board.makeMove(Sq.e2 to Sq.e4, Piece.wPawn)
 
-        assertEquals(0x1000ef00UL, board.whitePawns)
+        assertEquals(0x1000ef00UL, board.wPawns)
 
-        board.makeMove(Sq.e7 to Sq.e5, Piece.blackPawn)
+        board.makeMove(Sq.e7 to Sq.e5, Piece.bPawn)
 
-        assertEquals(0xef001000000000UL, board.blackPawns)
+        assertEquals(0xef001000000000UL, board.bPawns)
 
-        board.makeMove(Sq.f1 to Sq.c4, Piece.whiteBishop)
+        board.makeMove(Sq.f1 to Sq.c4, Piece.wBishop)
 
-        assertEquals(0x4000004UL, board.whiteBishops)
+        assertEquals(0x4000004UL, board.wBishops)
 
-        board.makeMove(Sq.f8 to Sq.c5, Piece.blackBishop)
+        board.makeMove(Sq.f8 to Sq.c5, Piece.bBishop)
 
-        assertEquals(0x400000400000000UL, board.blackBishops)
+        assertEquals(0x400000400000000UL, board.bBishops)
 
-        board.makeMove(Sq.g8 to Sq.f6, Piece.blackKnight)
+        board.makeMove(Sq.g8 to Sq.f6, Piece.bKnight)
 
-        assertEquals(0x200200000000000UL, board.blackKnights)
+        assertEquals(0x200200000000000UL, board.bKnights)
 
-        board.makeMove(Sq.h8 to Sq.f8, Piece.blackRook)
+        board.makeMove(Sq.h8 to Sq.f8, Piece.bRook)
 
-        assertEquals(0x2100000000000000UL, board.blackRooks)
+        assertEquals(0x2100000000000000UL, board.bRooks)
     }
 }

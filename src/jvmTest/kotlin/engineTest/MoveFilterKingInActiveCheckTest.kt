@@ -60,7 +60,7 @@ internal class MoveFilterKingInActiveCheckTest {
     fun `black king active check every possible escape`() {
         val game = Game(Fen("rnb1k1nr/ppp3pp/8/1B1pppq1/3PPPP1/b4N2/PPP4P/RNBQK2R b KQkq - 4 6"))
         val moves = KingInActiveCheckGenerator(MoveGenCtx(game.data.clone())).execute()
-        val kingMoves = moves.filter { it.piece == Piece.blackKing }
+        val kingMoves = moves.filter { it.piece == Piece.bKing }
         assertEquals(4, kingMoves.size)
     }
 
@@ -68,7 +68,7 @@ internal class MoveFilterKingInActiveCheckTest {
     fun `black king chase`() {
         val game = Game(Fen("rnb3nr/ppp1k1pp/8/1B1pp1q1/P2PPP2/B4p2/P1P4P/RN1QK2R b KQ - 1 9"))
         val moves = KingInActiveCheckGenerator(MoveGenCtx(game.data.clone())).execute()
-        val kingMoves = moves.filter { it.piece == Piece.blackKing }
+        val kingMoves = moves.filter { it.piece == Piece.bKing }
         assertEquals(4, kingMoves.size)
     }
 
@@ -84,7 +84,7 @@ internal class MoveFilterKingInActiveCheckTest {
     fun `white king 1 escape square`() {
         val game = Game(Fen("rnb1kbnr/pppp1ppp/8/4p3/4PP1q/8/PPPP2PP/RNBQKBNR w KQkq - 1 3"))
         val moves = KingInActiveCheckGenerator(MoveGenCtx(game.data.clone())).execute()
-        val kingMoves = moves.filter { it.piece == Piece.whiteKing }
+        val kingMoves = moves.filter { it.piece == Piece.wKing }
         assertEquals(1, kingMoves.size)
     }
 

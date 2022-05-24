@@ -41,7 +41,7 @@ internal class MoveFilterAbsolutePinsTest {
         val moves = MoveFilterGenerator(MoveGenCtx(game.data)).execute()
         val e3PawnMoves = moves.filter { it.from == Square.e3 }
         for (move in e3PawnMoves) {
-            assertTrue { move.piece == Piece.whitePawn }
+            assertTrue { move.piece == Piece.wPawn }
             assertTrue { move.to == Square.e4 }
         }
     }

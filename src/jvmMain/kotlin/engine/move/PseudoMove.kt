@@ -19,13 +19,13 @@ data class PseudoMove(val from: Square, val to: Square, val piece: Char, val pro
 
     companion object {
         fun getPromoMoves(from: Square, to: Square, piece: Char): List<PseudoMove> = when (piece) {
-            Piece.whitePawn -> listOf(
+            Piece.wPawn -> listOf(
                 PseudoMove(from, to, piece, 'Q'),
                 PseudoMove(from, to, piece, 'R'),
                 PseudoMove(from, to, piece, 'B'),
                 PseudoMove(from, to, piece, 'N'),
             )
-            Piece.blackPawn -> listOf(
+            Piece.bPawn -> listOf(
                 PseudoMove(from, to, piece, 'q'),
                 PseudoMove(from, to, piece, 'r'),
                 PseudoMove(from, to, piece, 'b'),
