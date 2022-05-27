@@ -6,6 +6,9 @@ import engine.Perft
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+/**
+ * Positions and results from http://www.chessprogramming.org/Perft_Results
+ */
 class PerftTest {
     @Test
     fun `Start Pos - Depth 1`() {
@@ -38,9 +41,19 @@ class PerftTest {
         assertEquals(48, Perft.run(1, game))
     }
     @Test
+    fun `Position 2 - Depth 2`() {
+        val game = Game(Fen("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1"))
+        assertEquals(2039, Perft.run(2, game))
+    }
+    @Test
     fun `Position 3 - Depth 1`() {
         val game = Game(Fen("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1"))
         assertEquals(14, Perft.run(1, game))
+    }
+    @Test
+    fun `Position 3 - Depth 2`() {
+        val game = Game(Fen("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1"))
+        assertEquals(191, Perft.run(2, game))
     }
     @Test
     fun `Position 4 - Depth 1`() {
