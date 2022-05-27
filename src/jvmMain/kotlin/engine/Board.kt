@@ -19,17 +19,20 @@ class Board(input: Any = Fen()) {
         }
     }
 
-    fun print() {
-        println()
+    fun log(note: String? = null) {
+        if (note != null) {
+            println(note)
+        }
         var idx = 63
         for (i in 0..7) {
-            print("    ")
+            print("  ")
             for (j in 7 downTo 0) {
                 print(if (squares[(idx - j).toByte()] == null) " . " else " ${squares[(idx - j).toByte()]} ")
             }
             idx -= 8
             println()
         }
+        println("--------------------------")
     }
 
     fun getPiecesByType(type: Char): List<Byte> {

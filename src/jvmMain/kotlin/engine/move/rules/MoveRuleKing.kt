@@ -1,9 +1,10 @@
 package engine.move.rules
 
-import engine.Compass
 import engine.Piece
+import engine.Square
 import engine.adapter.BitBitsPairToPseudoMoves
 import engine.move.IMoveRule
+import engine.move.Magic
 import engine.move.MoveGenCtx
 
 class MoveRuleKing : IMoveRule {
@@ -13,7 +14,7 @@ class MoveRuleKing : IMoveRule {
 
     override suspend fun run(ctx: MoveGenCtx) {
         val (board, turn) = ctx.data
-        val targetSquares = Compass.kingMoveTargets(board.king(turn))
+        val targetSquares = Magic.Attack[Square[board.king(turn)], Piece.king(turn)]
 
         val validTargetSquares = (targetSquares and board.occupied(turn).inv()) and board.allAttackTargets(turn.inv()).inv()
 

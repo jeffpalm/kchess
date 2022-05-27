@@ -1,5 +1,7 @@
 package engine
 
+import engine.adapter.BitsToListOfBit
+
 class BitBoard(empty: Boolean = false) : IBitBoardPieces {
     override var wPawns: ULong = if (empty) 0UL else StartPosition.P
     override var wKnights: ULong = if (empty) 0UL else StartPosition.N
@@ -33,7 +35,7 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
     )
 
     fun print() {
-        Board(this).print()
+        Board(this).log()
     }
 
     fun castlingRightsToString(): String {
@@ -127,33 +129,44 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
     }
 
     fun rayMoves(x: ULong, direction: Direction, color: Color): ULong {
-        var moves = Compass.ray(x, direction)
-        val blocker = moves and occupied()
+        var output: ULong = 0UL
+        val bits = BitsToListOfBit(x).output
+        for (bit in bits) {
+            var moves = Compass.ray(bit, direction)
+            val blocker = moves and occupied()
 
-        if (blocker != 0UL) {
-            var square = Direction.getClosestBit(direction, blocker)
-            val ray = Compass.ray(square, direction)
-            moves = if ((square and occupied(color)).countOneBits() > 0) {
-                moves xor square.or(ray)
-            } else {
-                moves xor ray
+            if (blocker != 0UL) {
+                val square = Direction.getClosestBit(direction, blocker)
+                val ray = Compass.ray(square, direction)
+                moves = if ((square and occupied(color)).countOneBits() > 0) {
+                    moves xor square.or(ray)
+                } else {
+                    moves xor ray
+                }
             }
+            output = output or moves
+
         }
-        return moves
+        return output
     }
 
     fun rayAttack(x: ULong, direction: Direction, color: Color): ULong {
-        val moves = Compass.ray(x, direction)
-        val blockers = moves and occupied()
+        val bits = BitsToListOfBit(x).output
+        var output: ULong = 0UL
 
-        if (blockers != 0UL) {
-            val square = Direction.getClosestBit(direction, blockers)
-            val enemy = square and occupied(color.inv())
-            if (enemy != 0UL) {
-                return enemy
+        for(bit in bits) {
+            val moves = Compass.ray(bit, direction)
+            val blockers = moves and occupied()
+
+            if (blockers != 0UL) {
+                val square = Direction.getClosestBit(direction, blockers)
+                val enemy = square and occupied(color.inv())
+                if (enemy != 0UL) {
+                    output = output or enemy
+                }
             }
         }
-        return 0UL
+        return output
     }
 
     fun makeMove(move: Pair<ULong, ULong>, piece: Char, capture: Char? = null) {

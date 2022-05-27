@@ -1,9 +1,13 @@
 package engine
 
+import engine.adapter.BitsToListOfBit
+import engine.move.Magic
+
 object Compass {
     fun navigate(start: ULong, direction: Direction, steps: Int = 1): ULong {
         if (steps < 1) return start
         return when (direction) {
+            Direction.NW -> start.shl(7 * steps)
             Direction.N -> start.shl(8 * steps)
             Direction.NE -> start.shl(9 * steps)
             Direction.E -> start.shl(1 * steps)
@@ -11,7 +15,6 @@ object Compass {
             Direction.S -> start.shr(8 * steps)
             Direction.SW -> start.shr(9 * steps)
             Direction.W -> start.shr(1 * steps)
-            Direction.NW -> start.shl(7 * steps)
             Direction.NNE -> start.shl(17 * steps) and Sets.NOT_A_FILE
             Direction.NEE -> start.shl(10 * steps) and Sets.NOT_AB_FILE
             Direction.SEE -> start.shr(6 * steps) and Sets.NOT_AB_FILE
@@ -24,8 +27,15 @@ object Compass {
     }
 
     fun ray(start: ULong, direction: Direction): ULong {
-        val steps = determineRayLength(start, direction)
-        return start xor walkRay(start, direction, steps)
+        var output: ULong = 0UL
+
+        val bits = BitsToListOfBit(start).output
+
+        for (bit in bits) {
+            output = output or bit.xor(Magic.Ray[Square[bit], direction])
+        }
+
+        return start xor output
     }
 
     private fun walkRay(start: ULong, direction: Direction, steps: Int = 1): ULong {
@@ -59,7 +69,6 @@ object Compass {
                     return i - 1
                 }
             }
-            else -> throw IllegalArgumentException("Invalid ray direction: $direction")
         }
 
         return if (i > 7) 7 else determineRayLength(start, direction, i + 1)
@@ -79,8 +88,55 @@ object Compass {
                 navigate(start, Direction.W).and(Sets.NOT_H_FILE) or navigate(start, Direction.NW).and(Sets.NOT_H_FILE)
     }
 
+    fun bishopMoveTargets(start: ULong): ULong {
+        if (start.countOneBits() != 1) throw IllegalArgumentException("Invalid start square: $start")
+        var output: ULong = 0UL
+        for (direction in Direction.bishops) {
+            output = output or ray(start, direction)
+        }
+        return output
+    }
+
+    fun queenMoveTargets(start: ULong): ULong {
+        if (start.countOneBits() != 1) throw IllegalArgumentException("Invalid start square: $start")
+        var output: ULong = 0UL
+        for (direction in Direction.sliding) {
+            output = output or ray(start, direction)
+        }
+        return output
+    }
+
+    fun rookMoveTargets(start: ULong): ULong {
+        if (start.countOneBits() != 1) throw IllegalArgumentException("Invalid start square: $start")
+        var output: ULong = 0UL
+        for (direction in Direction.rooks) {
+            output = output or ray(start, direction)
+        }
+        return output
+    }
+
     fun pawnAttackTargets(start: ULong, color: Color): ULong = when (color) {
-        Color.WHITE -> navigate(start, Direction.NE).and(Sets.NOT_A_FILE) or navigate(start, Direction.NW).and(Sets.NOT_H_FILE)
-        Color.BLACK -> navigate(start, Direction.SE).and(Sets.NOT_A_FILE) or navigate(start, Direction.SW).and(Sets.NOT_H_FILE)
+        Color.WHITE -> {
+            val neAttacks = navigate(start, Direction.NE).and(Sets.NOT_A_FILE)
+            val nwAttacks = navigate(start, Direction.NW).and(Sets.NOT_H_FILE)
+            if (start.and(Sets.A_FILE) != 0UL) {
+                neAttacks or nwAttacks.and(Sets.NOT_H_FILE)
+            }
+            if (start.and(Sets.H_FILE) != 0UL) {
+                nwAttacks or neAttacks.and(Sets.NOT_A_FILE)
+            }
+            neAttacks or nwAttacks
+        }
+        Color.BLACK -> {
+            val seAttacks = navigate(start, Direction.SE).and(Sets.NOT_A_FILE)
+            val swAttacks = navigate(start, Direction.SW).and(Sets.NOT_H_FILE)
+            if (start.and(Sets.A_FILE) != 0UL) {
+                seAttacks or swAttacks.and(Sets.NOT_H_FILE)
+            }
+            if (start.and(Sets.H_FILE) != 0UL) {
+                swAttacks or seAttacks.and(Sets.NOT_A_FILE)
+            }
+            seAttacks or swAttacks
+        }
     }
 }
