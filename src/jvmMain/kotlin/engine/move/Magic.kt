@@ -958,7 +958,6 @@ object Magic {
         }
     }
 
-
     object Ray {
         operator fun get(square: Square, direction: Direction): ULong = when (direction) {
             Direction.N -> North[square]

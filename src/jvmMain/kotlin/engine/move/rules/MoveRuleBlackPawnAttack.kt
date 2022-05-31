@@ -1,13 +1,12 @@
 package engine.move.rules
 
 import engine.Color
-import engine.Compass
-import engine.Direction
 import engine.Piece
-import engine.Sets
+import engine.Square
 import engine.adapter.BitBitsPairToPseudoMoves
 import engine.adapter.BitsToListOfBit
 import engine.move.IMoveRule
+import engine.move.Magic
 import engine.move.MoveGenCtx
 
 class MoveRuleBlackPawnAttack : IMoveRule {
@@ -20,20 +19,20 @@ class MoveRuleBlackPawnAttack : IMoveRule {
 
         val pawns = BitsToListOfBit(board.bPawns).output
 
-        for(pawn in pawns) {
-            val valEastAttacks = bPawnEastAttacks(pawn) and (board.occupied(Color.WHITE) or (board.enPassantTarget ?: 0UL))
-            val valWestAttacks = bPawnWestAttacks(pawn) and (board.occupied(Color.WHITE) or (board.enPassantTarget ?: 0UL))
+        for (pawn in pawns) {
+            val potentialAttackSquares = Magic.Attack.BlackPawn[Square[pawn]]
+            val validAttackSquares = board.occupied(Color.WHITE).or(board.enPassantTarget ?: 0UL)
 
-            ctx.addMoves(BitBitsPairToPseudoMoves(pawn to (valEastAttacks and Sets.NOT_A_FILE), Piece.bPawn).output)
-            ctx.addMoves(BitBitsPairToPseudoMoves(pawn to (valWestAttacks and Sets.NOT_H_FILE), Piece.bPawn).output)
+            val validAttacks = potentialAttackSquares and validAttackSquares
+            ctx.addMoves(BitBitsPairToPseudoMoves(pawn to validAttacks, Piece.bPawn).output)
         }
     }
-
-    private fun bPawnEastAttacks(pawns: ULong): ULong {
-        return Compass.navigate(pawns, Direction.SE) and Sets.NOT_A_FILE
-    }
-
-    private fun bPawnWestAttacks(pawns: ULong): ULong {
-        return Compass.navigate(pawns, Direction.SW) and Sets.NOT_H_FILE
-    }
+//
+//    private fun bPawnEastAttacks(pawns: ULong): ULong {
+//        return Compass.navigate(pawns, Direction.SE) and Sets.NOT_A_FILE
+//    }
+//
+//    private fun bPawnWestAttacks(pawns: ULong): ULong {
+//        return Compass.navigate(pawns, Direction.SW) and Sets.NOT_H_FILE
+//    }
 }

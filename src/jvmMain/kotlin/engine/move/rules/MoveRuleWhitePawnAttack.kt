@@ -1,13 +1,10 @@
 package engine.move.rules
 
-import engine.Color
-import engine.Compass
-import engine.Direction
-import engine.Piece
-import engine.Sets
+import engine.*
 import engine.adapter.BitBitsPairToPseudoMoves
 import engine.adapter.BitsToListOfBit
 import engine.move.IMoveRule
+import engine.move.Magic
 import engine.move.MoveGenCtx
 
 class MoveRuleWhitePawnAttack : IMoveRule {
@@ -21,10 +18,11 @@ class MoveRuleWhitePawnAttack : IMoveRule {
         val pawns = BitsToListOfBit(board.wPawns).output
 
         for (pawn in pawns) {
-            val valEastAttacks = wPawnEastAttacks(pawn) and (board.occupied(Color.BLACK) or (board.enPassantTarget ?: 0UL))
-            val valWestAttacks = wPawnWestAttacks(pawn) and (board.occupied(Color.BLACK) or (board.enPassantTarget ?: 0UL))
-            ctx.addMoves(BitBitsPairToPseudoMoves(pawn to (valEastAttacks and Sets.NOT_A_FILE), Piece.wPawn).output)
-            ctx.addMoves(BitBitsPairToPseudoMoves(pawn to (valWestAttacks and Sets.NOT_H_FILE), Piece.wPawn).output)
+            val potentialAttackSquares = Magic.Attack.WhitePawn[Square[pawn]]
+            val validAttackSquares = board.occupied(Color.BLACK).or(board.enPassantTarget ?: 0UL)
+
+            val validAttacks = potentialAttackSquares and validAttackSquares
+            ctx.addMoves(BitBitsPairToPseudoMoves(pawn to validAttacks, Piece.wPawn).output)
         }
 
     }

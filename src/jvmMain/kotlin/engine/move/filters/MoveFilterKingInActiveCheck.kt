@@ -1,9 +1,8 @@
 package engine.move.filters
 
-import engine.Compass
-import engine.Direction
-import engine.Piece
+import engine.*
 import engine.move.IMoveFilter
+import engine.move.Magic
 import engine.move.MoveGenCtx
 
 class MoveFilterKingInActiveCheck : IMoveFilter {
@@ -11,39 +10,43 @@ class MoveFilterKingInActiveCheck : IMoveFilter {
     override suspend fun run(ctx: MoveGenCtx): MoveGenCtx {
         val (board, turn) = ctx.data
 
-        val friendlyKing = board.king(turn)
-        val enemyColor = turn.inv()
-        var activeKingThreats: ULong = 0UL
-        // Threats that impact the king movement only
-        var passiveKingThreats: ULong = 0UL
+        val (activeSlidingThreats, passiveSlidingThreats) = getSlidingThreats(board, turn)
+        val activeKnightThreats = getKnightThreats(board, turn)
+        val activePawnThreats = getPawnThreats(board, turn)
 
-        for (direction in Direction.sliding) {
-            val (activeThreats, passiveThreats) = getThreatsByDirection(ctx, direction)
-            activeKingThreats = activeKingThreats or activeThreats
-            passiveKingThreats = passiveKingThreats or passiveThreats
-        }
+        val activeThreats = activeSlidingThreats or activeKnightThreats
 
-        activeKingThreats = activeKingThreats or Compass.knightMoveTargets(friendlyKing).and(board.knights(enemyColor))
-
-        if (activeKingThreats != 0UL) {
+        if (activeThreats != 0UL || activePawnThreats != 0UL) {
             ctx.filterMoves {
                 when (it.piece) {
-                    Piece.wKing, Piece.bKing -> it.toBit.and(activeKingThreats) == 0UL
-                    else -> it.toBit.and(activeKingThreats) != 0UL
+                    Piece.wKing, Piece.bKing -> it.toBit.and(activeThreats) == 0UL
+                    else -> it.toBit.and(activeThreats) != 0UL || it.toBit.and(activePawnThreats) != 0UL
                 }
             }
         }
 
-        if (passiveKingThreats != 0UL) {
-            ctx.filterMoves { it.toBit.and(passiveKingThreats) == 0UL }
+        if (passiveSlidingThreats != 0UL) {
+            ctx.filterMoves { it.toBit.and(passiveSlidingThreats) == 0UL }
         }
 
         return ctx
     }
 
-    private fun getThreatsByDirection(ctx: MoveGenCtx, direction: Direction): Pair<ULong, ULong> {
-        val (board, turn) = ctx.data
+    private fun getSlidingThreats(board: BitBoard, turn: Color): Pair<ULong, ULong> {
+        var activeKingThreats: ULong = 0UL
+        // Threats that impact the king movement only
+        var passiveKingThreats: ULong = 0UL
 
+        for (direction in Direction.sliding) {
+            val (activeThreats, passiveThreats) = getSlidingThreatsByDirectionFromKing(board, turn, direction)
+            activeKingThreats = activeKingThreats or activeThreats
+            passiveKingThreats = passiveKingThreats or passiveThreats
+        }
+
+        return activeKingThreats to passiveKingThreats
+    }
+
+    private fun getSlidingThreatsByDirectionFromKing(board: BitBoard, turn: Color, direction: Direction): Pair<ULong, ULong> {
         val friendlyKing = board.king(turn)
         val enemyColor = turn.inv()
 
@@ -62,5 +65,30 @@ class MoveFilterKingInActiveCheck : IMoveFilter {
             }
         }
         return 0UL to 0UL
+    }
+
+    private fun getPawnThreats(board: BitBoard, turn: Color): ULong {
+        val enemyColor = turn.inv()
+        val friendlyKing = board.king(turn)
+
+        val enemyPawnsNearKing = Compass.kingMoveTargets(friendlyKing) and board.pawns(enemyColor)
+        if (enemyPawnsNearKing != 0UL) {
+            val enemyPawnAttacks = Compass.pawnAttackTargets(enemyPawnsNearKing, enemyColor).and(friendlyKing)
+            if (enemyPawnAttacks.and(friendlyKing) != 0UL) {
+                val pawnThreats = when (turn) {
+                    Color.WHITE -> enemyPawnsNearKing and Magic.Attack.WhitePawn[Square[friendlyKing]]
+                    Color.BLACK -> enemyPawnsNearKing and Magic.Attack.BlackPawn[Square[friendlyKing]]
+                }
+                return pawnThreats
+            }
+        }
+        return 0UL
+    }
+
+    private fun getKnightThreats(board: BitBoard, turn: Color): ULong {
+        val enemyColor = turn.inv()
+        val friendlyKing = board.king(turn)
+
+        return Compass.knightMoveTargets(friendlyKing).and(board.knights(enemyColor))
     }
 }

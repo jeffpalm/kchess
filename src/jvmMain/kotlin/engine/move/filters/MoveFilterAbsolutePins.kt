@@ -3,7 +3,9 @@ package engine.move.filters
 import engine.Color
 import engine.Compass
 import engine.Direction
+import engine.Square
 import engine.move.IMoveFilter
+import engine.move.Magic
 import engine.move.MoveGenCtx
 
 class MoveFilterAbsolutePins : IMoveFilter {
@@ -23,9 +25,10 @@ class MoveFilterAbsolutePins : IMoveFilter {
     private fun getAbsolutePins(ctx: MoveGenCtx): ULong {
         val (board, turn) = ctx.data
         var output: ULong = 0UL
+        val friendlyKing = board.king(turn)
 
         for (direction in Direction.sliding) {
-            val xRay = Compass.ray(board.king(turn), direction)
+            val xRay = Compass.ray(friendlyKing, direction)
             val enemyOnXRay = when (direction) {
                 in Direction.bishops -> when (turn) {
                     Color.WHITE -> xRay and (board.bBishops or board.bQueens)
@@ -45,8 +48,20 @@ class MoveFilterAbsolutePins : IMoveFilter {
                 else -> throw IllegalArgumentException("Invalid direction")
             }
             val protector = board.rayAttack(closestEnemy, direction.inv(), turn.inv())
-            if (protector != board.king(turn)) {
-                output = output or protector
+            if (protector != friendlyKing) {
+
+                val squaresNextToKing = Magic.Attack.King[Square[friendlyKing]]
+                // protector is adjacent to king
+                if (squaresNextToKing.and(protector) != 0UL) {
+                    output = output or protector
+                    continue
+                }
+
+                // Use enemy color to include protector bit
+                val pathToProtector = board.rayMoves(board.king(turn), direction, turn.inv())
+                if (pathToProtector.and(protector) != 0UL) {
+                    output = output or protector
+                }
             }
         }
         return output

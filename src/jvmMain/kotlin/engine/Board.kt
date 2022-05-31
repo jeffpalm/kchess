@@ -4,16 +4,20 @@ import engine.adapter.BitBoardToBoardSquares
 import engine.adapter.FenToBoardRep
 import engine.adapter.WordToBoardSquares
 
+typealias BoardSquares = Map<Byte, Char?>
+
 class Board(input: Any = Fen()) {
     private val squares: MutableMap<Byte, Char?>
 
     init {
+        @Suppress("UNCHECKED_CAST")
         squares = when (input) {
             is BitBoard -> BitBoardToBoardSquares(input).output
             is IBitBoardPieces -> BitBoardToBoardSquares(input).output
             is Fen -> FenToBoardRep(input).output
             is String -> FenToBoardRep(Fen(input)).output
             is ULong -> WordToBoardSquares(input).output
+            is Map<*, *> -> input as MutableMap<Byte, Char?>
             is MutableMap<*, *> -> input as MutableMap<Byte, Char?>
             else -> throw IllegalArgumentException("Invalid input board input: $input")
         }
@@ -39,10 +43,6 @@ class Board(input: Any = Fen()) {
         return squares.filter { it.value == type }.keys.toList()
     }
 
-    fun setSquare(index: Byte, value: Char? = null) {
-        squares[index] = value
-    }
-
     fun setSquare(sq: Square, value: Char? = null) {
         squares[sq.ordinal.toByte()] = value
     }
@@ -51,7 +51,7 @@ class Board(input: Any = Fen()) {
         return squares[sq.ordinal.toByte()]
     }
 
-    fun getSquares(): Map<Byte, Char?> {
+    fun getSquares(): BoardSquares {
         return squares
     }
 
@@ -122,5 +122,9 @@ class Board(input: Any = Fen()) {
             62.toByte() to null,
             63.toByte() to null
         )
+    }
+
+    fun clone(): Board {
+        return Board(this.squares)
     }
 }

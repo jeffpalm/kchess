@@ -16,7 +16,14 @@ class MoveRuleKing : IMoveRule {
         val (board, turn) = ctx.data
         val targetSquares = Magic.Attack[Square[board.king(turn)], Piece.king(turn)]
 
-        val validTargetSquares = (targetSquares and board.occupied(turn).inv()) and board.allAttackTargets(turn.inv()).inv()
+        val occupiedInv = board.occupied(turn).inv()
+//        Board(occupiedInv).log("occupiedInv")
+        val allAttackTargets = board.allAttackTargets(turn.inv())
+//        Board(allAttackTargets).log("allAttackTargets")
+//        Board(allAttackTargets.inv()).log("allAttackTargetsInv")
+
+        val validTargetSquares = targetSquares.and(occupiedInv) and allAttackTargets.inv()
+//        Board(validTargetSquares).log("validTargetSquares")
 
         if (validTargetSquares.countOneBits() > 0) {
             ctx.addMoves(BitBitsPairToPseudoMoves(board.king(turn) to validTargetSquares, Piece.king(turn)).output)
