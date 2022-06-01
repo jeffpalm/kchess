@@ -1,7 +1,8 @@
 package engine
 
-import engine.adapter.BoardSquaresToBitBoard
+import engine.adapter.FenToBitBoard
 import engine.adapter.GameToFen
+import engine.move.Magic
 import engine.move.PseudoMove
 
 class Game(private val fen: Fen = Fen(), private val _board: Board = Board(fen)) {
@@ -12,10 +13,10 @@ class Game(private val fen: Fen = Fen(), private val _board: Board = Board(fen))
         get() = _board
 
     private val _data: GameData = GameData(
-        BoardSquaresToBitBoard(_board.getSquares()).output,
+        FenToBitBoard(fen).output,
         if (fen.sideToMove == "w") Color.WHITE else Color.BLACK,
         fen.castlingAvailability,
-        fen.enPassantTarget,
+        if (fen.enPassantTarget == "-") null else Square[fen.enPassantTarget],
         fen.halfMoveClock,
         fen.fullMoveClock
     )
@@ -31,7 +32,7 @@ class Game(private val fen: Fen = Fen(), private val _board: Board = Board(fen))
         incrementClocks()
         handleRemovingCastlingAvail(validatedMove)
         _data.board.makeMove(
-            Sq[move.from.ordinal] to Sq[move.to.ordinal], validatedMove.piece, validatedMove.capture
+            move.from.asBit() to move.to.asBit(), validatedMove.piece, validatedMove.capture
         )
 
         handleEnPassantTarget(validatedMove)
@@ -39,28 +40,30 @@ class Game(private val fen: Fen = Fen(), private val _board: Board = Board(fen))
     }
 
     private fun handleEnPassantTarget(move: Move) {
-        _data.enPassantTarget = move.enPassantTarget()
-        if (_data.enPassantTarget != "-") {
-            _data.board.enPassantTarget = Sq[_data.enPassantTarget]
-        }
+        val enPassantTarget = move.enPassantTarget()
+        _data.enPassantTarget = enPassantTarget
+        _data.board.enPassantTarget = enPassantTarget?.asBit()
     }
 
 
     fun undoMove() {
-        val lastMove = _moves.removeLast()
-        _board.setSquare(lastMove.fromSquare, lastMove.piece)
-        _board.setSquare(lastMove.toSquare, lastMove.capture)
+        val pMove = _moves.removeLast()
+        _board.setSquare(pMove.from, pMove.piece)
+        _board.setSquare(pMove.to, pMove.capture)
         flipSideToMove()
         decrementClocks()
-        handleAddingCastlingAvail(lastMove)
+        handleAddingCastlingAvail(pMove)
+        val toSquare = if (pMove.to == pMove.prevEnPassantTarget) Magic.EnPassantCaptureSq[pMove.to] else pMove.to.asBit()
         _data.board.undoMove(
-            Sq[lastMove.fromSquare.ordinal] to Sq[lastMove.toSquare.ordinal], lastMove.piece, lastMove.capture
+            pMove.from.asBit() to toSquare, pMove.piece, pMove.capture
         )
-        _data.enPassantTarget = lastMove.prevEnPassantTarget
+        _data.enPassantTarget = pMove.prevEnPassantTarget
+        _data.board.enPassantTarget = pMove.prevEnPassantTarget?.asBit()
     }
 
     private fun flipSideToMove() {
         _data.turn = if (_data.turn == Color.WHITE) Color.BLACK else Color.WHITE
+        _data.board.turn = !_data.board.turn
     }
 
     private fun incrementClocks() {
@@ -83,22 +86,22 @@ class Game(private val fen: Fen = Fen(), private val _board: Board = Board(fen))
 
     private fun handleRemovingCastlingAvail(m: Move) {
         when {
-            m.piece == 'K' && m.fromSquare == Square.e1 -> {
+            m.piece == 'K' && m.from == Square.e1 -> {
                 removeCastlingAbility { c -> c != 'K' && c != 'Q' }
             }
-            m.piece == 'k' && m.fromSquare == Square.e8 -> {
+            m.piece == 'k' && m.from == Square.e8 -> {
                 removeCastlingAbility { c -> c != 'k' && c != 'q' }
             }
-            m.piece == 'R' && m.fromSquare == Square.a1 -> {
+            m.piece == 'R' && m.from == Square.a1 -> {
                 removeCastlingAbility { c -> c != 'Q' }
             }
-            m.piece == 'R' && m.fromSquare == Square.h1 -> {
+            m.piece == 'R' && m.from == Square.h1 -> {
                 removeCastlingAbility { c -> c != 'K' }
             }
-            m.piece == 'r' && m.fromSquare == Square.a8 -> {
+            m.piece == 'r' && m.from == Square.a8 -> {
                 removeCastlingAbility { c -> c != 'q' }
             }
-            m.piece == 'r' && m.fromSquare == Square.h8 -> {
+            m.piece == 'r' && m.from == Square.h8 -> {
                 removeCastlingAbility { c -> c != 'k' }
             }
         }
@@ -106,24 +109,24 @@ class Game(private val fen: Fen = Fen(), private val _board: Board = Board(fen))
 
     private fun handleAddingCastlingAvail(m: Move) {
         when {
-            m.piece == 'K' && m.fromSquare == Square.e1 -> {
+            m.piece == 'K' && m.from == Square.e1 -> {
                 addCastlingAbility('K')
                 addCastlingAbility('Q')
             }
-            m.piece == 'k' && m.fromSquare == Square.e8 -> {
+            m.piece == 'k' && m.from == Square.e8 -> {
                 addCastlingAbility('k')
                 addCastlingAbility('q')
             }
-            m.piece == 'R' && m.fromSquare == Square.a1 -> {
+            m.piece == 'R' && m.from == Square.a1 -> {
                 addCastlingAbility('Q')
             }
-            m.piece == 'R' && m.fromSquare == Square.h1 -> {
+            m.piece == 'R' && m.from == Square.h1 -> {
                 addCastlingAbility('K')
             }
-            m.piece == 'r' && m.fromSquare == Square.a8 -> {
+            m.piece == 'r' && m.from == Square.a8 -> {
                 addCastlingAbility('q')
             }
-            m.piece == 'r' && m.fromSquare == Square.h8 -> {
+            m.piece == 'r' && m.from == Square.h8 -> {
                 addCastlingAbility('k')
             }
         }

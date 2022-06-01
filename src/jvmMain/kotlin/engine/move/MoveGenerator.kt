@@ -1,6 +1,7 @@
 package engine.move
 
 import engine.move.filters.MoveFilterAbsolutePins
+import engine.move.filters.MoveFilterEnPassantCaptureEdgeCase
 import engine.move.filters.MoveFilterKingInActiveCheck
 import engine.move.rules.*
 
@@ -20,6 +21,7 @@ class MoveGenerator(context: MoveGenCtx) : AbstractMoveGenerator(
     ),
     listOf(
         MoveFilterAbsolutePins(),
-        MoveFilterKingInActiveCheck()
+        MoveFilterKingInActiveCheck(),
+        MoveFilterEnPassantCaptureEdgeCase()
     )
 )

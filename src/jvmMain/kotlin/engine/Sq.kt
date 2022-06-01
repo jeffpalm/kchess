@@ -688,6 +688,73 @@ object Sq {
         else -> throw IllegalArgumentException("Invalid square: $s")
     }
 
+    operator fun get(square: Square): ULong = when (square) {
+        Square.a1 -> a1
+        Square.a2 -> a2
+        Square.a3 -> a3
+        Square.a4 -> a4
+        Square.a5 -> a5
+        Square.a6 -> a6
+        Square.a7 -> a7
+        Square.a8 -> a8
+        Square.b1 -> b1
+        Square.b2 -> b2
+        Square.b3 -> b3
+        Square.b4 -> b4
+        Square.b5 -> b5
+        Square.b6 -> b6
+        Square.b7 -> b7
+        Square.b8 -> b8
+        Square.c1 -> c1
+        Square.c2 -> c2
+        Square.c3 -> c3
+        Square.c4 -> c4
+        Square.c5 -> c5
+        Square.c6 -> c6
+        Square.c7 -> c7
+        Square.c8 -> c8
+        Square.d1 -> d1
+        Square.d2 -> d2
+        Square.d3 -> d3
+        Square.d4 -> d4
+        Square.d5 -> d5
+        Square.d6 -> d6
+        Square.d7 -> d7
+        Square.d8 -> d8
+        Square.e1 -> e1
+        Square.e2 -> e2
+        Square.e3 -> e3
+        Square.e4 -> e4
+        Square.e5 -> e5
+        Square.e6 -> e6
+        Square.e7 -> e7
+        Square.e8 -> e8
+        Square.f1 -> f1
+        Square.f2 -> f2
+        Square.f3 -> f3
+        Square.f4 -> f4
+        Square.f5 -> f5
+        Square.f6 -> f6
+        Square.f7 -> f7
+        Square.f8 -> f8
+        Square.g1 -> g1
+        Square.g2 -> g2
+        Square.g3 -> g3
+        Square.g4 -> g4
+        Square.g5 -> g5
+        Square.g6 -> g6
+        Square.g7 -> g7
+        Square.g8 -> g8
+        Square.h1 -> h1
+        Square.h2 -> h2
+        Square.h3 -> h3
+        Square.h4 -> h4
+        Square.h5 -> h5
+        Square.h6 -> h6
+        Square.h7 -> h7
+        Square.h8 -> h8
+    }
+
     const val a1 = 0x1UL
     const val b1 = 0x2UL
     const val c1 = 0x4UL

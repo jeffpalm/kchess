@@ -4,14 +4,15 @@ import engine.move.MoveGenCtx
 import engine.move.MoveGenerator
 
 object Perft {
-    fun run(depth: Int, game: Game): Int {
+    fun run(depth: Int, game: Game, startDepth: Int = depth): Int {
         val moves = MoveGenerator(MoveGenCtx(game.data)).execute()
 
-//        if (depth == 1) {
-//            for (move in moves) {
-//                println("      ${move.from.name}${move.to.name}: 1")
-//            }
-//        }
+        if (depth == 1 && startDepth == 1) {
+            for (move in moves) {
+                println("${move.from.name}${move.to.name}: 1")
+            }
+            println(moves.size)
+        }
 
         if (depth == 1) return moves.size
 
@@ -20,12 +21,16 @@ object Perft {
 
         for (move in moves) {
             game.makeMove(move)
-//            val curNodeVal = nodes
-            nodes += run(depth - 1, game.clone())
-//            println("${move.from.name}${move.to.name}: ${nodes - curNodeVal}")
+            val curNodeVal = nodes
+            nodes += run(depth - 1, game.clone(), startDepth)
+            if (depth == startDepth) {
+                println("${move.from.name}${move.to.name}: ${nodes - curNodeVal}")
+            }
             game.undoMove()
         }
-//        println(nodes)
+        if (depth == startDepth) {
+            println(nodes)
+        }
         return nodes
     }
 }

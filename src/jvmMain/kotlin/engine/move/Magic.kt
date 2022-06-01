@@ -2,6 +2,7 @@ package engine.move
 
 import engine.Direction
 import engine.Piece
+import engine.Sq
 import engine.Square
 
 object Magic {
@@ -2046,4 +2047,65 @@ object Magic {
         }
     }
 
+    object EnPassantCaptureSq {
+        operator fun get(squareName: String): ULong = when (squareName) {
+            Square.a3.name -> Sq.a4
+            Square.b3.name -> Sq.b4
+            Square.c3.name -> Sq.c4
+            Square.d3.name -> Sq.d4
+            Square.e3.name -> Sq.e4
+            Square.f3.name -> Sq.f4
+            Square.g3.name -> Sq.g4
+            Square.h3.name -> Sq.h4
+            Square.a6.name -> Sq.a5
+            Square.b6.name -> Sq.b5
+            Square.c6.name -> Sq.c5
+            Square.d6.name -> Sq.d5
+            Square.e6.name -> Sq.e5
+            Square.f6.name -> Sq.f5
+            Square.g6.name -> Sq.g5
+            Square.h6.name -> Sq.h5
+            else -> 0UL
+        }
+
+        operator fun get(square: ULong): ULong = when (square) {
+            Sq.a3 -> Sq.a4
+            Sq.b3 -> Sq.b4
+            Sq.c3 -> Sq.c4
+            Sq.d3 -> Sq.d4
+            Sq.e3 -> Sq.e4
+            Sq.f3 -> Sq.f4
+            Sq.g3 -> Sq.g4
+            Sq.h3 -> Sq.h4
+            Sq.a6 -> Sq.a5
+            Sq.b6 -> Sq.b5
+            Sq.c6 -> Sq.c5
+            Sq.d6 -> Sq.d5
+            Sq.e6 -> Sq.e5
+            Sq.f6 -> Sq.f5
+            Sq.g6 -> Sq.g5
+            Sq.h6 -> Sq.h5
+            else -> 0UL
+        }
+
+        operator fun get(square: Square): ULong = when (square) {
+            Square.a3 -> Sq.a4
+            Square.b3 -> Sq.b4
+            Square.c3 -> Sq.c4
+            Square.d3 -> Sq.d4
+            Square.e3 -> Sq.e4
+            Square.f3 -> Sq.f4
+            Square.g3 -> Sq.g4
+            Square.h3 -> Sq.h4
+            Square.a6 -> Sq.a5
+            Square.b6 -> Sq.b5
+            Square.c6 -> Sq.c5
+            Square.d6 -> Sq.d5
+            Square.e6 -> Sq.e5
+            Square.f6 -> Sq.f5
+            Square.g6 -> Sq.g5
+            Square.h6 -> Sq.h5
+            else -> 0UL
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package engine
 
 import engine.adapter.BitsToListOfBit
+import engine.move.Magic
 
 class BitBoard(empty: Boolean = false) : IBitBoardPieces {
     override var wPawns: ULong = if (empty) 0UL else StartPosition.P
@@ -169,7 +170,7 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
         return output
     }
 
-    fun makeMove(move: Pair<ULong, ULong>, piece: Char, capture: Char? = null) {
+    fun makeMove(move: Pair<ULong, ULong>, piece: Char, capture: Char? = null, promo: Char? = null) {
         when (piece) {
             'P' -> wPawns = wPawns.xor(move.first).or(move.second)
             'N' -> wKnights = wKnights.xor(move.first).or(move.second)
@@ -185,14 +186,26 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
             'k' -> bKing = bKing.xor(move.first).or(move.second)
             else -> throw IllegalArgumentException("Piece must be one of P, N, B, R, Q, K, p, n, b, r, q, k")
         }
+//        when (promo) {
+//            'N' -> wKnights = wKnights.xor(move.second)
+//            'B' -> wBishops = wBishops.xor(move.second)
+//            'R' -> wRooks = wRooks.xor(move.second)
+//            'Q' -> wQueens = wQueens.xor(move.second)
+//            'n' -> bKnights = bKnights.xor(move.second)
+//            'b' -> bBishops = bBishops.xor(move.second)
+//            'r' -> bRooks = bRooks.xor(move.second)
+//            'q' -> bQueens = bQueens.xor(move.second)
+//            null -> {}
+//            else -> throw IllegalArgumentException("Invalid promo piece: $promo")
+//        }
         when (capture) {
-            'P' -> wPawns = wPawns.xor(move.second)
+            'P' -> wPawns = wPawns.xor(if (move.second == enPassantTarget) Magic.EnPassantCaptureSq[move.second] else move.second)
             'N' -> wKnights = wKnights.xor(move.second)
             'B' -> wBishops = wBishops.xor(move.second)
             'R' -> wRooks = wRooks.xor(move.second)
             'Q' -> wQueens = wQueens.xor(move.second)
             'K' -> wKing = wKing.xor(move.second)
-            'p' -> bPawns = bPawns.xor(move.second)
+            'p' -> bPawns = bPawns.xor(if (move.second == enPassantTarget) Magic.EnPassantCaptureSq[move.second] else move.second)
             'n' -> bKnights = bKnights.xor(move.second)
             'b' -> bBishops = bBishops.xor(move.second)
             'r' -> bRooks = bRooks.xor(move.second)
@@ -218,19 +231,39 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
             else -> throw IllegalArgumentException("Piece must be one of P, N, B, R, Q, K, p, n, b, r, q, k")
         }
         when (capture) {
-            'P' -> wPawns = wPawns.or(move.first)
-            'N' -> wKnights = wKnights.or(move.first)
-            'B' -> wBishops = wBishops.or(move.first)
-            'R' -> wRooks = wRooks.or(move.first)
-            'Q' -> wQueens = wQueens.or(move.first)
-            'K' -> wKing = wKing.or(move.first)
-            'p' -> bPawns = bPawns.or(move.first)
-            'n' -> bKnights = bKnights.or(move.first)
-            'b' -> bBishops = bBishops.or(move.first)
-            'r' -> bRooks = bRooks.or(move.first)
-            'q' -> bQueens = bQueens.or(move.first)
-            'k' -> bKing = bKing.or(move.first)
+            'P' -> wPawns = wPawns.or(move.second)
+            'N' -> wKnights = wKnights.or(move.second)
+            'B' -> wBishops = wBishops.or(move.second)
+            'R' -> wRooks = wRooks.or(move.second)
+            'Q' -> wQueens = wQueens.or(move.second)
+            'K' -> wKing = wKing.or(move.second)
+            'p' -> bPawns = bPawns.or(move.second)
+            'n' -> bKnights = bKnights.or(move.second)
+            'b' -> bBishops = bBishops.or(move.second)
+            'r' -> bRooks = bRooks.or(move.second)
+            'q' -> bQueens = bQueens.or(move.second)
+            'k' -> bKing = bKing.or(move.second)
         }
+    }
+
+    fun clone(): BitBoard {
+        val clone = BitBoard(true)
+        clone.wPawns = wPawns
+        clone.wKnights = wKnights
+        clone.wBishops = wBishops
+        clone.wRooks = wRooks
+        clone.wQueens = wQueens
+        clone.wKing = wKing
+        clone.bPawns = bPawns
+        clone.bKnights = bKnights
+        clone.bBishops = bBishops
+        clone.bRooks = bRooks
+        clone.bQueens = bQueens
+        clone.bKing = bKing
+        clone.enPassantTarget = enPassantTarget
+        clone.castlingRights = castlingRights
+        clone.turn = turn
+        return clone
     }
 
     companion object {

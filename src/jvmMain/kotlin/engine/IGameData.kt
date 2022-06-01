@@ -13,7 +13,7 @@ interface IGameData {
         return castleAvail
     }
 
-    operator fun component4(): String {
+    operator fun component4(): Square? {
         return enPassantTarget
     }
 
@@ -28,7 +28,7 @@ interface IGameData {
     val board: BitBoard
     val turn: Color
     val castleAvail: String
-    val enPassantTarget: String
+    val enPassantTarget: Square?
     val halfMoveClock: Int
     val fullMoveClock: Int
     fun clone(): IGameData

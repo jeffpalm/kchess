@@ -2,8 +2,8 @@ package engineTest
 
 import engine.Fen
 import engine.Game
-import engine.Square
 import engine.Piece
+import engine.Square
 import engine.move.PseudoMove
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -25,8 +25,8 @@ internal class GameTest {
         val game = Game()
         game.makeMove(PseudoMove(Square.d2, Square.d4, Piece.wPawn))
         assertEquals(Piece.wPawn, game.moves[0].piece)
-        assertEquals(Square.d4, game.moves[0].toSquare)
-        assertEquals(Square.d2, game.moves[0].fromSquare)
+        assertEquals(Square.d4, game.moves[0].to)
+        assertEquals(Square.d2, game.moves[0].from)
         assertNull(game.moves[0].capture)
     }
 
@@ -50,7 +50,7 @@ internal class GameTest {
 
     @Test
     fun `makeMove updates enPassantTarget correctly`() {
-        assertEquals("d3", defaultGame.data.enPassantTarget)
+        assertEquals(Square.d3, defaultGame.data.enPassantTarget)
     }
 
     @Test
@@ -64,7 +64,7 @@ internal class GameTest {
         val game = Game()
         game.makeMove(PseudoMove(Square.d2, Square.d4, Piece.wPawn))
         game.undoMove()
-        assertEquals("-", game.data.enPassantTarget)
+        assertEquals(null, game.data.enPassantTarget)
         assertEquals("KQkq", game.data.castleAvail)
         assertEquals(0, game.data.halfMoveClock)
         assertEquals(1, game.data.fullMoveClock)

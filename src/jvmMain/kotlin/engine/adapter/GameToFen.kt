@@ -32,7 +32,7 @@ class GameToFen(game: Game) : Adapter<Game, Fen>(game) {
             fenSquares,
             if(input.data.turn == Color.WHITE) "w" else "b",
             input.data.castleAvail,
-            input.data.enPassantTarget,
+            input.data.enPassantTarget?.name ?: "-",
             input.data.halfMoveClock,
             input.data.fullMoveClock
         )

@@ -73,7 +73,7 @@ object Demos {
             bb,
             Color.WHITE,
             "KQkq",
-            "-",
+            null,
             0,
             1
         )

@@ -1,8 +1,15 @@
-import engine.*
+
+import engine.Game
+import engine.Perft
+import engine.Piece
+import engine.Square
 import engine.move.PseudoMove
 
 fun main() {
-    val game = Game(Fen("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1"))
-    game.makeMove(PseudoMove(Square.a2, Square.a4, Piece.wPawn))
+    val game = Game()
+    game.makeMove(PseudoMove(Square.d2, Square.d3, Piece.wPawn))
+    game.makeMove(PseudoMove(Square.h7, Square.h5, Piece.bPawn))
+    game.makeMove(PseudoMove(Square.d1, Square.d2, Piece.wQueen))
     Perft.run(1, game)
+
 }
