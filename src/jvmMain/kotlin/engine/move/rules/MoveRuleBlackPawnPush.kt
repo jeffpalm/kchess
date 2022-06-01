@@ -1,10 +1,6 @@
 package engine.move.rules
 
-import engine.Color
-import engine.Compass
-import engine.Direction
-import engine.Piece
-import engine.Sets
+import engine.*
 import engine.adapter.PawnPushPairToPseudoMoves
 import engine.move.IMoveRule
 import engine.move.MoveGenCtx

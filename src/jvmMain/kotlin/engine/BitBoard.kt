@@ -199,13 +199,13 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
 //            else -> throw IllegalArgumentException("Invalid promo piece: $promo")
 //        }
         when (capture) {
-            'P' -> wPawns = wPawns.xor(if (move.second == enPassantTarget) Magic.EnPassantCaptureSq[move.second] else move.second)
+            'P' -> wPawns = wPawns.xor(if (move.second == enPassantTarget && piece == Piece.bPawn) Magic.EnPassantCaptureSq[move.second] else move.second)
             'N' -> wKnights = wKnights.xor(move.second)
             'B' -> wBishops = wBishops.xor(move.second)
             'R' -> wRooks = wRooks.xor(move.second)
             'Q' -> wQueens = wQueens.xor(move.second)
             'K' -> wKing = wKing.xor(move.second)
-            'p' -> bPawns = bPawns.xor(if (move.second == enPassantTarget) Magic.EnPassantCaptureSq[move.second] else move.second)
+            'p' -> bPawns = bPawns.xor(if (move.second == enPassantTarget && piece == Piece.wPawn) Magic.EnPassantCaptureSq[move.second] else move.second)
             'n' -> bKnights = bKnights.xor(move.second)
             'b' -> bBishops = bBishops.xor(move.second)
             'r' -> bRooks = bRooks.xor(move.second)

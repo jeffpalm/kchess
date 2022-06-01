@@ -20,13 +20,14 @@ object Perft {
 
 
         for (move in moves) {
-            game.makeMove(move)
+            val cloned = game.clone()
+            cloned.makeMove(move)
             val curNodeVal = nodes
-            nodes += run(depth - 1, game.clone(), startDepth)
+            nodes += run(depth - 1, cloned, startDepth)
             if (depth == startDepth) {
                 println("${move.from.name}${move.to.name}: ${nodes - curNodeVal}")
             }
-            game.undoMove()
+//            game.undoMove()
         }
         if (depth == startDepth) {
             println(nodes)

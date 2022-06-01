@@ -14,7 +14,10 @@ class Move(
 
     init {
         capture = when (to) {
-            prevEnPassantTarget -> board.getPiece(Square[Magic.EnPassantCaptureSq[to]])
+            prevEnPassantTarget -> when (piece) {
+              Piece.wPawn, Piece.bPawn ->board.getPiece(Square[Magic.EnPassantCaptureSq[to]])
+              else -> board.getPiece(to)
+            }
             else -> board.getPiece(to)
         }
     }
@@ -41,11 +44,11 @@ class Move(
 
     fun enPassantTarget(): Square? = when {
         isWhiteTwoMoveJump(this) -> {
-            val square = Compass.navigate(Sq[from.ordinal], Direction.N)
+            val square = Compass.navigate(Sq[from], Direction.N)
             Square[square]
         }
         isBlackTwoMoveJump(this) -> {
-            val square = Compass.navigate(Sq[from.ordinal], Direction.S)
+            val square = Compass.navigate(Sq[from], Direction.S)
             Square[square]
         }
         else -> null
@@ -53,10 +56,10 @@ class Move(
 
     companion object {
         fun isWhitePawnStartingMove(move: Move): Boolean =
-            Sq[move.from.ordinal].and(BitBoard.Companion.StartPosition.P).countOneBits() > 0 && move.piece == 'P'
+            Sq[move.from].and(BitBoard.Companion.StartPosition.P).countOneBits() > 0 && move.piece == Piece.wPawn
 
         fun isBlackPawnStartingMove(move: Move): Boolean =
-            Sq[move.from.ordinal].and(BitBoard.Companion.StartPosition.p).countOneBits() > 0 && move.piece == 'p'
+            Sq[move.from].and(BitBoard.Companion.StartPosition.p).countOneBits() > 0 && move.piece == Piece.bPawn
 
         fun isWhiteTwoMoveJump(move: Move): Boolean =
             isWhitePawnStartingMove(move) && Sq[move.to.ordinal].and(Sets.RANK4).countOneBits() > 0
