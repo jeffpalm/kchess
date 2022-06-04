@@ -7,8 +7,9 @@ import engine.move.MoveGenCtx
 
 class MoveFilterAbsolutePins : IMoveFilter {
     override suspend fun run(ctx: MoveGenCtx): MoveGenCtx {
-        val (pins, pathToProtector) = getAbsolutePins(ctx)
+        val (pins, paths) = getAbsolutePins(ctx)
         val (pinnedPieces, enemySquares) = pins
+        val (pathToProtector, pathProtectorToEnemy) = paths
 
         ctx.filterMoves {
             when (it.piece) {
@@ -23,12 +24,13 @@ class MoveFilterAbsolutePins : IMoveFilter {
         return ctx
     }
 
-    private fun getAbsolutePins(ctx: MoveGenCtx): Pair<Pair<ULong, ULong>, ULong> {
+    private fun getAbsolutePins(ctx: MoveGenCtx): Pair<Pair<ULong, ULong>, Pair<ULong,ULong>> {
         val (board, turn) = ctx.data
 
         var pinnedPieces: ULong = 0UL
         var enemySquares: ULong = 0UL
         var pathProtectorToKing: ULong = 0UL
+        var pathProtectorToEnemy: ULong = 0UL
 
         val friendlyKing = board.king(turn)
 
@@ -55,8 +57,10 @@ class MoveFilterAbsolutePins : IMoveFilter {
             enemySquares = enemySquares or closestEnemy
             val protector = board.rayAttack(closestEnemy, direction.inv(), turn.inv())
             if (protector != friendlyKing) {
-
+                val pathToEnemy = board.rayMoves(protector, direction, turn).xor(closestEnemy)
+                pathProtectorToEnemy = pathProtectorToEnemy or pathToEnemy
                 val squaresNextToKing = Magic.Attack.King[Square[friendlyKing]]
+
                 // protector is adjacent to king
                 if (squaresNextToKing.and(protector) != 0UL) {
                     pinnedPieces = pinnedPieces or protector
@@ -71,6 +75,6 @@ class MoveFilterAbsolutePins : IMoveFilter {
                 }
             }
         }
-        return (pinnedPieces to enemySquares) to pathProtectorToKing
+        return (pinnedPieces to enemySquares) to (pathProtectorToKing to pathProtectorToEnemy)
     }
 }
