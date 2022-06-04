@@ -1,17 +1,10 @@
 
-import engine.Board
-import engine.Game
-import engine.Piece
-import engine.Square
+import engine.*
 import engine.move.PseudoMove
 
 fun main() {
-    val game = Game()
-    game.makeMove(PseudoMove(Square.d2, Square.d3, Piece.wPawn))
-    game.makeMove(PseudoMove(Square.h7, Square.h5, Piece.bPawn))
-    Board(game.data.board.bPawns).log()
-    game.makeMove(PseudoMove(Square.c1, Square.h6, Piece.wBishop))
-    Board(game.data.board.bPawns).log()
-//    Perft.run(1, game)
+    val game = Game(Fen("r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10"))
+    game.makeMove(PseudoMove(Square.c4, Square.e6, Piece.wBishop))
+    Perft.run(1, game)
 
 }

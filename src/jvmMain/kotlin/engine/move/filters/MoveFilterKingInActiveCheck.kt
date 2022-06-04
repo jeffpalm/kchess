@@ -11,16 +11,17 @@ class MoveFilterKingInActiveCheck : IMoveFilter {
         val (board, turn) = ctx.data
 
         val (activeSlidingThreats, passiveSlidingThreats) = getSlidingThreats(board, turn)
+        val (enemySquares, slidingThreats) = activeSlidingThreats
         val activeKnightThreats = getKnightThreats(board, turn)
         val activePawnThreats = getPawnThreats(board, turn)
 
-        val activeThreats = activeSlidingThreats or activeKnightThreats
+        val activeThreats = slidingThreats or activeKnightThreats
 
-        if (activeThreats != 0UL || activePawnThreats != 0UL) {
+        if (activeThreats != 0UL || activePawnThreats != 0UL || enemySquares != 0UL) {
             ctx.filterMoves {
                 when (it.piece) {
                     Piece.wKing, Piece.bKing -> it.toBit.and(activeThreats) == 0UL
-                    else -> it.toBit.and(activeThreats) != 0UL || it.toBit.and(activePawnThreats) != 0UL
+                    else -> it.toBit.and(activeThreats) != 0UL || it.toBit.and(activePawnThreats) != 0UL || it.toBit.and(enemySquares) != 0UL
                 }
             }
         }
@@ -32,21 +33,24 @@ class MoveFilterKingInActiveCheck : IMoveFilter {
         return ctx
     }
 
-    private fun getSlidingThreats(board: BitBoard, turn: Color): Pair<ULong, ULong> {
+    private fun getSlidingThreats(board: BitBoard, turn: Color): Pair<Pair<ULong, ULong>, ULong> {
         var activeKingThreats: ULong = 0UL
         // Threats that impact the king movement only
         var passiveKingThreats: ULong = 0UL
+        var enemySquares: ULong = 0UL
 
         for (direction in Direction.sliding) {
             val (activeThreats, passiveThreats) = getSlidingThreatsByDirectionFromKing(board, turn, direction)
-            activeKingThreats = activeKingThreats or activeThreats
+            val (enemySquare, threatSquares) = activeThreats
+            activeKingThreats = activeKingThreats or threatSquares
             passiveKingThreats = passiveKingThreats or passiveThreats
+            enemySquares = enemySquares or enemySquare
         }
 
-        return activeKingThreats to passiveKingThreats
+        return (enemySquares to activeKingThreats) to passiveKingThreats
     }
 
-    private fun getSlidingThreatsByDirectionFromKing(board: BitBoard, turn: Color, direction: Direction): Pair<ULong, ULong> {
+    private fun getSlidingThreatsByDirectionFromKing(board: BitBoard, turn: Color, direction: Direction): Pair<Pair<ULong, ULong>, ULong> {
         val friendlyKing = board.king(turn)
         val enemyColor = turn.inv()
 
@@ -58,13 +62,13 @@ class MoveFilterKingInActiveCheck : IMoveFilter {
                 else -> throw IllegalStateException("Unknown direction $direction")
             }
             if (enemyThreats != 0UL) {
-                val activeKingThreats = board.rayMoves(friendlyKing, direction, turn)
+                val activeKingThreats = board.rayMoves(friendlyKing, direction, turn).xor(enemyThreats)
                 // Threats that impact the king movement only
                 val passiveKingThreats = board.rayMoves(friendlyKing, direction.inv(), turn)
-                return activeKingThreats to passiveKingThreats
+                return (enemyThreats to activeKingThreats) to passiveKingThreats
             }
         }
-        return 0UL to 0UL
+        return 0UL to 0UL to 0UL
     }
 
     private fun getPawnThreats(board: BitBoard, turn: Color): ULong {
