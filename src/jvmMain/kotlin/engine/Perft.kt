@@ -9,7 +9,7 @@ object Perft {
 
         if (depth == 1 && startDepth == 1) {
             for (move in moves) {
-                println("${move.from.name}${move.to.name}: 1")
+                println("${move.from.name}${move.to.name}${move.promo ?: ""}: 1")
             }
             println(moves.size)
         }
@@ -25,7 +25,7 @@ object Perft {
             val curNodeVal = nodes
             nodes += run(depth - 1, cloned, startDepth)
             if (depth == startDepth) {
-                println("${move.from.name}${move.to.name}: ${nodes - curNodeVal}")
+                println("${move.from.name}${move.to.name}${move.promo ?: ""}: ${nodes - curNodeVal}")
             }
 //            game.undoMove()
         }

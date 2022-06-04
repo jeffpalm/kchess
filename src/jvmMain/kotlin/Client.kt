@@ -3,8 +3,9 @@ import engine.*
 import engine.move.PseudoMove
 
 fun main() {
-    val game = Game(Fen("r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10"))
-    game.makeMove(PseudoMove(Square.c4, Square.e6, Piece.wBishop))
+    val game = Game(Fen("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1"))
+    game.makeMove(PseudoMove(Square.b4, Square.c5, Piece.wKing))
+    game.makeMove(PseudoMove(Square.a3, Square.a2, Piece.bQueen))
     Perft.run(1, game)
 
 }

@@ -7,14 +7,15 @@ import engine.move.MoveGenCtx
 
 class MoveFilterAbsolutePins : IMoveFilter {
     override suspend fun run(ctx: MoveGenCtx): MoveGenCtx {
-        val (pinnedPieces, enemySquares) = getAbsolutePins(ctx)
+        val (pins, pathToProtector) = getAbsolutePins(ctx)
+        val (pinnedPieces, enemySquares) = pins
 
         ctx.filterMoves {
             when (it.piece) {
                 'K', 'k' -> true
                 else -> {
                     val isPinnedPiece = it.fromBit.and(pinnedPieces) != 0UL
-                    if (!isPinnedPiece) true else  it.toBit.and(enemySquares) != 0UL
+                    if (!isPinnedPiece) true else  it.toBit.and(enemySquares) != 0UL || it.toBit.and(pathToProtector) != 0UL
                 }
             }
         }
@@ -22,10 +23,13 @@ class MoveFilterAbsolutePins : IMoveFilter {
         return ctx
     }
 
-    private fun getAbsolutePins(ctx: MoveGenCtx): Pair<ULong, ULong> {
+    private fun getAbsolutePins(ctx: MoveGenCtx): Pair<Pair<ULong, ULong>, ULong> {
         val (board, turn) = ctx.data
+
         var pinnedPieces: ULong = 0UL
         var enemySquares: ULong = 0UL
+        var pathProtectorToKing: ULong = 0UL
+
         val friendlyKing = board.king(turn)
 
         for (direction in Direction.sliding) {
@@ -63,9 +67,10 @@ class MoveFilterAbsolutePins : IMoveFilter {
                 val pathToProtector = board.rayMoves(board.king(turn), direction, turn.inv())
                 if (pathToProtector.and(protector) != 0UL) {
                     pinnedPieces = pinnedPieces or protector
+                    pathProtectorToKing = pathProtectorToKing or pathToProtector.xor(protector)
                 }
             }
         }
-        return pinnedPieces to enemySquares
+        return (pinnedPieces to enemySquares) to pathProtectorToKing
     }
 }
