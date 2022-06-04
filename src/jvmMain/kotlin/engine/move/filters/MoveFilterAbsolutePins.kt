@@ -1,30 +1,31 @@
 package engine.move.filters
 
-import engine.Color
-import engine.Compass
-import engine.Direction
-import engine.Square
+import engine.*
 import engine.move.IMoveFilter
 import engine.move.Magic
 import engine.move.MoveGenCtx
 
 class MoveFilterAbsolutePins : IMoveFilter {
     override suspend fun run(ctx: MoveGenCtx): MoveGenCtx {
-        val absolutePins = getAbsolutePins(ctx)
+        val (pinnedPieces, enemySquares) = getAbsolutePins(ctx)
 
         ctx.filterMoves {
             when (it.piece) {
                 'K', 'k' -> true
-                else -> !(it.fromBit.and(absolutePins) != 0UL && it.toBit.and(absolutePins) == 0UL)
+                else -> {
+                    val isPinnedPiece = it.fromBit.and(pinnedPieces) != 0UL
+                    if (!isPinnedPiece) true else  it.toBit.and(enemySquares) != 0UL
+                }
             }
         }
 
         return ctx
     }
 
-    private fun getAbsolutePins(ctx: MoveGenCtx): ULong {
+    private fun getAbsolutePins(ctx: MoveGenCtx): Pair<ULong, ULong> {
         val (board, turn) = ctx.data
-        var output: ULong = 0UL
+        var pinnedPieces: ULong = 0UL
+        var enemySquares: ULong = 0UL
         val friendlyKing = board.king(turn)
 
         for (direction in Direction.sliding) {
@@ -47,23 +48,25 @@ class MoveFilterAbsolutePins : IMoveFilter {
                 in Direction.negative -> enemyOnXRay.takeHighestOneBit()
                 else -> throw IllegalArgumentException("Invalid direction")
             }
+            enemySquares = enemySquares or closestEnemy
             val protector = board.rayAttack(closestEnemy, direction.inv(), turn.inv())
+            Board(protector).log("protector")
             if (protector != friendlyKing) {
 
                 val squaresNextToKing = Magic.Attack.King[Square[friendlyKing]]
                 // protector is adjacent to king
                 if (squaresNextToKing.and(protector) != 0UL) {
-                    output = output or protector
+                    pinnedPieces = pinnedPieces or protector
                     continue
                 }
 
                 // Use enemy color to include protector bit
                 val pathToProtector = board.rayMoves(board.king(turn), direction, turn.inv())
                 if (pathToProtector.and(protector) != 0UL) {
-                    output = output or protector
+                    pinnedPieces = pinnedPieces or protector
                 }
             }
         }
-        return output
+        return pinnedPieces to enemySquares
     }
 }
