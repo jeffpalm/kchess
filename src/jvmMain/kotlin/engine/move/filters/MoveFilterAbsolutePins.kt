@@ -50,7 +50,6 @@ class MoveFilterAbsolutePins : IMoveFilter {
             }
             enemySquares = enemySquares or closestEnemy
             val protector = board.rayAttack(closestEnemy, direction.inv(), turn.inv())
-            Board(protector).log("protector")
             if (protector != friendlyKing) {
 
                 val squaresNextToKing = Magic.Attack.King[Square[friendlyKing]]
