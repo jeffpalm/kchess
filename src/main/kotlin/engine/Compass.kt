@@ -69,6 +69,8 @@ object Compass {
                     return i - 1
                 }
             }
+
+            else -> {}
         }
 
         return if (i > 7) 7 else determineRayLength(start, direction, i + 1)

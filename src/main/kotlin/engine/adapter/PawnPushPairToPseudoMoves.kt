@@ -32,7 +32,7 @@ class PawnPushPairToPseudoMoves(wordPair: Pair<ULong, ULong>, piece: Char) :
         return output
     }
 
-    private fun getPushMoves(from: List<Int>, to: List<Int>, char: Char): List<PseudoMove> =  from.zip(to)
+    private fun getPushMoves(from: List<Int>, to: List<Int>, char: Char): List<PseudoMove> = from.zip(to)
         .map { PseudoMove(Square[it.first], Square[it.second], char) }
         .filter { it.fromBit != it.toBit }
 

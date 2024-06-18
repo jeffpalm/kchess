@@ -1,4 +1,4 @@
-
+package dev.jeffpalm
 import engine.*
 import engine.move.MoveGenCtx
 import engine.move.MoveGenerator
