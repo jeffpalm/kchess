@@ -1,6 +1,5 @@
 package engine
 
-import engine.adapter.BitsToListOfBit
 import engine.move.Magic
 
 class BitBoard(empty: Boolean = false) : IBitBoardPieces {
@@ -117,8 +116,10 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
         if (pieces == 0UL) return 0UL
         val occupiedMinusEnemyKing = occupied() xor (occupied() and enemyKing)
         var output: ULong = 0UL
-        val bits = engine.adapter.BitsToListOfBit(pieces).output
-        for (bit in bits) {
+        var w = pieces
+        while (w != 0UL) {
+            val bit = w.takeLowestOneBit()
+            w = w xor bit
             for (direction in directions) {
                 val ray = Compass.ray(bit, direction)
                 val blockers = ray and occupiedMinusEnemyKing
@@ -141,7 +142,7 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
      */
     fun attackersOf(squareBit: ULong, byColor: Color): ULong {
         if (squareBit == 0UL) return 0UL
-        val sq = Square[squareBit]
+        val sq = Square.fromBit(squareBit)
         var attackers = 0UL
 
         attackers = attackers or (Magic.Attack.Knight[sq] and knights(byColor))

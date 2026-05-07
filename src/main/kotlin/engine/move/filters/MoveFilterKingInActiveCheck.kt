@@ -5,7 +5,7 @@ import engine.move.IMoveFilter
 import engine.move.Magic
 import engine.move.MoveGenCtx
 
-class MoveFilterKingInActiveCheck : IMoveFilter {
+object MoveFilterKingInActiveCheck : IMoveFilter {
 
     override fun run(ctx: MoveGenCtx): MoveGenCtx {
         val (board, turn) = ctx.data
@@ -89,8 +89,8 @@ class MoveFilterKingInActiveCheck : IMoveFilter {
             val enemyPawnAttacks = Compass.pawnAttackTargets(enemyPawnsNearKing, enemyColor).and(friendlyKing)
             if (enemyPawnAttacks.and(friendlyKing) != 0UL) {
                 val pawnThreats = when (turn) {
-                    Color.WHITE -> enemyPawnsNearKing and Magic.Attack.WhitePawn[Square[friendlyKing]]
-                    Color.BLACK -> enemyPawnsNearKing and Magic.Attack.BlackPawn[Square[friendlyKing]]
+                    Color.WHITE -> enemyPawnsNearKing and Magic.Attack.WhitePawn[Square.fromBit(friendlyKing)]
+                    Color.BLACK -> enemyPawnsNearKing and Magic.Attack.BlackPawn[Square.fromBit(friendlyKing)]
                 }
                 return pawnThreats
             }

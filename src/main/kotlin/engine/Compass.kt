@@ -1,6 +1,5 @@
 package engine
 
-import engine.adapter.BitsToListOfBit
 import engine.move.Magic
 
 object Compass {
@@ -31,7 +30,7 @@ object Compass {
         var w = start
         while (w != 0UL) {
             val bit = w.takeLowestOneBit()
-            output = output or Magic.Ray[Square[bit], direction]
+            output = output or Magic.Ray[Square.fromBit(bit), direction]
             w = w xor bit
         }
         return output

@@ -13,7 +13,7 @@ import kotlin.test.assertTrue
 
 private class QueenMoveGenerator(context: MoveGenCtx) : AbstractMoveGenerator(
     context, listOf(
-        MoveRuleQueen()
+        MoveRuleQueen
     ),
     listOf()
 )
@@ -55,8 +55,8 @@ internal class MoveRuleQueenTest {
         val boardWithoutQueen = BitBoard()
         boardWithoutQueen.wQueens = 0UL
         assertTrue("shouldRun") {
-            MoveRuleQueen().shouldRun(MoveGenCtx(Game().data))
-            !MoveRuleQueen().shouldRun(MoveGenCtx(GameData(boardWithoutQueen, Color.WHITE)))
+            MoveRuleQueen.shouldRun(MoveGenCtx(Game().data))
+            !MoveRuleQueen.shouldRun(MoveGenCtx(GameData(boardWithoutQueen, Color.WHITE)))
         }
     }
 

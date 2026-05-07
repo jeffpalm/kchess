@@ -5,23 +5,16 @@ import engine.move.Magic
 class Move(
     override val from: Square,
     override val to: Square,
+    override val piece: Char,
     board: Board,
     val prevEnPassantTarget: Square?,
     val prevCastleAvail: String = "-",
     val promo: Char? = null
 ) : IMove {
-    override val piece: Char =
-        board.getPiece(from) ?: throw IllegalArgumentException("No piece at $from")
-    override val capture: Char?
-
-    init {
-        capture = when (to) {
-            prevEnPassantTarget -> when (piece) {
-              Piece.wPawn, Piece.bPawn ->board.getPiece(Square[Magic.EnPassantCaptureSq[to]])
-              else -> board.getPiece(to)
-            }
-            else -> board.getPiece(to)
-        }
+    override val capture: Char? = when {
+        to == prevEnPassantTarget && (piece == Piece.wPawn || piece == Piece.bPawn) ->
+            board.getPiece(Square.fromBit(Magic.EnPassantCaptureSq[to]))
+        else -> board.getPiece(to)
     }
 
     fun asString(): String {

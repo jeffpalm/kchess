@@ -2,12 +2,10 @@ package engine.move.rules
 
 import engine.Direction
 import engine.Piece
-import engine.adapter.BitBitsPairToPseudoMoves
-import engine.adapter.BitsToListOfBit
 import engine.move.IMoveRule
 import engine.move.MoveGenCtx
 
-class MoveRuleBishop : IMoveRule {
+object MoveRuleBishop : IMoveRule {
     override fun shouldRun(ctx: MoveGenCtx): Boolean {
         val (board, turn) = ctx.data
         return board.bishops(turn) != 0UL
@@ -15,18 +13,14 @@ class MoveRuleBishop : IMoveRule {
 
     override fun run(ctx: MoveGenCtx) {
         val (board, turn) = ctx.data
-
-        val individualBishops = BitsToListOfBit(board.bishops(turn)).output
-        for (bishop in individualBishops) {
+        val piece = Piece.bishop(turn)
+        var w = board.bishops(turn)
+        while (w != 0UL) {
+            val bishop = w.takeLowestOneBit()
             for (direction in Direction.bishops) {
-                handleTargetSquares(bishop, direction, ctx)
+                ctx.addBitMoves(bishop, board.rayMoves(bishop, direction, turn), piece)
             }
+            w = w xor bishop
         }
     }
-
-    private fun handleTargetSquares(x: ULong, direction: Direction, ctx: MoveGenCtx) {
-        val targetSquares = ctx.data.board.rayMoves(x, direction, ctx.data.turn)
-        ctx.addMoves(BitBitsPairToPseudoMoves(x to targetSquares, Piece.bishop(ctx.data.turn)).output)
-    }
-
 }

@@ -17,9 +17,9 @@ import kotlin.test.assertTrue
 
 private class MoveFilterGenerator(context: MoveGenCtx) : AbstractMoveGenerator(
     context, listOf(
-        MoveRuleQueen(), MoveRuleKnight(), MoveRuleWhitePawnAttack(), MoveRuleWhitePawnPush(),
+        MoveRuleQueen, MoveRuleKnight, MoveRuleWhitePawnAttack, MoveRuleWhitePawnPush,
     ), listOf(
-        MoveFilterAbsolutePins()
+        MoveFilterAbsolutePins
     )
 )
 

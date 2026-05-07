@@ -78,9 +78,14 @@ enum class Square {
     }
 
     companion object {
+        private val VALUES: Array<Square> = entries.toTypedArray()
+
         operator fun get(str: String): Square = Square.valueOf(str.lowercase())
 
-        operator fun get(index: Int): Square = Square.values()[index]
+        operator fun get(index: Int): Square = VALUES[index]
+
+        /** Bit-index → Square; expects a single-bit ULong. */
+        fun fromBit(bit: ULong): Square = VALUES[bit.countTrailingZeroBits()]
 
         operator fun get(word: ULong): Square = when (word) {
             Sq.a1 -> a1

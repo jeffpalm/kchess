@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 private class KingMoveGenerator(context: MoveGenCtx) : AbstractMoveGenerator(
     context,
     listOf(
-        MoveRuleKing()
+        MoveRuleKing
     ),
     listOf()
 )

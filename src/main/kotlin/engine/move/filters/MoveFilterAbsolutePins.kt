@@ -5,7 +5,7 @@ import engine.move.IMoveFilter
 import engine.move.Magic
 import engine.move.MoveGenCtx
 
-class MoveFilterAbsolutePins : IMoveFilter {
+object MoveFilterAbsolutePins : IMoveFilter {
     override fun run(ctx: MoveGenCtx): MoveGenCtx {
         val pinAllowedByPiece = computePins(ctx)
         if (pinAllowedByPiece.isEmpty()) return ctx
@@ -50,7 +50,7 @@ class MoveFilterAbsolutePins : IMoveFilter {
             val protector = board.rayAttack(closestEnemy, direction.inv(), turn.inv())
             if (protector == 0UL || protector == friendlyKing) continue
 
-            val squaresNextToKing = Magic.Attack.King[Square[friendlyKing]]
+            val squaresNextToKing = Magic.Attack.King[Square.fromBit(friendlyKing)]
             val pathProtectorToEnemy = board.rayMoves(protector, direction, turn).xor(closestEnemy)
 
             val pathProtectorToKing = if (squaresNextToKing.and(protector) != 0UL) {

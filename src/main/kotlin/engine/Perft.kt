@@ -11,51 +11,91 @@ object Perft {
      */
     fun runStats(depth: Int, game: Game): PerftStats {
         if (depth == 0) return PerftStats(nodes = 1)
-        val moves = MoveGenerator(MoveGenCtx(game.data)).execute()
-        var s = PerftStats.ZERO
-        if (depth == 1) {
-            for (move in moves) {
-                val played = game.makeMove(move)
-                s += classify(played, game)
-                game.undoMove()
-            }
-            return s
-        }
-        for (move in moves) {
-            game.makeMove(move)
-            s += runStats(depth - 1, game)
-            game.undoMove()
-        }
-        return s
+        val pool = arrayOfNulls<MoveGenCtx>(depth + 1)
+        val mateCtx = MoveGenCtx(game.data)
+        val acc = Acc()
+        walkStats(depth, game, acc, pool, mateCtx)
+        return acc.toStats()
     }
 
-    private fun classify(played: Move, gameAfter: Game): PerftStats {
+    private fun walkStats(
+        depth: Int,
+        game: Game,
+        acc: Acc,
+        pool: Array<MoveGenCtx?>,
+        mateCtx: MoveGenCtx,
+    ) {
+        var ctx = pool[depth]
+        if (ctx == null) {
+            ctx = MoveGenCtx(game.data)
+            pool[depth] = ctx
+        } else {
+            ctx.reset(game.data)
+        }
+        val moves = MoveGenerator.executeOn(ctx)
+        if (depth == 1) {
+            var i = 0
+            val n = moves.size
+            while (i < n) {
+                val played = game.makeMove(moves[i])
+                classifyInto(played, game, acc, mateCtx)
+                game.undoMove()
+                i++
+            }
+            return
+        }
+        var i = 0
+        val n = moves.size
+        while (i < n) {
+            game.makeMove(moves[i])
+            walkStats(depth - 1, game, acc, pool, mateCtx)
+            game.undoMove()
+            i++
+        }
+    }
+
+    private fun classifyInto(played: Move, gameAfter: Game, acc: Acc, mateCtx: MoveGenCtx) {
         val mover = gameAfter.data.turn.inv()
-        val isCapture = played.capture != null
-        val isEnPassant = (played.piece == Piece.wPawn || played.piece == Piece.bPawn)
-            && played.to == played.prevEnPassantTarget
-        val isCastle = (played.piece == Piece.wKing || played.piece == Piece.bKing)
-            && abs(played.from.ordinal - played.to.ordinal) == 2
-        val isPromotion = played.promo != null
+        acc.nodes++
+        if (played.capture != null) acc.captures++
+        if ((played.piece == Piece.wPawn || played.piece == Piece.bPawn) && played.to == played.prevEnPassantTarget) {
+            acc.enPassant++
+        }
+        if ((played.piece == Piece.wKing || played.piece == Piece.bKing) && abs(played.from.ordinal - played.to.ordinal) == 2) {
+            acc.castles++
+        }
+        if (played.promo != null) acc.promotions++
 
         val enemyKingBit = gameAfter.data.board.king(mover.inv())
         val attackers = gameAfter.data.board.attackersOf(enemyKingBit, mover)
         val numAttackers = attackers.countOneBits()
-        val isCheck = numAttackers > 0
-        val isDoubleCheck = numAttackers >= 2
-        val isDiscoveryCheck = numAttackers == 1 && (attackers and played.to.asBit()) == 0UL
-        val isCheckmate = isCheck && MoveGenerator(MoveGenCtx(gameAfter.data)).execute().isEmpty()
+        if (numAttackers == 0) return
+        acc.checks++
+        if (numAttackers >= 2) {
+            acc.doubleChecks++
+        } else if ((attackers and played.to.asBit()) == 0UL) {
+            acc.discoveryChecks++
+        }
+        mateCtx.reset(gameAfter.data)
+        if (MoveGenerator.executeOn(mateCtx).isEmpty()) {
+            acc.checkmates++
+        }
+    }
 
-        return PerftStats(
-            nodes = 1,
-            captures = if (isCapture) 1L else 0L,
-            enPassant = if (isEnPassant) 1L else 0L,
-            castles = if (isCastle) 1L else 0L,
-            promotions = if (isPromotion) 1L else 0L,
-            checks = if (isCheck) 1L else 0L,
-            discoveryChecks = if (isDiscoveryCheck) 1L else 0L,
-            doubleChecks = if (isDoubleCheck) 1L else 0L,
-            checkmates = if (isCheckmate) 1L else 0L,
+    private class Acc {
+        var nodes = 0L
+        var captures = 0L
+        var enPassant = 0L
+        var castles = 0L
+        var promotions = 0L
+        var checks = 0L
+        var discoveryChecks = 0L
+        var doubleChecks = 0L
+        var checkmates = 0L
+
+        fun toStats() = PerftStats(
+            nodes, captures, enPassant, castles, promotions,
+            checks, discoveryChecks, doubleChecks, checkmates,
         )
     }
 
@@ -72,8 +112,6 @@ object Perft {
         if (depth == 1) return moves.size
 
         var nodes = 0
-
-
         for (move in moves) {
             game.makeMove(move)
             val curNodeVal = nodes
