@@ -134,6 +134,45 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
         return output
     }
 
+    /**
+     * Bitboard of pieces of [byColor] that attack [squareBit]. Returns 0 when
+     * [squareBit] is empty/0. Counts each attacker as one bit, so
+     * `attackersOf(...).countOneBits()` gives the number of attackers.
+     */
+    fun attackersOf(squareBit: ULong, byColor: Color): ULong {
+        if (squareBit == 0UL) return 0UL
+        val sq = Square[squareBit]
+        var attackers = 0UL
+
+        attackers = attackers or (Magic.Attack.Knight[sq] and knights(byColor))
+        // a byColor pawn attacks squareBit iff a (byColor.inv()) pawn placed on
+        // squareBit would attack the byColor pawn's square.
+        attackers = attackers or (Compass.pawnAttackTargets(squareBit, byColor.inv()) and pawns(byColor))
+        attackers = attackers or (Compass.kingMoveTargets(squareBit) and king(byColor))
+
+        for (direction in Direction.bishops) {
+            val ray = Compass.ray(squareBit, direction)
+            val blockers = ray and occupied()
+            if (blockers != 0UL) {
+                val first = Direction.getClosestBit(direction, blockers)
+                if (first and (bishops(byColor) or queens(byColor)) != 0UL) {
+                    attackers = attackers or first
+                }
+            }
+        }
+        for (direction in Direction.rooks) {
+            val ray = Compass.ray(squareBit, direction)
+            val blockers = ray and occupied()
+            if (blockers != 0UL) {
+                val first = Direction.getClosestBit(direction, blockers)
+                if (first and (rooks(byColor) or queens(byColor)) != 0UL) {
+                    attackers = attackers or first
+                }
+            }
+        }
+        return attackers
+    }
+
     fun rayMoves(x: ULong, direction: Direction, color: Color): ULong {
         var output: ULong = 0UL
         val bits = BitsToListOfBit(x).output
