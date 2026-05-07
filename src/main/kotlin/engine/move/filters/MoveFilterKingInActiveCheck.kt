@@ -7,7 +7,7 @@ import engine.move.MoveGenCtx
 
 class MoveFilterKingInActiveCheck : IMoveFilter {
 
-    override suspend fun run(ctx: MoveGenCtx): MoveGenCtx {
+    override fun run(ctx: MoveGenCtx): MoveGenCtx {
         val (board, turn) = ctx.data
 
         val (activeSlidingThreats, passiveSlidingThreats) = getSlidingThreats(board, turn)

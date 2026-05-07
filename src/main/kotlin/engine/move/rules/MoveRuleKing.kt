@@ -12,7 +12,7 @@ class MoveRuleKing : IMoveRule {
         return true
     }
 
-    override suspend fun run(ctx: MoveGenCtx) {
+    override fun run(ctx: MoveGenCtx) {
         val (board, turn) = ctx.data
         val targetSquares = Magic.Attack[Square[board.king(turn)], Piece.king(turn)]
 

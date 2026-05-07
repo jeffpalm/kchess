@@ -174,40 +174,47 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
     }
 
     fun rayMoves(x: ULong, direction: Direction, color: Color): ULong {
+        if (x == 0UL) return 0UL
         var output: ULong = 0UL
-        val bits = BitsToListOfBit(x).output
-        for (bit in bits) {
+        val occ = occupied()
+        val own = occupied(color)
+        var w = x
+        while (w != 0UL) {
+            val bit = w.takeLowestOneBit()
+            w = w xor bit
             var moves = Compass.ray(bit, direction)
-            val blocker = moves and occupied()
-
+            val blocker = moves and occ
             if (blocker != 0UL) {
                 val square = Direction.getClosestBit(direction, blocker)
                 val ray = Compass.ray(square, direction)
-                moves = if ((square and occupied(color)).countOneBits() > 0) {
+                moves = if (square and own != 0UL) {
                     moves xor square.or(ray)
                 } else {
                     moves xor ray
                 }
             }
             output = output or moves
-
         }
         return output
     }
 
     fun rayAttack(x: ULong, direction: Direction, color: Color): ULong {
-        val bits = BitsToListOfBit(x).output
+        if (x == 0UL) return 0UL
+        val occ = occupied()
+        val enemy = occupied(color.inv())
         var output: ULong = 0UL
-
-        for(bit in bits) {
+        var w = x
+        while (w != 0UL) {
+            val bit = w.takeLowestOneBit()
+            w = w xor bit
             val moves = Compass.ray(bit, direction)
-            val blockers = moves and occupied()
+            val blockers = moves and occ
 
             if (blockers != 0UL) {
                 val square = Direction.getClosestBit(direction, blockers)
-                val enemy = square and occupied(color.inv())
-                if (enemy != 0UL) {
-                    output = output or enemy
+                val enemyHit = square and enemy
+                if (enemyHit != 0UL) {
+                    output = output or enemyHit
                 }
             }
         }
@@ -258,47 +265,53 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
         }
     }
 
-    fun undoMove(move: Pair<ULong, ULong>, piece: Char, capture: Char?, promo: Char? = null) {
+    /**
+     * Reverse a previously-played move. [from]/[to] are the square the piece
+     * came from and the square it ended up on. [capturedSquare] is where the
+     * captured piece (if any) was — usually equal to [to], but not for en
+     * passant where the captured pawn was on a different rank.
+     */
+    fun undoMove(from: ULong, to: ULong, piece: Char, capture: Char? = null, capturedSquare: ULong = to, promo: Char? = null) {
         when (promo) {
-            'N' -> { wKnights = wKnights.xor(move.second); wPawns = wPawns.or(move.second) }
-            'B' -> { wBishops = wBishops.xor(move.second); wPawns = wPawns.or(move.second) }
-            'R' -> { wRooks = wRooks.xor(move.second); wPawns = wPawns.or(move.second) }
-            'Q' -> { wQueens = wQueens.xor(move.second); wPawns = wPawns.or(move.second) }
-            'n' -> { bKnights = bKnights.xor(move.second); bPawns = bPawns.or(move.second) }
-            'b' -> { bBishops = bBishops.xor(move.second); bPawns = bPawns.or(move.second) }
-            'r' -> { bRooks = bRooks.xor(move.second); bPawns = bPawns.or(move.second) }
-            'q' -> { bQueens = bQueens.xor(move.second); bPawns = bPawns.or(move.second) }
+            'N' -> { wKnights = wKnights.xor(to); wPawns = wPawns.or(to) }
+            'B' -> { wBishops = wBishops.xor(to); wPawns = wPawns.or(to) }
+            'R' -> { wRooks = wRooks.xor(to); wPawns = wPawns.or(to) }
+            'Q' -> { wQueens = wQueens.xor(to); wPawns = wPawns.or(to) }
+            'n' -> { bKnights = bKnights.xor(to); bPawns = bPawns.or(to) }
+            'b' -> { bBishops = bBishops.xor(to); bPawns = bPawns.or(to) }
+            'r' -> { bRooks = bRooks.xor(to); bPawns = bPawns.or(to) }
+            'q' -> { bQueens = bQueens.xor(to); bPawns = bPawns.or(to) }
             null -> {}
             else -> throw IllegalArgumentException("Invalid promo piece: $promo")
         }
         when (piece) {
-            'P' -> wPawns = wPawns.xor(move.second).or(move.first)
-            'N' -> wKnights = wKnights.xor(move.second).or(move.first)
-            'B' -> wBishops = wBishops.xor(move.second).or(move.first)
-            'R' -> wRooks = wRooks.xor(move.second).or(move.first)
-            'Q' -> wQueens = wQueens.xor(move.second).or(move.first)
-            'K' -> wKing = wKing.xor(move.second).or(move.first)
-            'p' -> bPawns = bPawns.xor(move.second).or(move.first)
-            'n' -> bKnights = bKnights.xor(move.second).or(move.first)
-            'b' -> bBishops = bBishops.xor(move.second).or(move.first)
-            'r' -> bRooks = bRooks.xor(move.second).or(move.first)
-            'q' -> bQueens = bQueens.xor(move.second).or(move.first)
-            'k' -> bKing = bKing.xor(move.second).or(move.first)
+            'P' -> wPawns = wPawns.xor(to).or(from)
+            'N' -> wKnights = wKnights.xor(to).or(from)
+            'B' -> wBishops = wBishops.xor(to).or(from)
+            'R' -> wRooks = wRooks.xor(to).or(from)
+            'Q' -> wQueens = wQueens.xor(to).or(from)
+            'K' -> wKing = wKing.xor(to).or(from)
+            'p' -> bPawns = bPawns.xor(to).or(from)
+            'n' -> bKnights = bKnights.xor(to).or(from)
+            'b' -> bBishops = bBishops.xor(to).or(from)
+            'r' -> bRooks = bRooks.xor(to).or(from)
+            'q' -> bQueens = bQueens.xor(to).or(from)
+            'k' -> bKing = bKing.xor(to).or(from)
             else -> throw IllegalArgumentException("Piece must be one of P, N, B, R, Q, K, p, n, b, r, q, k")
         }
         when (capture) {
-            'P' -> wPawns = wPawns.or(move.second)
-            'N' -> wKnights = wKnights.or(move.second)
-            'B' -> wBishops = wBishops.or(move.second)
-            'R' -> wRooks = wRooks.or(move.second)
-            'Q' -> wQueens = wQueens.or(move.second)
-            'K' -> wKing = wKing.or(move.second)
-            'p' -> bPawns = bPawns.or(move.second)
-            'n' -> bKnights = bKnights.or(move.second)
-            'b' -> bBishops = bBishops.or(move.second)
-            'r' -> bRooks = bRooks.or(move.second)
-            'q' -> bQueens = bQueens.or(move.second)
-            'k' -> bKing = bKing.or(move.second)
+            'P' -> wPawns = wPawns.or(capturedSquare)
+            'N' -> wKnights = wKnights.or(capturedSquare)
+            'B' -> wBishops = wBishops.or(capturedSquare)
+            'R' -> wRooks = wRooks.or(capturedSquare)
+            'Q' -> wQueens = wQueens.or(capturedSquare)
+            'K' -> wKing = wKing.or(capturedSquare)
+            'p' -> bPawns = bPawns.or(capturedSquare)
+            'n' -> bKnights = bKnights.or(capturedSquare)
+            'b' -> bBishops = bBishops.or(capturedSquare)
+            'r' -> bRooks = bRooks.or(capturedSquare)
+            'q' -> bQueens = bQueens.or(capturedSquare)
+            'k' -> bKing = bKing.or(capturedSquare)
         }
     }
 

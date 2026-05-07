@@ -10,7 +10,7 @@ class MoveRuleBlackPawnPush : IMoveRule {
         return ctx.data.turn == Color.BLACK && ctx.data.board.bPawns.countOneBits() > 0
     }
 
-    override suspend fun run(ctx: MoveGenCtx) {
+    override fun run(ctx: MoveGenCtx) {
         val (board) = ctx.data
 
         val empty = board.empty()

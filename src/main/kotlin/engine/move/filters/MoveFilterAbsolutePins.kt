@@ -6,7 +6,7 @@ import engine.move.Magic
 import engine.move.MoveGenCtx
 
 class MoveFilterAbsolutePins : IMoveFilter {
-    override suspend fun run(ctx: MoveGenCtx): MoveGenCtx {
+    override fun run(ctx: MoveGenCtx): MoveGenCtx {
         val pinAllowedByPiece = computePins(ctx)
         if (pinAllowedByPiece.isEmpty()) return ctx
 

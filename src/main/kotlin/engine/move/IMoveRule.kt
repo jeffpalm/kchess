@@ -1,12 +1,10 @@
 package engine.move
 
 /**
- * Responsible for generating possible all moves based on IGameData
- * and adding them to the MoveGenCtx via the addMoves or addMove method
- *
- * These rules run in parallel
+ * Generates pseudo-legal moves into [MoveGenCtx]. Filters run after rules
+ * to remove illegal ones.
  */
 interface IMoveRule {
     fun shouldRun(ctx: MoveGenCtx): Boolean
-    suspend fun run(ctx: MoveGenCtx)
+    fun run(ctx: MoveGenCtx)
 }

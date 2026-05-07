@@ -12,7 +12,7 @@ class MoveRuleKnight : IMoveRule {
         return board.knights(turn) != 0UL
     }
 
-    override suspend fun run(ctx: MoveGenCtx) {
+    override fun run(ctx: MoveGenCtx) {
         val (board, turn) = ctx.data
         val moveTargets = Compass.knightMoveTargets(board.knights(turn))
         val legalMoveTargets = moveTargets and board.occupied(turn).inv()

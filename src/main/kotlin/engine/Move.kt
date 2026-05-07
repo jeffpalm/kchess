@@ -7,6 +7,7 @@ class Move(
     override val to: Square,
     board: Board,
     val prevEnPassantTarget: Square?,
+    val prevCastleAvail: String = "-",
     val promo: Char? = null
 ) : IMove {
     override val piece: Char =

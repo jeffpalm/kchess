@@ -1,10 +1,10 @@
 package engine.move
 
 /**
- * Runs after move rules and interacts with filterMoves method of ctx to remove illegal moves from the list
- *
- * These filters run in sequence passing the context returned from the run method
+ * Strips illegal moves from a [MoveGenCtx] populated by rules. Filters are
+ * called sequentially in declaration order; each one's output becomes the
+ * next one's input.
  */
 interface IMoveFilter {
-    suspend fun run(ctx: MoveGenCtx): MoveGenCtx
+    fun run(ctx: MoveGenCtx): MoveGenCtx
 }
