@@ -13,7 +13,7 @@ class MoveRuleBishop : IMoveRule {
         return board.bishops(turn) != 0UL
     }
 
-    override suspend fun run(ctx: MoveGenCtx) {
+    override fun run(ctx: MoveGenCtx) {
         val (board, turn) = ctx.data
 
         val individualBishops = BitsToListOfBit(board.bishops(turn)).output

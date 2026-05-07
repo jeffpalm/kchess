@@ -33,8 +33,8 @@ src/main/kotlin/
       AbstractMoveGenerator.kt rules first (each addMoves), then filters in order
       MoveGenCtx.kt            mutable bag: data, moves, addMove(s), filterMoves
       PseudoMove.kt            (from, to, piece, promo?) — produced by rules
-      IMoveRule.kt             shouldRun + suspend run(ctx)
-      IMoveFilter.kt           suspend run(ctx): MoveGenCtx — strips illegal moves
+      IMoveRule.kt             shouldRun + run(ctx) — populates ctx.moves
+      IMoveFilter.kt           run(ctx): MoveGenCtx — strips illegal moves in place
       rules/                   one per piece + Castle + pawn push/attack split by color
       filters/                 AbsolutePins, KingInActiveCheck, EnPassantCaptureEdgeCase
     adapter/                   small one-shot transforms (FenToBitBoard, BitsToListOfBit, …)
@@ -52,10 +52,10 @@ src/test/kotlin/engineTest/    JUnit 5 + kotlin.test; PerftTest is the integrati
 
 ## Move generation pipeline
 
-`MoveGenerator(MoveGenCtx(gameData)).execute()` returns a `Set<PseudoMove>` of fully legal moves.
+`MoveGenerator(MoveGenCtx(gameData)).execute()` returns a `List<PseudoMove>` of fully legal moves.
 
-1. Each registered rule's `run(ctx)` adds pseudo-legal moves via `ctx.addMoves(...)`. Rules are launched as coroutines under a single `runBlocking`; with no suspension points they run sequentially in declaration order — fine today, but don't introduce `yield`/IO without auditing the shared `MoveGenCtx`.
-2. Each filter's `run(ctx)` calls `ctx.filterMoves { … }` to strip illegal moves. Filters are also launched, but mutate the same `moves` set — they currently run sequentially for the same reason. Order of filters in `MoveGenerator` matters semantically.
+1. Each rule's `run(ctx)` populates pseudo-legal moves via `ctx.addMoves(...)`. Rules are called sequentially in declaration order on `MoveGenerator` — no coroutines, no async; reorder cautiously.
+2. Each filter's `run(ctx)` calls `ctx.filterMoves { keep -> Boolean }` to strip illegal moves in place. Filter order matters semantically (e.g. `MoveFilterAbsolutePins` runs before `MoveFilterKingInActiveCheck`).
 
 Rules and filters are pure-ish: they read `ctx.data`, write `ctx`. State changes between plies happen through `Game.makeMove(PseudoMove)` / `Game.undoMove()`, never inside a rule.
 
@@ -69,6 +69,8 @@ Rules and filters are pure-ish: they read `ctx.data`, write `ctx`. State changes
 - **Rook-from-starting-square moves OR captures** drop the corresponding castling right. Capture-of-rook is checked via `m.to in {a1,h1,a8,h8}` + `m.capture == 'R'/'r'`.
 
 `Game.clone()` round-trips through FEN (`GameToFen` → `Game(Fen(...))`), so any inconsistency between `Board` and `BitBoard` is silently lost on clone. If you add a new special-case move, make sure both reps are updated *and* serialize correctly.
+
+`Game.undoMove()` is the canonical inverse of `makeMove`. The hot path (perft, search) should `makeMove` / `undoMove` in place — don't `clone()` per move; FEN serialization dominates the runtime when you do. `MakeUnmakeTest` covers EP, castle, promotion, promotion-with-capture, and rook captures; if you add a new special-case move, extend that test first.
 
 ## Filters — non-obvious invariants
 
@@ -94,6 +96,6 @@ When adding a new perft case: it must come from chessprogramming.org or a Stockf
 
 - `Sets.kt` contains a long tail of `*_SHIFT_*` / `*_SHIFT_RIGHT_n` / `*_SHIFT_LEFT_n` constants that are all assigned the same two values (`0x55AA…` / `0xAA55…`). They are clearly placeholder/wrong and unused. If you reach for one, double-check the value before trusting it.
 - `Move.enPassantTarget()` only returns non-null for *starting-square* two-square pawn pushes. EP target on the resulting `GameData` is set via `handleEnPassantTarget`, which calls this and assigns `null` otherwise — relied on to clear stale EP targets on every other move type.
-- `Perft.run` prints to stdout at start depth and depth 1. It's not silent.
+- `Perft.run` (Int-returning, prints divides) is the legacy entry point. `Perft.runStats` is the silent, full-classification version (returns `PerftStats`). Prefer `runStats` for new tests.
 - `Client.kt` is a scratchpad, not a public entry point. Don't build infra around its current contents.
-- The `IMoveRule` doc comment says rules "run in parallel". They effectively don't (single-thread dispatcher, no yield points). Treat the comment as aspirational.
+- `WordToSquareIndices` / `BitsToListOfBit` use bit-twiddling (`countTrailingZeroBits`, `takeLowestOneBit`). If you find yourself reaching for `ULong.toString(2)` or `String.toCharArray()` for bit work, stop — that's an order of magnitude slower.

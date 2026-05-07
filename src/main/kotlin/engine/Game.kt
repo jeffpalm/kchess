@@ -24,7 +24,14 @@ class Game(private val fen: Fen = Fen(), private val _board: Board = Board(fen))
         get() = _data
 
     fun makeMove(move: PseudoMove): Move {
-        val validatedMove = Move(move.from, move.to, _board, _data.enPassantTarget, move.promo)
+        val validatedMove = Move(
+            move.from,
+            move.to,
+            _board,
+            _data.enPassantTarget,
+            _data.castleAvail,
+            move.promo,
+        )
         _moves.add(validatedMove)
         if (move.to == _data.enPassantTarget && (validatedMove.piece == Piece.wPawn || validatedMove.piece == Piece.bPawn)) {
             _board.setSquare(Square[Magic.EnPassantCaptureSq[move.to.asBit()]], null)
@@ -65,18 +72,37 @@ class Game(private val fen: Fen = Fen(), private val _board: Board = Board(fen))
 
     fun undoMove() {
         val pMove = _moves.removeLast()
+        val isEnPassant = (pMove.piece == Piece.wPawn || pMove.piece == Piece.bPawn)
+            && pMove.to == pMove.prevEnPassantTarget
+        val capturedSquare = if (isEnPassant) Magic.EnPassantCaptureSq[pMove.to.asBit()] else pMove.to.asBit()
+
+        // Board (squares)
+        if (isEnPassant) {
+            _board.setSquare(pMove.to, null)
+            _board.setSquare(Square[capturedSquare], pMove.capture)
+        } else {
+            _board.setSquare(pMove.to, pMove.capture)
+        }
         _board.setSquare(pMove.from, pMove.piece)
-        _board.setSquare(pMove.to, pMove.capture)
-        flipSideToMove()
-        decrementClocks()
-        handleAddingCastlingAvail(pMove)
-        val toSquare = if (pMove.to == pMove.prevEnPassantTarget) Magic.EnPassantCaptureSq[pMove.to] else pMove.to.asBit()
+
+        // BitBoard
         _data.board.undoMove(
-            pMove.from.asBit() to toSquare, pMove.piece, pMove.capture, pMove.promo
+            from = pMove.from.asBit(),
+            to = pMove.to.asBit(),
+            piece = pMove.piece,
+            capture = pMove.capture,
+            capturedSquare = capturedSquare,
+            promo = pMove.promo,
         )
         handleCastleRookUndo(pMove)
+
+        // Restore game-level state from snapshot
+        _data.castleAvail = pMove.prevCastleAvail
         _data.enPassantTarget = pMove.prevEnPassantTarget
         _data.board.enPassantTarget = pMove.prevEnPassantTarget?.asBit()
+
+        flipSideToMove()
+        decrementClocks()
     }
 
     private fun handleCastleRookUndo(m: Move) {
@@ -89,7 +115,7 @@ class Game(private val fen: Fen = Fen(), private val _board: Board = Board(fen))
         }
         _board.setSquare(rookTo, null)
         _board.setSquare(rookFrom, rookPiece)
-        _data.board.undoMove(rookFrom.asBit() to rookTo.asBit(), rookPiece, null)
+        _data.board.undoMove(from = rookFrom.asBit(), to = rookTo.asBit(), piece = rookPiece)
     }
 
     private fun flipSideToMove() {
@@ -145,43 +171,10 @@ class Game(private val fen: Fen = Fen(), private val _board: Board = Board(fen))
         }
     }
 
-    private fun handleAddingCastlingAvail(m: Move) {
-        when {
-            m.piece == 'K' && m.from == Square.e1 -> {
-                addCastlingAbility('K')
-                addCastlingAbility('Q')
-            }
-            m.piece == 'k' && m.from == Square.e8 -> {
-                addCastlingAbility('k')
-                addCastlingAbility('q')
-            }
-            m.piece == 'R' && m.from == Square.a1 -> {
-                addCastlingAbility('Q')
-            }
-            m.piece == 'R' && m.from == Square.h1 -> {
-                addCastlingAbility('K')
-            }
-            m.piece == 'r' && m.from == Square.a8 -> {
-                addCastlingAbility('q')
-            }
-            m.piece == 'r' && m.from == Square.h8 -> {
-                addCastlingAbility('k')
-            }
-        }
-    }
-
     private fun removeCastlingAbility(filter: (Char) -> Boolean) {
         _data.castleAvail = _data.castleAvail.toCharArray().filter(filter).joinToString("")
         if (_data.castleAvail.isEmpty()) {
             _data.castleAvail = "-"
-        }
-    }
-
-    private fun addCastlingAbility(c: Char) {
-        if (_data.castleAvail == "-") {
-            _data.castleAvail = c.toString()
-        } else {
-            _data.castleAvail += c
         }
     }
 

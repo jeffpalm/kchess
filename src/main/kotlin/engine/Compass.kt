@@ -28,14 +28,13 @@ object Compass {
 
     fun ray(start: ULong, direction: Direction): ULong {
         var output: ULong = 0UL
-
-        val bits = BitsToListOfBit(start).output
-
-        for (bit in bits) {
-            output = output or bit.xor(Magic.Ray[Square[bit], direction])
+        var w = start
+        while (w != 0UL) {
+            val bit = w.takeLowestOneBit()
+            output = output or Magic.Ray[Square[bit], direction]
+            w = w xor bit
         }
-
-        return start xor output
+        return output
     }
 
     private fun walkRay(start: ULong, direction: Direction, steps: Int = 1): ULong {

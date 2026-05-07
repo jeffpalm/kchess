@@ -12,20 +12,19 @@ object Perft {
     fun runStats(depth: Int, game: Game): PerftStats {
         if (depth == 0) return PerftStats(nodes = 1)
         val moves = MoveGenerator(MoveGenCtx(game.data)).execute()
+        var s = PerftStats.ZERO
         if (depth == 1) {
-            var s = PerftStats.ZERO
             for (move in moves) {
-                val cloned = game.clone()
-                val played = cloned.makeMove(move)
-                s += classify(played, cloned)
+                val played = game.makeMove(move)
+                s += classify(played, game)
+                game.undoMove()
             }
             return s
         }
-        var s = PerftStats.ZERO
         for (move in moves) {
-            val cloned = game.clone()
-            cloned.makeMove(move)
-            s += runStats(depth - 1, cloned)
+            game.makeMove(move)
+            s += runStats(depth - 1, game)
+            game.undoMove()
         }
         return s
     }
@@ -76,14 +75,13 @@ object Perft {
 
 
         for (move in moves) {
-            val cloned = game.clone()
-            cloned.makeMove(move)
+            game.makeMove(move)
             val curNodeVal = nodes
-            nodes += run(depth - 1, cloned, startDepth)
+            nodes += run(depth - 1, game, startDepth)
+            game.undoMove()
             if (depth == startDepth) {
                 println("${move.from.name}${move.to.name}${move.promo ?: ""}: ${nodes - curNodeVal}")
             }
-//            game.undoMove()
         }
         if (depth == startDepth) {
             println(nodes)

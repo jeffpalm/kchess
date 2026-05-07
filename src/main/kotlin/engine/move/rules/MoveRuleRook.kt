@@ -14,7 +14,7 @@ class MoveRuleRook : IMoveRule {
         return board.rooks(turn) != 0UL
     }
 
-    override suspend fun run(ctx: MoveGenCtx) {
+    override fun run(ctx: MoveGenCtx) {
         val (board, turn) = ctx.data
 
         val individualRooks = BitsToListOfBit(board.rooks(turn)).output

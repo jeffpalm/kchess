@@ -11,7 +11,7 @@ class MoveRuleCastle : IMoveRule {
         return (castlingAvail.contains(Piece.king(turn)) || castlingAvail.contains(Piece.queen(turn)))
     }
 
-    override suspend fun run(ctx: MoveGenCtx) {
+    override fun run(ctx: MoveGenCtx) {
         val (board, turn, castlingAvail) = ctx.data
         val enemyAttacks = board.allAttackTargets(turn.inv())
         val kingSquare = board.king(turn)

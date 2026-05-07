@@ -11,7 +11,7 @@ import engine.move.PseudoMove
 // it would put friendly king in Check
 // See Perft Position 2 - Depth 2
 class MoveFilterEnPassantCaptureEdgeCase : IMoveFilter {
-    override suspend fun run(ctx: MoveGenCtx): MoveGenCtx {
+    override fun run(ctx: MoveGenCtx): MoveGenCtx {
         if (ctx.data.board.enPassantTarget == null) return ctx
 
         ctx.filterMoves { handleEdgeCase(it, ctx) }
