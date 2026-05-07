@@ -18,9 +18,18 @@ class MoveFilterKingInActiveCheck : IMoveFilter {
         val activeThreats = slidingThreats or activeKnightThreats
 
         if (activeThreats != 0UL || activePawnThreats != 0UL || enemySquares != 0UL) {
+            val epTarget = board.enPassantTarget
             ctx.filterMoves {
                 when (it.piece) {
                     Piece.wKing, Piece.bKing -> it.toBit.and(activeThreats) == 0UL
+                    Piece.wPawn, Piece.bPawn -> {
+                        if (epTarget != null && it.toBit == epTarget) {
+                            val capturedSquare = Magic.EnPassantCaptureSq[it.toBit]
+                            it.toBit.and(activeThreats) != 0UL || capturedSquare.and(activePawnThreats) != 0UL || it.toBit.and(enemySquares) != 0UL
+                        } else {
+                            it.toBit.and(activeThreats) != 0UL || it.toBit.and(activePawnThreats) != 0UL || it.toBit.and(enemySquares) != 0UL
+                        }
+                    }
                     else -> it.toBit.and(activeThreats) != 0UL || it.toBit.and(activePawnThreats) != 0UL || it.toBit.and(enemySquares) != 0UL
                 }
             }

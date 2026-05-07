@@ -6,7 +6,8 @@ class Move(
     override val from: Square,
     override val to: Square,
     board: Board,
-    val prevEnPassantTarget: Square?
+    val prevEnPassantTarget: Square?,
+    val promo: Char? = null
 ) : IMove {
     override val piece: Char =
         board.getPiece(from) ?: throw IllegalArgumentException("No piece at $from")

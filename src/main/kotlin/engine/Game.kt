@@ -24,19 +24,36 @@ class Game(private val fen: Fen = Fen(), private val _board: Board = Board(fen))
         get() = _data
 
     fun makeMove(move: PseudoMove): Move {
-        val validatedMove = Move(move.from, move.to, _board, _data.enPassantTarget)
+        val validatedMove = Move(move.from, move.to, _board, _data.enPassantTarget, move.promo)
         _moves.add(validatedMove)
+        if (move.to == _data.enPassantTarget && (validatedMove.piece == Piece.wPawn || validatedMove.piece == Piece.bPawn)) {
+            _board.setSquare(Square[Magic.EnPassantCaptureSq[move.to.asBit()]], null)
+        }
         _board.setSquare(move.from, null)
-        _board.setSquare(move.to, validatedMove.piece)
+        _board.setSquare(move.to, move.promo ?: validatedMove.piece)
         flipSideToMove()
         incrementClocks()
         handleRemovingCastlingAvail(validatedMove)
         _data.board.makeMove(
-            move.from.asBit() to move.to.asBit(), validatedMove.piece, validatedMove.capture
+            move.from.asBit() to move.to.asBit(), validatedMove.piece, validatedMove.capture, move.promo
         )
 
+        handleCastleRookMove(validatedMove)
         handleEnPassantTarget(validatedMove)
         return validatedMove
+    }
+
+    private fun handleCastleRookMove(m: Move) {
+        val (rookFrom, rookTo, rookPiece) = when {
+            m.isWhiteKingCastle() && m.to == Square.g1 -> Triple(Square.h1, Square.f1, 'R')
+            m.isWhiteKingCastle() && m.to == Square.c1 -> Triple(Square.a1, Square.d1, 'R')
+            m.isBlackKingCastle() && m.to == Square.g8 -> Triple(Square.h8, Square.f8, 'r')
+            m.isBlackKingCastle() && m.to == Square.c8 -> Triple(Square.a8, Square.d8, 'r')
+            else -> return
+        }
+        _board.setSquare(rookFrom, null)
+        _board.setSquare(rookTo, rookPiece)
+        _data.board.makeMove(rookFrom.asBit() to rookTo.asBit(), rookPiece)
     }
 
     private fun handleEnPassantTarget(move: Move) {
@@ -55,10 +72,24 @@ class Game(private val fen: Fen = Fen(), private val _board: Board = Board(fen))
         handleAddingCastlingAvail(pMove)
         val toSquare = if (pMove.to == pMove.prevEnPassantTarget) Magic.EnPassantCaptureSq[pMove.to] else pMove.to.asBit()
         _data.board.undoMove(
-            pMove.from.asBit() to toSquare, pMove.piece, pMove.capture
+            pMove.from.asBit() to toSquare, pMove.piece, pMove.capture, pMove.promo
         )
+        handleCastleRookUndo(pMove)
         _data.enPassantTarget = pMove.prevEnPassantTarget
         _data.board.enPassantTarget = pMove.prevEnPassantTarget?.asBit()
+    }
+
+    private fun handleCastleRookUndo(m: Move) {
+        val (rookFrom, rookTo, rookPiece) = when {
+            m.isWhiteKingCastle() && m.to == Square.g1 -> Triple(Square.h1, Square.f1, 'R')
+            m.isWhiteKingCastle() && m.to == Square.c1 -> Triple(Square.a1, Square.d1, 'R')
+            m.isBlackKingCastle() && m.to == Square.g8 -> Triple(Square.h8, Square.f8, 'r')
+            m.isBlackKingCastle() && m.to == Square.c8 -> Triple(Square.a8, Square.d8, 'r')
+            else -> return
+        }
+        _board.setSquare(rookTo, null)
+        _board.setSquare(rookFrom, rookPiece)
+        _data.board.undoMove(rookFrom.asBit() to rookTo.asBit(), rookPiece, null)
     }
 
     private fun flipSideToMove() {
@@ -104,6 +135,13 @@ class Game(private val fen: Fen = Fen(), private val _board: Board = Board(fen))
             m.piece == 'r' && m.from == Square.h8 -> {
                 removeCastlingAbility { c -> c != 'k' }
             }
+        }
+        when (m.to) {
+            Square.a1 -> if (m.capture == 'R') removeCastlingAbility { c -> c != 'Q' }
+            Square.h1 -> if (m.capture == 'R') removeCastlingAbility { c -> c != 'K' }
+            Square.a8 -> if (m.capture == 'r') removeCastlingAbility { c -> c != 'q' }
+            Square.h8 -> if (m.capture == 'r') removeCastlingAbility { c -> c != 'k' }
+            else -> {}
         }
     }
 

@@ -7,32 +7,25 @@ import engine.move.MoveGenCtx
 
 class MoveFilterAbsolutePins : IMoveFilter {
     override suspend fun run(ctx: MoveGenCtx): MoveGenCtx {
-        val (pins, paths) = getAbsolutePins(ctx)
-        val (pinnedPieces, enemySquares) = pins
-        val (pathToProtector, pathProtectorToEnemy) = paths
+        val pinAllowedByPiece = computePins(ctx)
+        if (pinAllowedByPiece.isEmpty()) return ctx
 
         ctx.filterMoves {
             when (it.piece) {
                 'K', 'k' -> true
                 else -> {
-                    val isPinnedPiece = it.fromBit.and(pinnedPieces) != 0UL
-                    if (!isPinnedPiece) true else  it.toBit.and(enemySquares) != 0UL || it.toBit.and(pathToProtector) != 0UL
+                    val allowed = pinAllowedByPiece[it.fromBit]
+                    if (allowed == null) true else it.toBit.and(allowed) != 0UL
                 }
             }
         }
-
         return ctx
     }
 
-    private fun getAbsolutePins(ctx: MoveGenCtx): Pair<Pair<ULong, ULong>, Pair<ULong,ULong>> {
+    private fun computePins(ctx: MoveGenCtx): Map<ULong, ULong> {
         val (board, turn) = ctx.data
-
-        var pinnedPieces: ULong = 0UL
-        var enemySquares: ULong = 0UL
-        var pathProtectorToKing: ULong = 0UL
-        var pathProtectorToEnemy: ULong = 0UL
-
         val friendlyKing = board.king(turn)
+        val result = mutableMapOf<ULong, ULong>()
 
         for (direction in Direction.sliding) {
             val xRay = Compass.ray(friendlyKing, direction)
@@ -54,27 +47,23 @@ class MoveFilterAbsolutePins : IMoveFilter {
                 in Direction.negative -> enemyOnXRay.takeHighestOneBit()
                 else -> throw IllegalArgumentException("Invalid direction")
             }
-            enemySquares = enemySquares or closestEnemy
             val protector = board.rayAttack(closestEnemy, direction.inv(), turn.inv())
-            if (protector != friendlyKing) {
-                val pathToEnemy = board.rayMoves(protector, direction, turn).xor(closestEnemy)
-                pathProtectorToEnemy = pathProtectorToEnemy or pathToEnemy
-                val squaresNextToKing = Magic.Attack.King[Square[friendlyKing]]
+            if (protector == 0UL || protector == friendlyKing) continue
 
-                // protector is adjacent to king
-                if (squaresNextToKing.and(protector) != 0UL) {
-                    pinnedPieces = pinnedPieces or protector
-                    continue
-                }
+            val squaresNextToKing = Magic.Attack.King[Square[friendlyKing]]
+            val pathProtectorToEnemy = board.rayMoves(protector, direction, turn).xor(closestEnemy)
 
-                // Use enemy color to include protector bit
-                val pathToProtector = board.rayMoves(board.king(turn), direction, turn.inv())
-                if (pathToProtector.and(protector) != 0UL) {
-                    pinnedPieces = pinnedPieces or protector
-                    pathProtectorToKing = pathProtectorToKing or pathToProtector.xor(protector)
-                }
+            val pathProtectorToKing = if (squaresNextToKing.and(protector) != 0UL) {
+                0UL
+            } else {
+                val rayKingDir = board.rayMoves(friendlyKing, direction, turn.inv())
+                if (rayKingDir.and(protector) == 0UL) continue
+                rayKingDir.xor(protector)
             }
+
+            val allowed = closestEnemy or pathProtectorToKing or pathProtectorToEnemy
+            result[protector] = (result[protector] ?: 0UL) or allowed
         }
-        return (pinnedPieces to enemySquares) to (pathProtectorToKing to pathProtectorToEnemy)
+        return result
     }
 }

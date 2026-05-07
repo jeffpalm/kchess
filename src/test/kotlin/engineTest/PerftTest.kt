@@ -30,11 +30,11 @@ class PerftTest {
         val game = Game()
         assertEquals(197281, Perft.run(4, game))
     }
-//    @Test
-//    fun `Start Pos - Depth 5`() {
-//        val game = Game()
-//        assertEquals(4865609, Perft.run(5, game))
-//    }
+    @Test
+    fun `Start Pos - Depth 5`() {
+        val game = Game()
+        assertEquals(4865609, Perft.run(5, game))
+    }
     @Test
     fun `Position 2 - Depth 1`() {
         val game = Game(Fen("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1"))
@@ -44,6 +44,11 @@ class PerftTest {
     fun `Position 2 - Depth 2`() {
         val game = Game(Fen("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1"))
         assertEquals(2039, Perft.run(2, game))
+    }
+    @Test
+    fun `Position 2 - Depth 3`() {
+        val game = Game(Fen("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1"))
+        assertEquals(97862, Perft.run(3, game))
     }
     @Test
     fun `Position 3 - Depth 1`() {
@@ -61,6 +66,16 @@ class PerftTest {
         assertEquals(2812, Perft.run(3, game))
     }
     @Test
+    fun `Position 3 - Depth 4`() {
+        val game = Game(Fen("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1"))
+        assertEquals(43238, Perft.run(4, game))
+    }
+    @Test
+    fun `Position 3 - Depth 5`() {
+        val game = Game(Fen("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1"))
+        assertEquals(674624, Perft.run(5, game))
+    }
+    @Test
     fun `Position 4 - Depth 1`() {
         val game = Game(Fen("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1"))
         assertEquals(6, Perft.run(1, game))
@@ -69,15 +84,41 @@ class PerftTest {
     fun `Position 4 - Depth 2`() {
         val game = Game(Fen("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1"))
         assertEquals(264, Perft.run(2, game))
-    }@Test
+    }
+    @Test
     fun `Position 4 - Depth 3`() {
         val game = Game(Fen("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1"))
+        assertEquals(9467, Perft.run(3, game))
+    }
+    @Test
+    fun `Position 4 - Depth 4`() {
+        val game = Game(Fen("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1"))
+        assertEquals(422333, Perft.run(4, game))
+    }
+    @Test
+    fun `Position 4 mirrored - Depth 1`() {
+        val game = Game(Fen("r2q1rk1/pP1p2pp/Q4n2/bbp1p3/Np6/1B3NBn/pPPP1PPP/R3K2R b KQ - 0 1"))
+        assertEquals(6, Perft.run(1, game))
+    }
+    @Test
+    fun `Position 4 mirrored - Depth 3`() {
+        val game = Game(Fen("r2q1rk1/pP1p2pp/Q4n2/bbp1p3/Np6/1B3NBn/pPPP1PPP/R3K2R b KQ - 0 1"))
         assertEquals(9467, Perft.run(3, game))
     }
     @Test
     fun `Position 5 - Depth 1`() {
         val game = Game(Fen("rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8  "))
         assertEquals(44, Perft.run(1, game))
+    }
+    @Test
+    fun `Position 5 - Depth 2`() {
+        val game = Game(Fen("rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8  "))
+        assertEquals(1486, Perft.run(2, game))
+    }
+    @Test
+    fun `Position 5 - Depth 3`() {
+        val game = Game(Fen("rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8  "))
+        assertEquals(62379, Perft.run(3, game))
     }
     @Test
     fun `Position 6 - Depth 1`() {
@@ -88,5 +129,10 @@ class PerftTest {
     fun `Position 6 - Depth 2`() {
         val game = Game(Fen("r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10"))
         assertEquals(2079, Perft.run(2, game))
+    }
+    @Test
+    fun `Position 6 - Depth 3`() {
+        val game = Game(Fen("r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10"))
+        assertEquals(89890, Perft.run(3, game))
     }
 }

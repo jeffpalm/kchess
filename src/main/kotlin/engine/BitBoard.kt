@@ -98,32 +98,37 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
 
     fun allAttackTargets(color: Color): ULong {
         var output: ULong = 0UL
+        val enemyKing = king(color.inv())
         for (piece in Piece.attackPieces(color)) {
             output = when (piece) {
                 Piece.wPawn, Piece.bPawn -> output or Compass.pawnAttackTargets(pawns(color), color)
                 Piece.wKnight, Piece.bKnight -> output or Compass.knightMoveTargets(knights(color))
-                Piece.wBishop, Piece.bBishop -> {
-                    var bishopAttacks: ULong = 0UL
-                    for (direction in Direction.bishops) {
-                        bishopAttacks = bishopAttacks or rayAttack(bishops(color), direction, color) or rayMoves(bishops(color), direction, color)
-                    }
-                    output or bishopAttacks
-                }
-                Piece.wRook, Piece.bRook -> {
-                    var rookAttacks: ULong = 0UL
-                    for (direction in Direction.rooks) {
-                        rookAttacks = rookAttacks or rayAttack(rooks(color), direction, color) or rayMoves(rooks(color), direction, color)
-                    }
-                    output or rookAttacks
-                }
-                Piece.wQueen, Piece.bQueen -> {
-                    var queenAttacks: ULong = 0UL
-                    for (direction in Direction.sliding) {
-                        queenAttacks = queenAttacks or rayAttack(queens(color), direction, color) or rayMoves(queens(color), direction, color)
-                    }
-                    output or queenAttacks
-                }
+                Piece.wBishop, Piece.bBishop -> output or sliderAttacks(bishops(color), Direction.bishops, enemyKing)
+                Piece.wRook, Piece.bRook -> output or sliderAttacks(rooks(color), Direction.rooks, enemyKing)
+                Piece.wQueen, Piece.bQueen -> output or sliderAttacks(queens(color), Direction.sliding, enemyKing)
                 else -> output
+            }
+        }
+        output = output or Compass.kingMoveTargets(king(color))
+        return output
+    }
+
+    private fun sliderAttacks(pieces: ULong, directions: List<Direction>, enemyKing: ULong): ULong {
+        if (pieces == 0UL) return 0UL
+        val occupiedMinusEnemyKing = occupied() xor (occupied() and enemyKing)
+        var output: ULong = 0UL
+        val bits = engine.adapter.BitsToListOfBit(pieces).output
+        for (bit in bits) {
+            for (direction in directions) {
+                val ray = Compass.ray(bit, direction)
+                val blockers = ray and occupiedMinusEnemyKing
+                output = output or if (blockers == 0UL) {
+                    ray
+                } else {
+                    val first = Direction.getClosestBit(direction, blockers)
+                    val beyond = Compass.ray(first, direction)
+                    (ray xor beyond)
+                }
             }
         }
         return output
@@ -186,18 +191,18 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
             'k' -> bKing = bKing.xor(move.first).or(move.second)
             else -> throw IllegalArgumentException("Piece must be one of P, N, B, R, Q, K, p, n, b, r, q, k")
         }
-//        when (promo) {
-//            'N' -> wKnights = wKnights.xor(move.second)
-//            'B' -> wBishops = wBishops.xor(move.second)
-//            'R' -> wRooks = wRooks.xor(move.second)
-//            'Q' -> wQueens = wQueens.xor(move.second)
-//            'n' -> bKnights = bKnights.xor(move.second)
-//            'b' -> bBishops = bBishops.xor(move.second)
-//            'r' -> bRooks = bRooks.xor(move.second)
-//            'q' -> bQueens = bQueens.xor(move.second)
-//            null -> {}
-//            else -> throw IllegalArgumentException("Invalid promo piece: $promo")
-//        }
+        when (promo) {
+            'N' -> { wPawns = wPawns.xor(move.second); wKnights = wKnights.or(move.second) }
+            'B' -> { wPawns = wPawns.xor(move.second); wBishops = wBishops.or(move.second) }
+            'R' -> { wPawns = wPawns.xor(move.second); wRooks = wRooks.or(move.second) }
+            'Q' -> { wPawns = wPawns.xor(move.second); wQueens = wQueens.or(move.second) }
+            'n' -> { bPawns = bPawns.xor(move.second); bKnights = bKnights.or(move.second) }
+            'b' -> { bPawns = bPawns.xor(move.second); bBishops = bBishops.or(move.second) }
+            'r' -> { bPawns = bPawns.xor(move.second); bRooks = bRooks.or(move.second) }
+            'q' -> { bPawns = bPawns.xor(move.second); bQueens = bQueens.or(move.second) }
+            null -> {}
+            else -> throw IllegalArgumentException("Invalid promo piece: $promo")
+        }
         when (capture) {
             'P' -> wPawns = wPawns.xor(if (move.second == enPassantTarget && piece == Piece.bPawn) Magic.EnPassantCaptureSq[move.second] else move.second)
             'N' -> wKnights = wKnights.xor(move.second)
@@ -214,7 +219,19 @@ class BitBoard(empty: Boolean = false) : IBitBoardPieces {
         }
     }
 
-    fun undoMove(move: Pair<ULong, ULong>, piece: Char, capture: Char?) {
+    fun undoMove(move: Pair<ULong, ULong>, piece: Char, capture: Char?, promo: Char? = null) {
+        when (promo) {
+            'N' -> { wKnights = wKnights.xor(move.second); wPawns = wPawns.or(move.second) }
+            'B' -> { wBishops = wBishops.xor(move.second); wPawns = wPawns.or(move.second) }
+            'R' -> { wRooks = wRooks.xor(move.second); wPawns = wPawns.or(move.second) }
+            'Q' -> { wQueens = wQueens.xor(move.second); wPawns = wPawns.or(move.second) }
+            'n' -> { bKnights = bKnights.xor(move.second); bPawns = bPawns.or(move.second) }
+            'b' -> { bBishops = bBishops.xor(move.second); bPawns = bPawns.or(move.second) }
+            'r' -> { bRooks = bRooks.xor(move.second); bPawns = bPawns.or(move.second) }
+            'q' -> { bQueens = bQueens.xor(move.second); bPawns = bPawns.or(move.second) }
+            null -> {}
+            else -> throw IllegalArgumentException("Invalid promo piece: $promo")
+        }
         when (piece) {
             'P' -> wPawns = wPawns.xor(move.second).or(move.first)
             'N' -> wKnights = wKnights.xor(move.second).or(move.first)
