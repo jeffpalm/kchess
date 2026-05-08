@@ -32,12 +32,12 @@ object Perft {
         } else {
             ctx.reset(game.data)
         }
-        val moves = MoveGenerator.executeOn(ctx)
+        MoveGenerator.executeOn(ctx)
+        val n = ctx.movesSize
         if (depth == 1) {
             var i = 0
-            val n = moves.size
             while (i < n) {
-                val played = game.makeMove(moves[i])
+                val played = game.makeMove(ctx.moveAt(i))
                 classifyInto(played, game, acc, mateCtx)
                 game.undoMove()
                 i++
@@ -45,9 +45,8 @@ object Perft {
             return
         }
         var i = 0
-        val n = moves.size
         while (i < n) {
-            game.makeMove(moves[i])
+            game.makeMove(ctx.moveAt(i))
             walkStats(depth - 1, game, acc, pool, mateCtx)
             game.undoMove()
             i++
@@ -77,7 +76,8 @@ object Perft {
             acc.discoveryChecks++
         }
         mateCtx.reset(gameAfter.data)
-        if (MoveGenerator.executeOn(mateCtx).isEmpty()) {
+        MoveGenerator.executeOn(mateCtx)
+        if (mateCtx.movesSize == 0) {
             acc.checkmates++
         }
     }

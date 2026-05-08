@@ -9,7 +9,7 @@ interface IGameData {
         return turn
     }
 
-    operator fun component3(): String {
+    operator fun component3(): Int {
         return castleAvail
     }
 
@@ -27,7 +27,8 @@ interface IGameData {
 
     val board: BitBoard
     val turn: Color
-    val castleAvail: String
+    /** Castling availability as a bitmask; see [CastleAvail]. */
+    val castleAvail: Int
     val enPassantTarget: Square?
     val halfMoveClock: Int
     val fullMoveClock: Int

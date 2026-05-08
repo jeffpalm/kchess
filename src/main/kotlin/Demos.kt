@@ -72,7 +72,7 @@ object Demos {
         val gameData = GameData(
             bb,
             Color.WHITE,
-            "KQkq",
+            CastleAvail.ALL,
             null,
             0,
             1

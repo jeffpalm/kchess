@@ -8,7 +8,7 @@ class Move(
     override val piece: Char,
     board: Board,
     val prevEnPassantTarget: Square?,
-    val prevCastleAvail: String = "-",
+    val prevCastleAvail: Int = CastleAvail.NONE,
     val promo: Char? = null
 ) : IMove {
     override val capture: Char? = when {
@@ -21,45 +21,25 @@ class Move(
         return "${from.name}${to.name}"
     }
 
-    fun isWhiteKingCastle(): Boolean = when (from) {
-        Square.e1 -> when (to) {
-            Square.g1, Square.c1 -> piece == 'K'
-            else -> false
-        }
-        else -> false
-    }
+    fun isWhiteKingCastle(): Boolean =
+        piece == 'K' && from == Square.e1 && (to == Square.g1 || to == Square.c1)
 
-    fun isBlackKingCastle(): Boolean = when (from) {
-        Square.e8 -> when (to) {
-            Square.g8, Square.c8 -> piece == 'k'
-            else -> false
-        }
-        else -> false
-    }
+    fun isBlackKingCastle(): Boolean =
+        piece == 'k' && from == Square.e8 && (to == Square.g8 || to == Square.c8)
 
     fun enPassantTarget(): Square? = when {
-        isWhiteTwoMoveJump(this) -> {
-            val square = Compass.navigate(Sq[from], Direction.N)
-            Square[square]
-        }
-        isBlackTwoMoveJump(this) -> {
-            val square = Compass.navigate(Sq[from], Direction.S)
-            Square[square]
-        }
+        isWhiteTwoMoveJump(this) -> Square[from.ordinal + 8]
+        isBlackTwoMoveJump(this) -> Square[from.ordinal - 8]
         else -> null
     }
 
     companion object {
-        fun isWhitePawnStartingMove(move: Move): Boolean =
-            Sq[move.from].and(BitBoard.Companion.StartPosition.P).countOneBits() > 0 && move.piece == Piece.wPawn
-
-        fun isBlackPawnStartingMove(move: Move): Boolean =
-            Sq[move.from].and(BitBoard.Companion.StartPosition.p).countOneBits() > 0 && move.piece == Piece.bPawn
-
+        // White pawns start on rank 2 (ordinals 8..15); black on rank 7 (48..55).
+        // A two-square jump lands on rank 4 (24..31) for white, rank 5 (32..39) for black.
         fun isWhiteTwoMoveJump(move: Move): Boolean =
-            isWhitePawnStartingMove(move) && Sq[move.to.ordinal].and(Sets.RANK4).countOneBits() > 0
+            move.piece == Piece.wPawn && move.from.ordinal in 8..15 && move.to.ordinal == move.from.ordinal + 16
 
         fun isBlackTwoMoveJump(move: Move): Boolean =
-            isBlackPawnStartingMove(move) && Sq[move.to.ordinal].and(Sets.RANK5).countOneBits() > 0
+            move.piece == Piece.bPawn && move.from.ordinal in 48..55 && move.to.ordinal == move.from.ordinal - 16
     }
 }

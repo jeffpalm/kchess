@@ -15,7 +15,7 @@ class Game(private val fen: Fen = Fen(), private val _board: Board = Board(fen))
     private val _data: GameData = GameData(
         FenToBitBoard(fen).output,
         if (fen.sideToMove == "w") Color.WHITE else Color.BLACK,
-        fen.castlingAvailability,
+        CastleAvail.parse(fen.castlingAvailability),
         if (fen.enPassantTarget == "-") null else Square[fen.enPassantTarget],
         fen.halfMoveClock,
         fen.fullMoveClock
@@ -143,40 +143,32 @@ class Game(private val fen: Fen = Fen(), private val _board: Board = Board(fen))
     }
 
     private fun handleRemovingCastlingAvail(m: Move) {
-        when {
-            m.piece == 'K' && m.from == Square.e1 -> {
-                removeCastlingAbility { c -> c != 'K' && c != 'Q' }
+        var rights = _data.castleAvail
+        if (rights == CastleAvail.NONE) return
+        // Moving piece
+        when (m.piece) {
+            'K' -> if (m.from == Square.e1) rights = rights and CastleAvail.DROP_WHITE
+            'k' -> if (m.from == Square.e8) rights = rights and CastleAvail.DROP_BLACK
+            'R' -> when (m.from) {
+                Square.a1 -> rights = rights and CastleAvail.Q.inv()
+                Square.h1 -> rights = rights and CastleAvail.K.inv()
+                else -> {}
             }
-            m.piece == 'k' && m.from == Square.e8 -> {
-                removeCastlingAbility { c -> c != 'k' && c != 'q' }
-            }
-            m.piece == 'R' && m.from == Square.a1 -> {
-                removeCastlingAbility { c -> c != 'Q' }
-            }
-            m.piece == 'R' && m.from == Square.h1 -> {
-                removeCastlingAbility { c -> c != 'K' }
-            }
-            m.piece == 'r' && m.from == Square.a8 -> {
-                removeCastlingAbility { c -> c != 'q' }
-            }
-            m.piece == 'r' && m.from == Square.h8 -> {
-                removeCastlingAbility { c -> c != 'k' }
+            'r' -> when (m.from) {
+                Square.a8 -> rights = rights and CastleAvail.BQ.inv()
+                Square.h8 -> rights = rights and CastleAvail.BK.inv()
+                else -> {}
             }
         }
+        // Captured rook on its starting square
         when (m.to) {
-            Square.a1 -> if (m.capture == 'R') removeCastlingAbility { c -> c != 'Q' }
-            Square.h1 -> if (m.capture == 'R') removeCastlingAbility { c -> c != 'K' }
-            Square.a8 -> if (m.capture == 'r') removeCastlingAbility { c -> c != 'q' }
-            Square.h8 -> if (m.capture == 'r') removeCastlingAbility { c -> c != 'k' }
+            Square.a1 -> if (m.capture == 'R') rights = rights and CastleAvail.Q.inv()
+            Square.h1 -> if (m.capture == 'R') rights = rights and CastleAvail.K.inv()
+            Square.a8 -> if (m.capture == 'r') rights = rights and CastleAvail.BQ.inv()
+            Square.h8 -> if (m.capture == 'r') rights = rights and CastleAvail.BK.inv()
             else -> {}
         }
-    }
-
-    private fun removeCastlingAbility(filter: (Char) -> Boolean) {
-        _data.castleAvail = _data.castleAvail.toCharArray().filter(filter).joinToString("")
-        if (_data.castleAvail.isEmpty()) {
-            _data.castleAvail = "-"
-        }
+        _data.castleAvail = rights
     }
 
     fun clone(): Game {
