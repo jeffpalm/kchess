@@ -1,37 +1,26 @@
 package engine.move.rules
 
-import engine.*
-import engine.adapter.BitBitsPairToPseudoMoves
-import engine.adapter.BitsToListOfBit
+import engine.Color
+import engine.Piece
+import engine.Square
 import engine.move.IMoveRule
 import engine.move.Magic
 import engine.move.MoveGenCtx
 
-class MoveRuleWhitePawnAttack : IMoveRule {
+object MoveRuleWhitePawnAttack : IMoveRule {
     override fun shouldRun(ctx: MoveGenCtx): Boolean {
-        return ctx.data.turn == Color.WHITE && ctx.data.board.wPawns.countOneBits() > 0
+        return ctx.data.turn == Color.WHITE && ctx.data.board.wPawns != 0UL
     }
 
     override fun run(ctx: MoveGenCtx) {
-        val (board) = ctx.data
-
-        val pawns = BitsToListOfBit(board.wPawns).output
-
-        for (pawn in pawns) {
-            val potentialAttackSquares = Magic.Attack.WhitePawn[Square[pawn]]
-            val validAttackSquares = board.occupied(Color.BLACK).or(board.enPassantTarget ?: 0UL)
-
-            val validAttacks = potentialAttackSquares and validAttackSquares
-            ctx.addMoves(BitBitsPairToPseudoMoves(pawn to validAttacks, Piece.wPawn).output)
+        val board = ctx.data.board
+        val captureMask = board.occupied(Color.BLACK) or (board.enPassantTarget ?: 0UL)
+        var w = board.wPawns
+        while (w != 0UL) {
+            val pawn = w.takeLowestOneBit()
+            val targets = Magic.Attack.WhitePawn[Square.fromBit(pawn)] and captureMask
+            ctx.addPawnTargets(pawn, targets, Piece.wPawn)
+            w = w xor pawn
         }
-
-    }
-
-    private fun wPawnEastAttacks(pawns: ULong): ULong {
-        return (Compass.navigate(pawns, Direction.NE) and Sets.NOT_A_FILE)
-    }
-
-    private fun wPawnWestAttacks(pawns: ULong): ULong {
-        return (Compass.navigate(pawns, Direction.NW) and Sets.NOT_H_FILE)
     }
 }

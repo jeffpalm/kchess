@@ -27,6 +27,7 @@ class Game(private val fen: Fen = Fen(), private val _board: Board = Board(fen))
         val validatedMove = Move(
             move.from,
             move.to,
+            move.piece,
             _board,
             _data.enPassantTarget,
             _data.castleAvail,
@@ -34,7 +35,7 @@ class Game(private val fen: Fen = Fen(), private val _board: Board = Board(fen))
         )
         _moves.add(validatedMove)
         if (move.to == _data.enPassantTarget && (validatedMove.piece == Piece.wPawn || validatedMove.piece == Piece.bPawn)) {
-            _board.setSquare(Square[Magic.EnPassantCaptureSq[move.to.asBit()]], null)
+            _board.setSquare(Square.fromBit(Magic.EnPassantCaptureSq[move.to.asBit()]), null)
         }
         _board.setSquare(move.from, null)
         _board.setSquare(move.to, move.promo ?: validatedMove.piece)
@@ -79,7 +80,7 @@ class Game(private val fen: Fen = Fen(), private val _board: Board = Board(fen))
         // Board (squares)
         if (isEnPassant) {
             _board.setSquare(pMove.to, null)
-            _board.setSquare(Square[capturedSquare], pMove.capture)
+            _board.setSquare(Square.fromBit(capturedSquare), pMove.capture)
         } else {
             _board.setSquare(pMove.to, pMove.capture)
         }

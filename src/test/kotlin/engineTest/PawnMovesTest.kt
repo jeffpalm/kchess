@@ -16,10 +16,10 @@ import kotlin.test.assertTrue
 
 private class PawnMoveGenerator(context: MoveGenCtx) : AbstractMoveGenerator(
     context, listOf(
-        MoveRuleWhitePawnPush(),
-        MoveRuleWhitePawnAttack(),
-        MoveRuleBlackPawnPush(),
-        MoveRuleBlackPawnAttack()
+        MoveRuleWhitePawnPush,
+        MoveRuleWhitePawnAttack,
+        MoveRuleBlackPawnPush,
+        MoveRuleBlackPawnAttack
     ),
     listOf()
 )
@@ -41,14 +41,14 @@ internal class PawnMovesTest {
     @Test
     fun shouldRun() {
         assertTrue("shouldRun flips based on turn"){
-            MoveRuleWhitePawnPush().shouldRun(whiteToMove)
-            !MoveRuleWhitePawnPush().shouldRun(blackToMove)
-            MoveRuleWhitePawnAttack().shouldRun(whiteToMove)
-            !MoveRuleWhitePawnAttack().shouldRun(blackToMove)
-            MoveRuleBlackPawnPush().shouldRun(blackToMove)
-            !MoveRuleBlackPawnPush().shouldRun(whiteToMove)
-            MoveRuleBlackPawnAttack().shouldRun(blackToMove)
-            !MoveRuleBlackPawnAttack().shouldRun(whiteToMove)
+            MoveRuleWhitePawnPush.shouldRun(whiteToMove)
+            !MoveRuleWhitePawnPush.shouldRun(blackToMove)
+            MoveRuleWhitePawnAttack.shouldRun(whiteToMove)
+            !MoveRuleWhitePawnAttack.shouldRun(blackToMove)
+            MoveRuleBlackPawnPush.shouldRun(blackToMove)
+            !MoveRuleBlackPawnPush.shouldRun(whiteToMove)
+            MoveRuleBlackPawnAttack.shouldRun(blackToMove)
+            !MoveRuleBlackPawnAttack.shouldRun(whiteToMove)
         }
     }
 

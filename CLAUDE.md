@@ -45,17 +45,18 @@ src/test/kotlin/engineTest/    JUnit 5 + kotlin.test; PerftTest is the integrati
 ## Conventions
 
 - Pieces are `Char`. White uppercase (`P N B R Q K`), black lowercase. `Piece.pawn(WHITE) == 'P'`, etc.
-- `Square.x1` is the enum, `Sq.x1` is the matching ULong bit. Conversions: `square.asBit()`, `Square[bit]`, `Sq[name]`.
+- `Square.x1` is the enum, `Sq.x1` is the matching ULong bit. Conversions: `square.asBit()`, `Square.fromBit(bit)` (fast: `countTrailingZeroBits` + array lookup; **prefer this in hot paths**), `Square[bit]` (legacy 64-way `when`, much slower), `Sq[name]`.
 - Bitboard layout: `a1 = bit 0`, `h1 = bit 7`, `a8 = bit 56`, `h8 = bit 63`. Hence `Compass.navigate`: N=`shl 8`, NW=`shl 7`, NE=`shl 9`, S/SE/SW are `shr`. `Direction.positive` = NW/N/NE/E (closest = `takeLowestOneBit`); `Direction.negative` = SE/S/SW/W (closest = `takeHighestOneBit`).
 - `IGameData.castleAvail` is a `String` containing some subset of `"KQkq"` (or `"-"`).
 - `BitBoard.allAttackTargets(color)` is the canonical "squares the king of `color.inv()` cannot move to": sliders treat the enemy king as **transparent** (so it can't escape along the attacker's ray) and **include** squares occupied by the attacker's friendlies (covered squares). Includes king attacks. Don't reintroduce a "stop at first piece" version for king-move filtering.
 
 ## Move generation pipeline
 
-`MoveGenerator(MoveGenCtx(gameData)).execute()` returns a `List<PseudoMove>` of fully legal moves.
+`MoveGenerator.executeOn(ctx)` returns a `List<PseudoMove>` of fully legal moves and is the **allocation-free** entry point — pass a caller-owned `MoveGenCtx` and reuse it (call `ctx.reset(newData)` between calls). The legacy `MoveGenerator(ctx).execute()` form still works for tests but allocates a wrapper instance per call.
 
-1. Each rule's `run(ctx)` populates pseudo-legal moves via `ctx.addMoves(...)`. Rules are called sequentially in declaration order on `MoveGenerator` — no coroutines, no async; reorder cautiously.
+1. Each rule's `run(ctx)` populates pseudo-legal moves via `ctx.addBitMoves(from, targets, piece)` (sliders/knight/king) or `ctx.addPawnTargets(from, targets, piece)` (pawn moves; auto-expands promotions). Rules are called sequentially in declaration order on `MoveGenerator` — no coroutines, no async; reorder cautiously.
 2. Each filter's `run(ctx)` calls `ctx.filterMoves { keep -> Boolean }` to strip illegal moves in place. Filter order matters semantically (e.g. `MoveFilterAbsolutePins` runs before `MoveFilterKingInActiveCheck`).
+3. Cache hot lookups on the ctx: `ctx.enemyAttacks()` returns `data.board.allAttackTargets(turn.inv())` and is shared between `MoveRuleKing` and `MoveRuleCastle` (both need it; computing it twice was costing real time).
 
 Rules and filters are pure-ish: they read `ctx.data`, write `ctx`. State changes between plies happen through `Game.makeMove(PseudoMove)` / `Game.undoMove()`, never inside a rule.
 
@@ -96,6 +97,7 @@ When adding a new perft case: it must come from chessprogramming.org or a Stockf
 
 - `Sets.kt` contains a long tail of `*_SHIFT_*` / `*_SHIFT_RIGHT_n` / `*_SHIFT_LEFT_n` constants that are all assigned the same two values (`0x55AA…` / `0xAA55…`). They are clearly placeholder/wrong and unused. If you reach for one, double-check the value before trusting it.
 - `Move.enPassantTarget()` only returns non-null for *starting-square* two-square pawn pushes. EP target on the resulting `GameData` is set via `handleEnPassantTarget`, which calls this and assigns `null` otherwise — relied on to clear stale EP targets on every other move type.
-- `Perft.run` (Int-returning, prints divides) is the legacy entry point. `Perft.runStats` is the silent, full-classification version (returns `PerftStats`). Prefer `runStats` for new tests.
+- `Perft.run` (Int-returning, prints divides) is the legacy entry point. `Perft.runStats` is the silent, full-classification version (returns `PerftStats`). It pools `MoveGenCtx` per recursion depth and uses make/undo, so don't reintroduce `game.clone()` per move.
 - `Client.kt` is a scratchpad, not a public entry point. Don't build infra around its current contents.
-- `WordToSquareIndices` / `BitsToListOfBit` use bit-twiddling (`countTrailingZeroBits`, `takeLowestOneBit`). If you find yourself reaching for `ULong.toString(2)` or `String.toCharArray()` for bit work, stop — that's an order of magnitude slower.
+- For bit-set iteration use `countTrailingZeroBits` / `takeLowestOneBit` directly. If you find yourself reaching for `ULong.toString(2)` or `String.toCharArray()` for bit work, stop — that's an order of magnitude slower.
+- Rules and filters are `object` singletons (stateless). `MoveGenerator` reuses the same `RULES`/`FILTERS` lists for every call.

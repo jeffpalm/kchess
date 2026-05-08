@@ -64,7 +64,7 @@ class PerftTest {
             Perft.runStats(5, Game()),
         )
     }
-    @Test @Disabled("~2 min; flip on for deep validation")
+    @Test @Disabled("~1 min; flip on for deep validation")
     fun `Start Pos - Depth 6`() {
         assertEquals(
             PerftStats(

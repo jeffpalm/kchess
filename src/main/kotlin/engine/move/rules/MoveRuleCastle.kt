@@ -5,7 +5,7 @@ import engine.move.IMoveRule
 import engine.move.MoveGenCtx
 import engine.move.PseudoMove
 
-class MoveRuleCastle : IMoveRule {
+object MoveRuleCastle : IMoveRule {
     override fun shouldRun(ctx: MoveGenCtx): Boolean {
         val (board, turn, castlingAvail) = ctx.data
         return (castlingAvail.contains(Piece.king(turn)) || castlingAvail.contains(Piece.queen(turn)))
@@ -13,7 +13,7 @@ class MoveRuleCastle : IMoveRule {
 
     override fun run(ctx: MoveGenCtx) {
         val (board, turn, castlingAvail) = ctx.data
-        val enemyAttacks = board.allAttackTargets(turn.inv())
+        val enemyAttacks = ctx.enemyAttacks()
         val kingSquare = board.king(turn)
         if (kingSquare.and(enemyAttacks) != 0UL) return
         val occupied = board.occupied()

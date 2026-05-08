@@ -12,18 +12,18 @@ import kotlin.test.assertEquals
 
 private class KingInActiveCheckGenerator(context: MoveGenCtx) : AbstractMoveGenerator(
     context, listOf(
-        MoveRuleWhitePawnPush(),
-        MoveRuleWhitePawnAttack(),
-        MoveRuleBlackPawnPush(),
-        MoveRuleBlackPawnAttack(),
-        MoveRuleKnight(),
-        MoveRuleKing(),
-        MoveRuleBishop(),
-        MoveRuleRook(),
-        MoveRuleQueen(),
-        MoveRuleCastle(),
+        MoveRuleWhitePawnPush,
+        MoveRuleWhitePawnAttack,
+        MoveRuleBlackPawnPush,
+        MoveRuleBlackPawnAttack,
+        MoveRuleKnight,
+        MoveRuleKing,
+        MoveRuleBishop,
+        MoveRuleRook,
+        MoveRuleQueen,
+        MoveRuleCastle,
     ), listOf(
-        MoveFilterKingInActiveCheck(),
+        MoveFilterKingInActiveCheck,
     )
 )
 

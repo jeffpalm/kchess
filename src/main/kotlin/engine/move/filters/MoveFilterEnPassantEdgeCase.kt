@@ -10,7 +10,7 @@ import engine.move.PseudoMove
 // unpins a pawn from the king but En Passant capture is illegal because
 // it would put friendly king in Check
 // See Perft Position 2 - Depth 2
-class MoveFilterEnPassantCaptureEdgeCase : IMoveFilter {
+object MoveFilterEnPassantCaptureEdgeCase : IMoveFilter {
     override fun run(ctx: MoveGenCtx): MoveGenCtx {
         if (ctx.data.board.enPassantTarget == null) return ctx
 

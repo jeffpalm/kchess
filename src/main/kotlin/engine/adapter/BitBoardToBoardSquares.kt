@@ -15,6 +15,12 @@ class BitBoardToBoardSquares(bitBoard: IBitBoardPieces) : Adapter<IBitBoardPiece
         return board
     }
 
-    private fun populateBoardSquares(word: ULong, board: BoardSquares, char: Char) =
-        BitsToListOfBit(word).output.forEach { bit -> board[Sq.IdxByte[bit]] = char }
+    private fun populateBoardSquares(word: ULong, board: BoardSquares, char: Char) {
+        var w = word
+        while (w != 0UL) {
+            val bit = w.takeLowestOneBit()
+            board[Sq.IdxByte[bit]] = char
+            w = w xor bit
+        }
+    }
 }
