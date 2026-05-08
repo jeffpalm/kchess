@@ -65,7 +65,7 @@ internal class GameTest {
         game.makeMove(PseudoMove(Square.d2, Square.d4, Piece.wPawn))
         game.undoMove()
         assertEquals(null, game.data.enPassantTarget)
-        assertEquals("KQkq", game.data.castleAvail)
+        assertEquals(engine.CastleAvail.ALL, game.data.castleAvail)
         assertEquals(0, game.data.halfMoveClock)
         assertEquals(1, game.data.fullMoveClock)
     }

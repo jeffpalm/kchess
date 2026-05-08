@@ -3,7 +3,7 @@ package engine
 data class GameData(
     override var board: BitBoard,
     override var turn: Color,
-    override var castleAvail: String = "KQkq",
+    override var castleAvail: Int = CastleAvail.ALL,
     override var enPassantTarget: Square? = null,
     override var halfMoveClock: Int = 0,
     override var fullMoveClock: Int = 1

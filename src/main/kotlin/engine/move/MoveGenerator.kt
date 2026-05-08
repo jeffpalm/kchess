@@ -27,13 +27,13 @@ class MoveGenerator(context: MoveGenCtx) : AbstractMoveGenerator(context, RULES,
 
         /**
          * Allocation-free entry point for the production rule+filter pipeline.
-         * Runs against a caller-owned [ctx] (which they may reuse). Tests that
-         * want a custom rule/filter set can still subclass [AbstractMoveGenerator].
+         * Populates [ctx] in place; caller iterates via [MoveGenCtx.moveAt] /
+         * [MoveGenCtx.movesSize]. Tests that want the moves as a `List` should
+         * call [AbstractMoveGenerator.execute] (which allocates a snapshot).
          */
-        fun executeOn(ctx: MoveGenCtx): List<PseudoMove> {
+        fun executeOn(ctx: MoveGenCtx) {
             for (rule in RULES) if (rule.shouldRun(ctx)) rule.run(ctx)
             for (filter in FILTERS) filter.run(ctx)
-            return ctx.moves()
         }
     }
 }

@@ -45,17 +45,18 @@ src/test/kotlin/engineTest/    JUnit 5 + kotlin.test; PerftTest is the integrati
 ## Conventions
 
 - Pieces are `Char`. White uppercase (`P N B R Q K`), black lowercase. `Piece.pawn(WHITE) == 'P'`, etc.
-- `Square.x1` is the enum, `Sq.x1` is the matching ULong bit. Conversions: `square.asBit()`, `Square.fromBit(bit)` (fast: `countTrailingZeroBits` + array lookup; **prefer this in hot paths**), `Square[bit]` (legacy 64-way `when`, much slower), `Sq[name]`.
+- `Square.x1` is the enum, `Sq.x1` is the matching ULong bit. Conversions: `square.asBit()` is `1UL shl ordinal` (one instruction); `Square.fromBit(bit)` is `countTrailingZeroBits + cached entries[]` (one instruction + array load). **Prefer both in hot paths.** `Square[bit]` (legacy 64-way `when`) and `Sq[Square]` are still around for non-hot callers but are an order of magnitude slower.
 - Bitboard layout: `a1 = bit 0`, `h1 = bit 7`, `a8 = bit 56`, `h8 = bit 63`. Hence `Compass.navigate`: N=`shl 8`, NW=`shl 7`, NE=`shl 9`, S/SE/SW are `shr`. `Direction.positive` = NW/N/NE/E (closest = `takeLowestOneBit`); `Direction.negative` = SE/S/SW/W (closest = `takeHighestOneBit`).
-- `IGameData.castleAvail` is a `String` containing some subset of `"KQkq"` (or `"-"`).
+- `IGameData.castleAvail` is an `Int` bitmask; constants in [`CastleAvail`] (`K`, `Q`, `BK`, `BQ`, `ALL`, `NONE`). Convert to/from FEN with `CastleAvail.parse` / `CastleAvail.toFenString`. Test against rights via bit AND (`avail and CastleAvail.K != 0`); drop a right via `avail and CastleAvail.K.inv()`. **Don't** treat it as a String anywhere except FEN I/O.
+- `PseudoMove` is a `@JvmInline value class` over a `Long` packed as `from | to<<6 | piece<<12 | promo<<20`. Construct with `PseudoMove(from, to, piece, promo?)` (companion `invoke`); read via `.from`, `.to`, `.piece`, `.promo`, `.fromBit`, `.toBit` (the bit accessors are `1UL shl ordinal`, no enum lookup). It stays unboxed in non-collection contexts; for storage use `LongArray` (see [`MoveGenCtx`]) so the underlying `Long` round-trips through primitives.
 - `BitBoard.allAttackTargets(color)` is the canonical "squares the king of `color.inv()` cannot move to": sliders treat the enemy king as **transparent** (so it can't escape along the attacker's ray) and **include** squares occupied by the attacker's friendlies (covered squares). Includes king attacks. Don't reintroduce a "stop at first piece" version for king-move filtering.
 
 ## Move generation pipeline
 
-`MoveGenerator.executeOn(ctx)` returns a `List<PseudoMove>` of fully legal moves and is the **allocation-free** entry point — pass a caller-owned `MoveGenCtx` and reuse it (call `ctx.reset(newData)` between calls). The legacy `MoveGenerator(ctx).execute()` form still works for tests but allocates a wrapper instance per call.
+`MoveGenerator.executeOn(ctx)` is the **allocation-free** entry point — populates `ctx` in place. Caller iterates via `ctx.movesSize` + `ctx.moveAt(i)`. The legacy `MoveGenerator(ctx).execute()` form still works for tests but allocates a `List<PseudoMove>` snapshot. Reuse one `MoveGenCtx` per recursion depth and call `ctx.reset(newData)` between turns; the ctx owns a growable `LongArray` move buffer plus the `enemyAttacks` cache.
 
 1. Each rule's `run(ctx)` populates pseudo-legal moves via `ctx.addBitMoves(from, targets, piece)` (sliders/knight/king) or `ctx.addPawnTargets(from, targets, piece)` (pawn moves; auto-expands promotions). Rules are called sequentially in declaration order on `MoveGenerator` — no coroutines, no async; reorder cautiously.
-2. Each filter's `run(ctx)` calls `ctx.filterMoves { keep -> Boolean }` to strip illegal moves in place. Filter order matters semantically (e.g. `MoveFilterAbsolutePins` runs before `MoveFilterKingInActiveCheck`).
+2. Each filter's `run(ctx)` calls `ctx.filterMoves { move -> Boolean }` to strip illegal moves in place. The lambda receives a `PseudoMove` value class; `filterMoves` is `inline` so no boxing. Filter order matters semantically (e.g. `MoveFilterAbsolutePins` runs before `MoveFilterKingInActiveCheck`).
 3. Cache hot lookups on the ctx: `ctx.enemyAttacks()` returns `data.board.allAttackTargets(turn.inv())` and is shared between `MoveRuleKing` and `MoveRuleCastle` (both need it; computing it twice was costing real time).
 
 Rules and filters are pure-ish: they read `ctx.data`, write `ctx`. State changes between plies happen through `Game.makeMove(PseudoMove)` / `Game.undoMove()`, never inside a rule.

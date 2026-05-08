@@ -2068,44 +2068,11 @@ object Magic {
             else -> 0UL
         }
 
-        operator fun get(square: ULong): ULong = when (square) {
-            Sq.a3 -> Sq.a4
-            Sq.b3 -> Sq.b4
-            Sq.c3 -> Sq.c4
-            Sq.d3 -> Sq.d4
-            Sq.e3 -> Sq.e4
-            Sq.f3 -> Sq.f4
-            Sq.g3 -> Sq.g4
-            Sq.h3 -> Sq.h4
-            Sq.a6 -> Sq.a5
-            Sq.b6 -> Sq.b5
-            Sq.c6 -> Sq.c5
-            Sq.d6 -> Sq.d5
-            Sq.e6 -> Sq.e5
-            Sq.f6 -> Sq.f5
-            Sq.g6 -> Sq.g5
-            Sq.h6 -> Sq.h5
-            else -> 0UL
-        }
+        // EP target on rank 3 (white double-pushed) → captured pawn one rank above (shl 8).
+        // EP target on rank 6 (black double-pushed) → captured pawn one rank below (shr 8).
+        operator fun get(square: ULong): ULong =
+            if (square and 0x0000_0000_00FF_0000UL != 0UL) square shl 8 else square shr 8
 
-        operator fun get(square: Square): ULong = when (square) {
-            Square.a3 -> Sq.a4
-            Square.b3 -> Sq.b4
-            Square.c3 -> Sq.c4
-            Square.d3 -> Sq.d4
-            Square.e3 -> Sq.e4
-            Square.f3 -> Sq.f4
-            Square.g3 -> Sq.g4
-            Square.h3 -> Sq.h4
-            Square.a6 -> Sq.a5
-            Square.b6 -> Sq.b5
-            Square.c6 -> Sq.c5
-            Square.d6 -> Sq.d5
-            Square.e6 -> Sq.e5
-            Square.f6 -> Sq.f5
-            Square.g6 -> Sq.g5
-            Square.h6 -> Sq.h5
-            else -> 0UL
-        }
+        operator fun get(square: Square): ULong = get(square.asBit())
     }
 }

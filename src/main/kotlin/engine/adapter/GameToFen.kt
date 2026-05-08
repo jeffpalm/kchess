@@ -1,5 +1,6 @@
 package engine.adapter
 
+import engine.CastleAvail
 import engine.Color
 import engine.Fen
 import engine.Game
@@ -31,7 +32,7 @@ class GameToFen(game: Game) : Adapter<Game, Fen>(game) {
         val fenElements = listOf(
             fenSquares,
             if(input.data.turn == Color.WHITE) "w" else "b",
-            input.data.castleAvail,
+            CastleAvail.toFenString(input.data.castleAvail),
             input.data.enPassantTarget?.name ?: "-",
             input.data.halfMoveClock,
             input.data.fullMoveClock
